@@ -2,13 +2,13 @@
 
 ## Installing
 
-Windows: just clone the repository.
-Linux: TBA
-OS-X: TBA
+- Windows: just clone the repository.
+- Linux: TBA
+- OS-X: TBA
 
 ## Setting up
 
-`cmake --H. -Bbuild`
+`cmake -H. -Bbuild`
 
 ## Building
 
