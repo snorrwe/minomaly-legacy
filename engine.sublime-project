@@ -1,0 +1,126 @@
+{
+	"build_systems":
+	[
+		{
+			"file_regex": "^  (.+)\\((\\d+)\\)(): ((?:fatal )?(?:error|warning) \\w+\\d\\d\\d\\d: .*) \\[.*$",
+			"name": "engine (Windows)",
+			"shell_cmd": "cmake --build .",
+			"syntax": "Packages/CMakeBuilder/Syntax/Visual_Studio.sublime-syntax",
+			"variants":
+			[
+				{
+					"name": "ALL_BUILD",
+					"shell_cmd": "cmake --build . --target ALL_BUILD"
+				},
+				{
+					"name": "common",
+					"shell_cmd": "cmake --build . --target common"
+				},
+				{
+					"name": "engine",
+					"shell_cmd": "cmake --build . --target engine"
+				},
+				{
+					"name": "ZERO_CHECK",
+					"shell_cmd": "cmake --build . --target ZERO_CHECK"
+				},
+				{
+					"name": "src/game_logic/alpha/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/alpha/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/alpha/alpha",
+					"shell_cmd": "cmake --build . --target src/game_logic/alpha/alpha"
+				},
+				{
+					"name": "src/game_logic/alpha/alpha_lib",
+					"shell_cmd": "cmake --build . --target src/game_logic/alpha/alpha_lib"
+				},
+				{
+					"name": "src/game_logic/bloke/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/bloke/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/bloke/bloke",
+					"shell_cmd": "cmake --build . --target src/game_logic/bloke/bloke"
+				},
+				{
+					"name": "src/game_logic/bloke/bloke_lib",
+					"shell_cmd": "cmake --build . --target src/game_logic/bloke/bloke_lib"
+				},
+				{
+					"name": "src/game_logic/rotation/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/rotation/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/rotation/rotation",
+					"shell_cmd": "cmake --build . --target src/game_logic/rotation/rotation"
+				},
+				{
+					"name": "src/game_logic/rotation/rotation_lib",
+					"shell_cmd": "cmake --build . --target src/game_logic/rotation/rotation_lib"
+				},
+				{
+					"name": "src/game_logic/spritesheet/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/spritesheet/spritesheet",
+					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/spritesheet"
+				},
+				{
+					"name": "src/game_logic/spritesheet/spritesheet_lib",
+					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/spritesheet_lib"
+				},
+				{
+					"name": "src/game_logic/walk/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/walk/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/walk/walk",
+					"shell_cmd": "cmake --build . --target src/game_logic/walk/walk"
+				},
+				{
+					"name": "src/game_logic/walk/walk_lib",
+					"shell_cmd": "cmake --build . --target src/game_logic/walk/walk_lib"
+				}
+			],
+			"working_dir": "${project_path}/build"
+		}
+	],
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"__*.ninja",
+				"bin/*",
+				"build/*"
+			],
+			"folder_exclude_patterns":
+			[
+				"bin",
+				"build",
+				"lib"
+			],
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"ClangFormat":
+		{
+			"format_on_save": true
+		},
+		"cmake":
+		{
+			"build_folder": "${project_path}/build",
+			"env":
+			{
+				"CC": "clang",
+				"CXX": "clang++"
+			},
+			"root_folder": "${project_path}"
+		}
+	}
+}

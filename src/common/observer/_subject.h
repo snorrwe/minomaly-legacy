@@ -1,0 +1,23 @@
+#pragma once
+#include "_observable.h"
+#include "_subscription.h"
+
+template <typename T> class Subject : public Observable<T>
+{
+public:
+    Subject() = default;
+    Subject(Subject<T>&&) = delete;
+    Subject(Subject<T> const&) = delete;
+    virtual ~Subject() {}
+
+    Subject<T>& operator=(Subject<T> const&) = delete;
+    Subject<T>& operator=(Subject<T>&&) = delete;
+
+    void next(T const& value)
+    {
+        for (auto i = subscriptions.begin(); i != subscriptions.end(); ++i)
+        {
+            i->second(value);
+        }
+    }
+};
