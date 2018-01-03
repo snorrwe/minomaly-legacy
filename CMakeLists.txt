@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
 
-set(PROJECT_NAME SDL_TEST)
-project(${PROJECT_NAME})
+set(MASTER_NAME ENGINE)
+project(${MASTER_NAME})
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
@@ -42,7 +42,7 @@ include_directories(src/engine/input
                     src/engine/core 
                     src/engine/camera)
 
-add_library(engine ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
+add_library(${MASTER_NAME} SHARED ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
                    ${PROJECT_SOURCE_DIR}/src/engine/input/input.cpp
                    ${PROJECT_SOURCE_DIR}/src/engine/renderer/renderer.cpp
                    ${PROJECT_SOURCE_DIR}/src/engine/camera/camera.cpp
@@ -63,12 +63,14 @@ endif()
 if(WIN32)
   set(SDL2_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2-2.0.7)
   set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_image-2.0.2)
+  set(SDL2_TTF_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_ttf-2.0.14)
 endif(WIN32)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
+include_directories(${SDL2_TTF_DIR}/include)
 
 #[[ Example projects ]]
 
@@ -81,6 +83,34 @@ MACRO(SUBDIRLIST result curdir)
     ENDIF()
   ENDFOREACH()
   SET(${result} ${dirlist})
+ENDMACRO()
+
+target_link_libraries(${MASTER_NAME} common
+                             ${SDL2_LIBRARIES} 
+                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
+                             "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib"
+                             )
+
+MACRO(LINK_EXAMPLE name)
+  target_link_libraries(${name} ${MASTER_NAME})
+
+  #[[ SDL core ]]
+  add_custom_command(TARGET ${name} POST_BUILD  
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different  
+          "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
+          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+
+  #[[ SDL Image ]]
+  add_custom_command(TARGET ${name} POST_BUILD  
+      COMMAND ${CMAKE_COMMAND} -E copy_directory  
+          "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+
+  #[[ SDL TTF ]]
+  add_custom_command(TARGET ${name} POST_BUILD  
+      COMMAND ${CMAKE_COMMAND} -E copy_directory  
+          "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 ENDMACRO()
 
 set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/src/game_logic)
