@@ -30,7 +30,6 @@ if(MSVC)
   endforeach()
 endif()
 
-
 #[[ Engine ]]
 
 include_directories(src/engine/input 
@@ -73,8 +72,20 @@ include_directories(${SDL2_IMAGE_DIR}/include)
 
 #[[ Example projects ]]
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/game_logic/bloke")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/game_logic/spritesheet")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/game_logic/alpha")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/game_logic/walk")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/game_logic/rotation")
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+      LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
+
+set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/src/game_logic)
+SUBDIRLIST(EXAMPLE_PROJECT_DIRS ${GAME_LOGIC_DIR})
+
+FOREACH(subdir ${EXAMPLE_PROJECT_DIRS})
+  add_subdirectory("${GAME_LOGIC_DIR}/${subdir}")
+ENDFOREACH()
