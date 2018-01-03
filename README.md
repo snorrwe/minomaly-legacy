@@ -24,9 +24,18 @@ src/
     game_logic/ # example applications go here
 ```
 
+## Adding new project
+
+Example projects can be added by the `generate_example.py` script.
+
+> python generate_example.py --name my-super-awesome-project
+
+Run _CMake Configure_ and you're all set!
+
+If you do not wish to use the script simply copy the provided `__template` project and rename it appropriately.
+
 ## CMake
 
-Example projects should be added to the root CMakeLists.txt. 
 You can use the provided CMakeLists.txt.template in the subprojects.
 
 ## Continous Integration
