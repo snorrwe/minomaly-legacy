@@ -6,7 +6,9 @@ project(${PROJECT_NAME})
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "-std=c++1z -fcxx-exceptions /EHa")
+set(GCC_FLAGS "-std=c++17 -fcxx-exceptions")
+set(MSVC_FLAGS "/EHa /std:c++latest")
+set(CMAKE_CXX_FLAGS "${GCC_FLAGS} ${MSVC_FLAGS}")
 set(OUT_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR})
 set(ASSETS "${PROJECT_SOURCE_DIR}/assets")
@@ -39,8 +41,7 @@ include_directories(src/engine/input
                     src/engine/window 
                     src/engine/renderer 
                     src/engine/core 
-                    src/engine/camera 
-                    )
+                    src/engine/camera)
 
 add_library(engine ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
                    ${PROJECT_SOURCE_DIR}/src/engine/input/input.cpp
@@ -52,9 +53,7 @@ add_library(common ${PROJECT_SOURCE_DIR}/src/common/surface/surface.cpp
                    ${PROJECT_SOURCE_DIR}/src/common/texture/texture.cpp)
 
 
-##########################
-#########  SDL  ##########
-##########################
+#[[ SDL ]]
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   set(VC_LIB_PATH_SUFFIX lib/x64)
