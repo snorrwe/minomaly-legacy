@@ -49,7 +49,7 @@ src/
 
 Example projects can be added by the `generate_example.py` script.
 
-> python generate_example.py --name my-super-awesome-project
+`python generate_example.py --name my-super-awesome-project`
 
 Run _CMake Configure_ and you're all set!
 
