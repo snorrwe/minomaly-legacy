@@ -20,11 +20,11 @@ install:
   - cd C:\projects\deps
 
   # Install Ninja
-  # - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip"
-  # - appveyor DownloadFile %NINJA_URL% -FileName ninja.zip
-  # - 7z x ninja.zip -oC:\projects\deps\ninja > nul
-  # - set PATH=C:\projects\deps\ninja;%PATH%
-  # - ninja --version
+  - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip"
+  - appveyor DownloadFile %NINJA_URL% -FileName ninja.zip
+  - 7z x ninja.zip -oC:\projects\deps\ninja > nul
+  - set PATH=C:\projects\deps\ninja;%PATH%
+  - ninja --version
 
   # Install a recent CMake
   - set CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.0-win64-x64.zip"
@@ -39,13 +39,14 @@ install:
   - clang-cl -v
 
 before_build:
+  - del :\Program Files (x86)\Windows Kits\10\include\10.0.16299.0 /s /r # Hack: Delete unsupported SDK
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - cd C:\projects\minomaly
 
 build_script:
   - mkdir build
   - cd build
-  - cmake .. # -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
+  - cmake .. -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
   - cmake --build . --config %CONFIGURATION%
   - cd ..
 
