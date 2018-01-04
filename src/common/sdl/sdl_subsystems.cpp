@@ -22,7 +22,7 @@ std::shared_ptr<SdlSubsystems> SdlSubsystems::initialize()
         throw std::runtime_error("SDL could not initialize!");
     }
     auto imgFlags = IMG_INIT_PNG;
-    if (!IMG_Init(imgFlags) & imgFlags)
+    if ((!IMG_Init(imgFlags)) & imgFlags)
     {
         std::cout << "SDL_image could not initialize! SDL_image Error:\n"
                   << IMG_GetError() << std::endl;
