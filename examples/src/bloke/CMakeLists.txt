@@ -3,10 +3,11 @@ string(REPLACE " " "_" GAME_NAME ${GAME_NAME})
 project(${GAME_NAME})
 
 #[[ Game ]]
-include_directories(src/game_logic/${GAME_NAME})
+include_directories(${GAME_NAME})
 
 #[[ Game executables ]]
-add_executable(${GAME_NAME} ${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/${GAME_NAME}.cpp)
+add_executable(${GAME_NAME} ${GAME_LOGIC_DIR}/${GAME_NAME}/main.cpp 
+                            ${GAME_LOGIC_DIR}/${GAME_NAME}/${GAME_NAME}.cpp)
 
 add_custom_command(TARGET ${GAME_NAME} POST_BUILD  
       COMMAND ${CMAKE_COMMAND} -E copy_directory  

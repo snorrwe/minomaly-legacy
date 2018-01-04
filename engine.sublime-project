@@ -17,12 +17,124 @@
 					"shell_cmd": "cmake --build . --target common"
 				},
 				{
-					"name": "engine",
-					"shell_cmd": "cmake --build . --target engine"
+					"name": "ENGINE",
+					"shell_cmd": "cmake --build . --target ENGINE"
 				},
 				{
 					"name": "ZERO_CHECK",
 					"shell_cmd": "cmake --build . --target ZERO_CHECK"
+				},
+				{
+					"name": "examples/alpha/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/alpha/ALL_BUILD"
+				},
+				{
+					"name": "examples/alpha/alpha",
+					"shell_cmd": "cmake --build . --target examples/alpha/alpha"
+				},
+				{
+					"name": "examples/bloke/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/bloke/ALL_BUILD"
+				},
+				{
+					"name": "examples/bloke/bloke",
+					"shell_cmd": "cmake --build . --target examples/bloke/bloke"
+				},
+				{
+					"name": "examples/rotation/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/rotation/ALL_BUILD"
+				},
+				{
+					"name": "examples/rotation/rotation",
+					"shell_cmd": "cmake --build . --target examples/rotation/rotation"
+				},
+				{
+					"name": "examples/spritesheet/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/spritesheet/ALL_BUILD"
+				},
+				{
+					"name": "examples/spritesheet/spritesheet",
+					"shell_cmd": "cmake --build . --target examples/spritesheet/spritesheet"
+				},
+				{
+					"name": "examples/src/alpha/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/alpha/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/alpha/alpha",
+					"shell_cmd": "cmake --build . --target examples/src/alpha/alpha"
+				},
+				{
+					"name": "examples/src/bloke/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/bloke/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/bloke/bloke",
+					"shell_cmd": "cmake --build . --target examples/src/bloke/bloke"
+				},
+				{
+					"name": "examples/src/rotation/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/rotation/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/rotation/rotation",
+					"shell_cmd": "cmake --build . --target examples/src/rotation/rotation"
+				},
+				{
+					"name": "examples/src/spritesheet/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/spritesheet/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/spritesheet/spritesheet",
+					"shell_cmd": "cmake --build . --target examples/src/spritesheet/spritesheet"
+				},
+				{
+					"name": "examples/src/walk/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/walk/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/walk/walk",
+					"shell_cmd": "cmake --build . --target examples/src/walk/walk"
+				},
+				{
+					"name": "examples/src/__template/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/__template/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/__template/__template",
+					"shell_cmd": "cmake --build . --target examples/src/__template/__template"
+				},
+				{
+					"name": "examples/walk/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/walk/ALL_BUILD"
+				},
+				{
+					"name": "examples/walk/walk",
+					"shell_cmd": "cmake --build . --target examples/walk/walk"
+				},
+				{
+					"name": "examples/__template/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/__template/ALL_BUILD"
+				},
+				{
+					"name": "examples/__template/__template",
+					"shell_cmd": "cmake --build . --target examples/__template/__template"
+				},
+				{
+					"name": "src/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/ALL_BUILD"
+				},
+				{
+					"name": "src/Common",
+					"shell_cmd": "cmake --build . --target src/Common"
+				},
+				{
+					"name": "src/Engine",
+					"shell_cmd": "cmake --build . --target src/Engine"
+				},
+				{
+					"name": "src/MinomalyEngine",
+					"shell_cmd": "cmake --build . --target src/MinomalyEngine"
 				},
 				{
 					"name": "src/game_logic/alpha/ALL_BUILD",
@@ -47,6 +159,22 @@
 				{
 					"name": "src/game_logic/bloke/bloke_lib",
 					"shell_cmd": "cmake --build . --target src/game_logic/bloke/bloke_lib"
+				},
+				{
+					"name": "src/game_logic/fox/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/fox/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/fox/fox",
+					"shell_cmd": "cmake --build . --target src/game_logic/fox/fox"
+				},
+				{
+					"name": "src/game_logic/quick_brown_fox/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/quick_brown_fox/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/quick_brown_fox/quick_brown_fox",
+					"shell_cmd": "cmake --build . --target src/game_logic/quick_brown_fox/quick_brown_fox"
 				},
 				{
 					"name": "src/game_logic/rotation/ALL_BUILD",
@@ -83,6 +211,14 @@
 				{
 					"name": "src/game_logic/walk/walk_lib",
 					"shell_cmd": "cmake --build . --target src/game_logic/walk/walk_lib"
+				},
+				{
+					"name": "src/game_logic/__template/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target src/game_logic/__template/ALL_BUILD"
+				},
+				{
+					"name": "src/game_logic/__template/__template",
+					"shell_cmd": "cmake --build . --target src/game_logic/__template/__template"
 				}
 			],
 			"working_dir": "${project_path}/build"

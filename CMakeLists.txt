@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(MASTER_NAME ENGINE)
+set(MASTER_NAME Minomaly)
 project(${MASTER_NAME})
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
@@ -30,30 +30,6 @@ if(MSVC)
   endforeach()
 endif()
 
-#[[ Engine ]]
-
-include_directories(src/engine/input 
-                    src/common/surface 
-                    src/common/texture 
-                    src/common/observer 
-                    src/common/color 
-                    src/common/sdl
-                    src/engine/window 
-                    src/engine/renderer 
-                    src/engine/core 
-                    src/engine/camera)
-
-add_library(${MASTER_NAME} ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
-                   ${PROJECT_SOURCE_DIR}/src/engine/input/input.cpp
-                   ${PROJECT_SOURCE_DIR}/src/engine/renderer/renderer.cpp
-                   ${PROJECT_SOURCE_DIR}/src/engine/camera/camera.cpp
-                   ${PROJECT_SOURCE_DIR}/src/engine/core/core.cpp)
-
-add_library(common ${PROJECT_SOURCE_DIR}/src/common/surface/surface.cpp
-                   ${PROJECT_SOURCE_DIR}/src/common/texture/texture.cpp
-                   ${PROJECT_SOURCE_DIR}/src/common/sdl/sdl_subsystems.cpp
-                   )
-
 #[[ SDL ]]
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -72,10 +48,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
 
-# Link SDL
-target_link_libraries(common ${SDL2_LIBRARIES} 
-                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib")
-target_link_libraries(${MASTER_NAME} common)
+#[[ Engine ]]
+
+add_subdirectory(src)
 
 #[[ Example projects ]]
 
@@ -91,15 +66,26 @@ MACRO(SUBDIRLIST result curdir)
 ENDMACRO()
 
 MACRO(LINK_EXAMPLE name)
-  target_link_libraries(${name} ${MASTER_NAME})
 
-  #[[ SDL core ]]
+  #[[ Includes ]]
+
+  FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES})
+    include_directories("${MINO_PATH}/${subdir}")
+  ENDFOREACH()
+
+  #[[ Link ]]
+
+  target_link_libraries(${name} ${MINO_ENGINE})
+
+  #[[ Copy DLLs ]]
+
+  # SDL core
   add_custom_command(TARGET ${name} POST_BUILD  
       COMMAND ${CMAKE_COMMAND} -E copy_if_different  
           "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
           $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 
-  #[[ SDL Image ]]
+  # SDL Image
   add_custom_command(TARGET ${name} POST_BUILD  
       COMMAND ${CMAKE_COMMAND} -E copy_directory  
           "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
