@@ -11,7 +11,7 @@ set(MSVC_FLAGS "/EHa /std:c++latest")
 set(CMAKE_CXX_FLAGS "${GCC_FLAGS} ${MSVC_FLAGS}")
 set(OUT_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR})
-set(ASSETS "${PROJECT_SOURCE_DIR}/assets")
+set(ASSETS "${PROJECT_SOURCE_DIR}/examples/assets")
 
 #[[ MSVC ]]
 
@@ -106,7 +106,7 @@ MACRO(LINK_EXAMPLE name)
           $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 ENDMACRO()
 
-set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/src/game_logic)
+set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/examples/src)
 SUBDIRLIST(EXAMPLE_PROJECT_DIRS ${GAME_LOGIC_DIR})
 
 FOREACH(subdir ${EXAMPLE_PROJECT_DIRS})

@@ -32,11 +32,12 @@ __TBA__
 ## Project Structure
 
 ```
-assets/         # assets go here
+examples/       # example applications go here
+    assets/     # example assets go here
+    src/        # example sources go here
 src/
     common/     # common, not directly engine related stuff
     engine/     # engine code goes here
-    game_logic/ # example applications go here
 ```
 
 ## Adding new project

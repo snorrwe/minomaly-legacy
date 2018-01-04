@@ -15,8 +15,8 @@ def get_args():
 
 def find_template():
     expected = os.path.join(HERE,
+                            'examples',
                             'src',
-                            'game_logic',
                             '__template')
     if not os.path.isdir(expected):
         print(
@@ -36,7 +36,7 @@ def generate_project(name, template_path):
             "Project directory with the name [%s] already exists in path\n%s\n"
             % (name, dest_dir))
     os.makedirs(dest_dir)
-    os.makedirs(os.path.join(HERE, "assets", name))
+    os.makedirs(os.path.join(HERE, "examples", "assets", name))
     for src_root, dirs, files in os.walk(template_path):
         for f in files:
             src_path = os.path.join(src_root, f)
