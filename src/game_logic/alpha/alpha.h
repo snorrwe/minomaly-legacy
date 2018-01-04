@@ -11,9 +11,6 @@
 #include <memory>
 #include <stdexcept>
 
-namespace Spritesheet
-{
-
 const size_t SCREEN_WIDTH = 640;
 const size_t SCREEN_HEIGHT = 480;
 
@@ -46,8 +43,6 @@ private:
     Subscriptions subs;
     MediaContainer images;
 
-    int x = 0, y = 0, vx = 0, vy = 0;
     uint8_t wait = 0;
     uint8_t alpha;
 };
-}

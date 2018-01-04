@@ -1,5 +1,4 @@
 #pragma once
-#include "SDL.h"
 #include "camera.h"
 #include "color.h"
 #include "core.h"

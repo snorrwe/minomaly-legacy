@@ -1,5 +1,3 @@
-#include "SDL.h"
-#undef main
 #include "__template.h"
 #include "core.h"
 #include <iostream>

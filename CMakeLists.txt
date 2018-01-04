@@ -37,20 +37,22 @@ include_directories(src/engine/input
                     src/common/texture 
                     src/common/observer 
                     src/common/color 
+                    src/common/sdl
                     src/engine/window 
                     src/engine/renderer 
                     src/engine/core 
                     src/engine/camera)
 
-add_library(${MASTER_NAME} SHARED ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
+add_library(${MASTER_NAME} ${PROJECT_SOURCE_DIR}/src/engine/window/window.cpp 
                    ${PROJECT_SOURCE_DIR}/src/engine/input/input.cpp
                    ${PROJECT_SOURCE_DIR}/src/engine/renderer/renderer.cpp
                    ${PROJECT_SOURCE_DIR}/src/engine/camera/camera.cpp
                    ${PROJECT_SOURCE_DIR}/src/engine/core/core.cpp)
 
 add_library(common ${PROJECT_SOURCE_DIR}/src/common/surface/surface.cpp
-                   ${PROJECT_SOURCE_DIR}/src/common/texture/texture.cpp)
-
+                   ${PROJECT_SOURCE_DIR}/src/common/texture/texture.cpp
+                   ${PROJECT_SOURCE_DIR}/src/common/sdl/sdl_subsystems.cpp
+                   )
 
 #[[ SDL ]]
 
@@ -63,14 +65,17 @@ endif()
 if(WIN32)
   set(SDL2_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2-2.0.7)
   set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_image-2.0.2)
-  set(SDL2_TTF_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_ttf-2.0.14)
 endif(WIN32)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
-include_directories(${SDL2_TTF_DIR}/include)
+
+# Link SDL
+target_link_libraries(common ${SDL2_LIBRARIES} 
+                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib")
+target_link_libraries(${MASTER_NAME} common)
 
 #[[ Example projects ]]
 
@@ -85,12 +90,6 @@ MACRO(SUBDIRLIST result curdir)
   SET(${result} ${dirlist})
 ENDMACRO()
 
-target_link_libraries(${MASTER_NAME} common
-                             ${SDL2_LIBRARIES} 
-                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
-                             "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib"
-                             )
-
 MACRO(LINK_EXAMPLE name)
   target_link_libraries(${name} ${MASTER_NAME})
 
@@ -104,12 +103,6 @@ MACRO(LINK_EXAMPLE name)
   add_custom_command(TARGET ${name} POST_BUILD  
       COMMAND ${CMAKE_COMMAND} -E copy_directory  
           "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
-          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
-
-  #[[ SDL TTF ]]
-  add_custom_command(TARGET ${name} POST_BUILD  
-      COMMAND ${CMAKE_COMMAND} -E copy_directory  
-          "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
           $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 ENDMACRO()
 

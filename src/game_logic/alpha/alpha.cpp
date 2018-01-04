@@ -1,7 +1,5 @@
 #include "alpha.h"
 
-using namespace Spritesheet;
-
 Program::Program(std::shared_ptr<Core> core) : ILogic(core)
 {
     window = engine->getWindow();

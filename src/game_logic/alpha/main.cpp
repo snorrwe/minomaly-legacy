@@ -1,13 +1,7 @@
-#include "SDL.h"
-#undef main
 #include "alpha.h"
 #include "core.h"
 #include <iostream>
 #include <stdexcept>
-
-using Spritesheet::Program;
-using Spritesheet::SCREEN_HEIGHT;
-using Spritesheet::SCREEN_WIDTH;
 
 int main(int argc, char const* argv[])
 {
