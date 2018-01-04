@@ -57,3 +57,4 @@ only_commits:
         - src/
         - examples/
         - CMakeLists.txt
+        - appveyor.yml
