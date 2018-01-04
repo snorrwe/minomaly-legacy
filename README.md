@@ -34,9 +34,12 @@
 ## Project Structure
 
 ```
-examples/       # example applications go here
+examples/
     assets/     # example assets go here
     src/        # example sources go here
+
+lib/            # external dependencies
+
 src/
     common/     # common, not directly engine related stuff
     engine/     # engine code goes here

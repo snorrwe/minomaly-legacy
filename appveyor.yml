@@ -49,3 +49,11 @@ test_script:
   - cd bin
     # See if the simplest example app runs
   - __template.exe
+
+only_commits:
+    # Ignore changes to uninteresting files
+    files:
+        - lib/
+        - src/
+        - examples/
+        - CMakeLists.txt
