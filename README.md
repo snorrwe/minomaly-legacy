@@ -65,10 +65,6 @@ Run _CMake Configure_ and you're all set!
 
 If you do not wish to use the script simply copy the provided `__template` project and rename it appropriately.
 
-## CMake
-
-You can use the provided CMakeLists.txt.template in the subprojects.
-
 ## Releases
 
 __TBA__
