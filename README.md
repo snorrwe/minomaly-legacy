@@ -1,14 +1,25 @@
 # Engine
 
+## Requirements
+
+- [CMake](https://cmake.org/) 2.8+
+- C++14
+
 ## Installing
 
-- Windows: just clone the repository.
+- Windows:
+    - Clone the repository. `git clone https://github.com/snorrwe/engine.git`
+    - Move to Setup
 - Linux: TBA
 - OS-X: TBA
 
-## Setting up
+## Setup
 
-`cmake -H. -Bbuild`
+- Windows:
+    - Init CMake. `cmake -H. -Bbuild`
+    - You're all set, move to Setup
+- Linux: TBA
+- OS-X: TBA
 
 ## Building
 
@@ -51,3 +62,4 @@ __TBA__
 - [SDL](https://www.libsdl.org/)
 - [LazyFoo](http://www.lazyfoo.net/tutorials/SDL/index.php)
 - [LLVM](https://llvm.org/)
+- [CMake](https://cmake.org/)
