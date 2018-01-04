@@ -4,8 +4,17 @@
 
 ## Requirements
 
+### General 
+
 - [CMake](https://cmake.org/) 2.8+
 - C++14
+
+### Platform specific
+
+- Windows:
+    - Windows SDK
+- Linux: TBA
+- OS X: TBA
 
 ## Installing
 
@@ -13,7 +22,7 @@
     - Clone the repository. `https://github.com/snorrwe/minomaly.git`
     - Move to Setup
 - Linux: TBA
-- OS-X: TBA
+- OS X: TBA
 
 ## Setup
 
@@ -21,7 +30,7 @@
     - Init CMake. `cmake -H. -Bbuild`
     - You're all set!
 - Linux: TBA
-- OS-X: TBA
+- OS X: TBA
 
 ## Building
 
