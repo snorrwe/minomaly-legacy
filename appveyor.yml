@@ -8,6 +8,7 @@ build:
 
 configuration:
   - Debug
+  - Release
 
 install:
   # All external dependencies are installed in C:\projects\deps
@@ -33,7 +34,6 @@ install:
   - set PATH="C:\Program Files\LLVM\bin";%PATH%
   - clang-cl -v
 
-
 before_build:
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - cd C:\projects\minomaly
@@ -43,7 +43,7 @@ build_script:
   - mkdir build
   - cd build
   - cmake .. -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
-  - cmake --build .
+  - cmake --build . --config %CONFIGURATION%
   - cd ..
 
 
