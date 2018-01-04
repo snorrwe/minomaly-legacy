@@ -5,6 +5,8 @@ option(test "Build all tests." ON) # Makes boolean 'test' available.
 
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION 10.0.14393.0)
 
+message(STATUS, "Windows target platform: ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}")
+
 set(MASTER_NAME Minomaly CXX)
 project(${MASTER_NAME})
 
