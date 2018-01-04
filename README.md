@@ -46,7 +46,8 @@ __TBA__
 
 __TBA__
 
-## Credits
+## Special thanks to
 
 - [SDL](https://www.libsdl.org/)
 - [LazyFoo](http://www.lazyfoo.net/tutorials/SDL/index.php)
+- [LLVM](https://llvm.org/)
