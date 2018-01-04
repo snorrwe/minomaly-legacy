@@ -30,7 +30,7 @@ build_script:
   - cd ..
 
 test_script:
-  - cd bin
+  - cd bin\%CONFIGURATION%
     # See if the simplest example app runs
   - __template.exe
     # Run MinoTests
