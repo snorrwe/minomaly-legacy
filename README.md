@@ -19,7 +19,7 @@
 
 - Windows:
     - Init CMake. `cmake -H. -Bbuild`
-    - You're all set, move to Setup
+    - You're all set!
 - Linux: TBA
 - OS-X: TBA
 
