@@ -11,6 +11,10 @@ configuration:
   - Release
 
 install:
+  # Init submodules
+  - git submodule init 
+  - git submodule update
+  
   # All external dependencies are installed in C:\projects\deps
   - mkdir C:\projects\deps
   - cd C:\projects\deps
