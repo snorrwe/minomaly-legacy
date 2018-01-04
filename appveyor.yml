@@ -23,8 +23,11 @@ before_build:
   - cd C:\projects\minomaly
 
 build_script:
-  - cmake -G"Visual Studio 15 2017" -Bbuild
+  - mkdir build
+  - cd build
+  - cmake -G"Visual Studio 15 2017"
   - cmake --build build --config %CONFIGURATION%
+  - cd ..
 
 test_script:
   - cd bin
