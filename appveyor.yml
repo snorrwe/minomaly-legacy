@@ -50,8 +50,8 @@ test_script:
     # See if the simplest example app runs
   - __template.exe
 
+# Only build interesting files
 only_commits:
-    # Ignore changes to uninteresting files
     files:
         - lib/
         - src/
