@@ -52,3 +52,10 @@ build_script:
   - cd build
   - cmake .. -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
   - cmake --build .
+  - cd ..
+
+
+test:
+  - cd bin
+    # See if the simplest example app runs
+  - __template.exe

@@ -14,7 +14,6 @@ int main(int argc, char const* argv[])
     catch (std::exception const& e)
     {
         std::cout << "Unexpected error happened!\n" << e.what() << std::endl;
-        std::cin.ignore();
         return 1;
     }
 }
