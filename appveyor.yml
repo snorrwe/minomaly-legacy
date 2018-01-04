@@ -55,7 +55,7 @@ build_script:
   - cd ..
 
 
-test:
+test_script:
   - cd bin
     # See if the simplest example app runs
   - __template.exe
