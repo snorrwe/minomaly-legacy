@@ -25,8 +25,8 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake -G"Visual Studio 15 2017"
-  - cmake --build build --config %CONFIGURATION%
+  - cmake .. -G"Visual Studio 15 2017"
+  - cmake --build . --config %CONFIGURATION%
   - cd ..
 
 test_script:
