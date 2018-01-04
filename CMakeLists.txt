@@ -6,7 +6,7 @@ project(${MASTER_NAME})
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
 
-set(GCC_FLAGS "-std=c++17 -fcxx-exceptions")
+set(GCC_FLAGS "-std=c++1z -fcxx-exceptions")
 set(MSVC_FLAGS "/EHa /std:c++latest")
 set(CMAKE_CXX_FLAGS "${GCC_FLAGS} ${MSVC_FLAGS}")
 set(OUT_DIR ${PROJECT_SOURCE_DIR}/bin)
