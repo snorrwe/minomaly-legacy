@@ -12,7 +12,7 @@
 ### Platform specific
 
 - Windows:
-    - Windows SDK
+    - Windows SDK 10.0.14393.0
     - See also: [How to set up SDL with Visual Studio 2017](https://www.wikihow.com/Set-Up-SDL-with-Visual-Studio-2017). _Part 1 helps getting started, the rest of the dependencies are already in contained by the project. There's no need for additional Setup!_
 - Linux: TBA
 - OS X: TBA

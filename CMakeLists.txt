@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 # Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
 option(test "Build all tests." ON) # Makes boolean 'test' available.
 
+set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION 10.0.14393.0)
+
 set(MASTER_NAME Minomaly CXX)
 project(${MASTER_NAME})
 
