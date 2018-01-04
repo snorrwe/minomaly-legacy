@@ -32,8 +32,11 @@ void Program::update()
     handleKey(SDLK_DOWN, 0, 1);
     handleKey(SDLK_LEFT, -1, 0);
     handleKey(SDLK_RIGHT, 1, 0);
-    x += vx;
-    y += vy;
+    if (!(++delay % 10)) // Update position in every 10th update
+    {
+        x += vx;
+        y += vy;
+    }
     images[0]->render({0, 0}); // background
     images[1]->render({x, y}, *camera);
 }

@@ -48,5 +48,6 @@ private:
     MediaContainer images;
 
     int x = 0, y = 0, vx = 0, vy = 0;
+    uint8_t delay = 0;
 };
-}
+} // namespace BlokeGame
