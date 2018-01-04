@@ -19,17 +19,19 @@ Program::~Program()
 
 void Program::start()
 {
-    const auto colorKey = Color(0, 0xFF, 0xFF);
-    const auto rectH = 205;
-    const auto rectW = 265 / 4;
-    images = Texture::loadSpritesheet("assets/__template/__template.png", *renderer,
-                                      {
-                                          getRect(0, 0, rectW, rectH),
-                                          getRect(rectW, 0, rectW, rectH),
-                                          getRect(rectW * 2, 0, rectW, rectH),
-                                          getRect(rectW * 3, 0, rectW, rectH),
-                                      },
-                                      true, &colorKey);
+    /*
+      const auto colorKey = Color(0, 0xFF, 0xFF);
+      const auto rectH = 205;
+      const auto rectW = 265 / 4;
+      images = Texture::loadSpritesheet("assets/__template/__template.png", *renderer,
+                                        {
+                                            getRect(0, 0, rectW, rectH),
+                                            getRect(rectW, 0, rectW, rectH),
+                                            getRect(rectW * 2, 0, rectW, rectH),
+                                            getRect(rectW * 3, 0, rectW, rectH),
+                                        },
+                                        true, &colorKey);
+    */
 }
 
 SDL_Rect Program::getRect(int x, int y, int w, int h)
@@ -43,7 +45,8 @@ SDL_Rect Program::getRect(int x, int y, int w, int h)
 }
 
 void Program::update()
-{ /* TODO: update logic here */
+{
+    if (!(++count)) engine->stop();
 }
 
 std::shared_ptr<Texture> Program::loadTexture(std::string const& name, bool flag,
