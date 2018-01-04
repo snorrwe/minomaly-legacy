@@ -1,4 +1,4 @@
-# Engine
+# Minomaly Game Engine
 
 ## Requirements
 
@@ -8,7 +8,7 @@
 ## Installing
 
 - Windows:
-    - Clone the repository. `git clone https://github.com/snorrwe/engine.git`
+    - Clone the repository. `https://github.com/snorrwe/minomaly.git`
     - Move to Setup
 - Linux: TBA
 - OS-X: TBA
@@ -24,6 +24,10 @@
 ## Building
 
 `cmake --build build`
+
+## Usage
+
+__TBA__
 
 ## Project Structure
 
