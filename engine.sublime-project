@@ -13,12 +13,12 @@
 					"shell_cmd": "cmake --build . --target ALL_BUILD"
 				},
 				{
-					"name": "common",
-					"shell_cmd": "cmake --build . --target common"
+					"name": "INSTALL",
+					"shell_cmd": "cmake --build . --target INSTALL"
 				},
 				{
-					"name": "ENGINE",
-					"shell_cmd": "cmake --build . --target ENGINE"
+					"name": "RUN_TESTS",
+					"shell_cmd": "cmake --build . --target RUN_TESTS"
 				},
 				{
 					"name": "ZERO_CHECK",
@@ -65,6 +65,14 @@
 					"shell_cmd": "cmake --build . --target examples/src/alpha/alpha"
 				},
 				{
+					"name": "examples/src/alpha/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/alpha/INSTALL"
+				},
+				{
+					"name": "examples/src/alpha/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/alpha/RUN_TESTS"
+				},
+				{
 					"name": "examples/src/bloke/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/bloke/ALL_BUILD"
 				},
@@ -73,12 +81,28 @@
 					"shell_cmd": "cmake --build . --target examples/src/bloke/bloke"
 				},
 				{
+					"name": "examples/src/bloke/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/bloke/INSTALL"
+				},
+				{
+					"name": "examples/src/bloke/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/bloke/RUN_TESTS"
+				},
+				{
 					"name": "examples/src/rotation/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/rotation/ALL_BUILD"
 				},
 				{
+					"name": "examples/src/rotation/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/rotation/INSTALL"
+				},
+				{
 					"name": "examples/src/rotation/rotation",
 					"shell_cmd": "cmake --build . --target examples/src/rotation/rotation"
+				},
+				{
+					"name": "examples/src/rotation/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/rotation/RUN_TESTS"
 				},
 				{
 					"name": "examples/src/spritesheet/ALL_BUILD",
@@ -93,12 +117,28 @@
 					"shell_cmd": "cmake --build . --target examples/src/walk/ALL_BUILD"
 				},
 				{
+					"name": "examples/src/walk/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/walk/INSTALL"
+				},
+				{
+					"name": "examples/src/walk/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/walk/RUN_TESTS"
+				},
+				{
 					"name": "examples/src/walk/walk",
 					"shell_cmd": "cmake --build . --target examples/src/walk/walk"
 				},
 				{
 					"name": "examples/src/__template/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/__template/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/__template/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/__template/INSTALL"
+				},
+				{
+					"name": "examples/src/__template/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/__template/RUN_TESTS"
 				},
 				{
 					"name": "examples/src/__template/__template",
@@ -121,6 +161,74 @@
 					"shell_cmd": "cmake --build . --target examples/__template/__template"
 				},
 				{
+					"name": "lib/googletest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target lib/googletest/ALL_BUILD"
+				},
+				{
+					"name": "lib/googletest/INSTALL",
+					"shell_cmd": "cmake --build . --target lib/googletest/INSTALL"
+				},
+				{
+					"name": "lib/googletest/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target lib/googletest/RUN_TESTS"
+				},
+				{
+					"name": "lib/googletest/googlemock/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/ALL_BUILD"
+				},
+				{
+					"name": "lib/googletest/googlemock/gmock",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gmock"
+				},
+				{
+					"name": "lib/googletest/googlemock/gmock_main",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gmock_main"
+				},
+				{
+					"name": "lib/googletest/googlemock/INSTALL",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/INSTALL"
+				},
+				{
+					"name": "lib/googletest/googlemock/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/RUN_TESTS"
+				},
+				{
+					"name": "lib/googletest/googlemock/gtest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/ALL_BUILD"
+				},
+				{
+					"name": "lib/googletest/googlemock/gtest/gtest",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/gtest"
+				},
+				{
+					"name": "lib/googletest/googlemock/gtest/gtest_main",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/gtest_main"
+				},
+				{
+					"name": "lib/googletest/googlemock/gtest/INSTALL",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/INSTALL"
+				},
+				{
+					"name": "lib/googletest/googlemock/gtest/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/RUN_TESTS"
+				},
+				{
+					"name": "lib/googletest/googletest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target lib/googletest/googletest/ALL_BUILD"
+				},
+				{
+					"name": "lib/googletest/googletest/gtest",
+					"shell_cmd": "cmake --build . --target lib/googletest/googletest/gtest"
+				},
+				{
+					"name": "lib/googletest/googletest/gtest_main",
+					"shell_cmd": "cmake --build . --target lib/googletest/googletest/gtest_main"
+				},
+				{
+					"name": "lib/googletest/googletest/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target lib/googletest/googletest/RUN_TESTS"
+				},
+				{
 					"name": "src/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target src/ALL_BUILD"
 				},
@@ -133,8 +241,16 @@
 					"shell_cmd": "cmake --build . --target src/Engine"
 				},
 				{
+					"name": "src/INSTALL",
+					"shell_cmd": "cmake --build . --target src/INSTALL"
+				},
+				{
 					"name": "src/MinomalyEngine",
 					"shell_cmd": "cmake --build . --target src/MinomalyEngine"
+				},
+				{
+					"name": "src/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target src/RUN_TESTS"
 				},
 				{
 					"name": "src/game_logic/alpha/ALL_BUILD",

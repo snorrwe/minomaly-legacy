@@ -7,7 +7,7 @@
 ### General 
 
 - [CMake](https://cmake.org/) 2.8+
-- C++14
+- C++17
 
 ### Platform specific
 

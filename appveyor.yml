@@ -49,6 +49,8 @@ test_script:
   - cd bin
     # See if the simplest example app runs
   - __template.exe
+    # Run MinoTests
+  - MinoTest.exe
 
 # Only build interesting files
 only_commits:
@@ -56,5 +58,6 @@ only_commits:
         - lib/
         - src/
         - examples/
+        - testing/
         - CMakeLists.txt
         - appveyor.yml

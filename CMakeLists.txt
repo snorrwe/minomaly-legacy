@@ -1,14 +1,22 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(MASTER_NAME Minomaly)
+# Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
+option(test "Build all tests." ON) # Makes boolean 'test' available.
+
+set(MASTER_NAME Minomaly CXX)
 project(${MASTER_NAME})
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
 
+set(CMAKE_C_FLAGS NULL)
 set(GCC_FLAGS "-std=c++1z -fcxx-exceptions")
 set(MSVC_FLAGS "/EHa /std:c++latest")
-set(CMAKE_CXX_FLAGS "${GCC_FLAGS} ${MSVC_FLAGS}")
+if(WIN32)
+  set(CMAKE_CXX_FLAGS ${MSVC_FLAGS})
+else()
+  set(CMAKE_CXX_FLAGS ${GCC_FLAGS})
+endif()
 set(OUT_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR})
 set(ASSETS "${PROJECT_SOURCE_DIR}/examples/assets")
@@ -98,3 +106,24 @@ SUBDIRLIST(EXAMPLE_PROJECT_DIRS ${GAME_LOGIC_DIR})
 FOREACH(subdir ${EXAMPLE_PROJECT_DIRS})
   add_subdirectory("${GAME_LOGIC_DIR}/${subdir}")
 ENDFOREACH()
+
+#[[ TESTS ]]
+if(test)
+  if (APPLE)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE)
+    add_definitions(-D__GLIBCXX__)
+  endif (APPLE)
+
+  #[[ gtest ]]
+
+  # This adds another subdirectory, which has 'project(gtest)'.
+  add_subdirectory(lib/googletest)
+   
+  enable_testing()
+
+  # Include the gtest library. gtest_SOURCE_DIR is available due to
+  # 'project(gtest)' above.
+  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+  add_subdirectory("${PROJECT_SOURCE_DIR}/testing")
+endif()
