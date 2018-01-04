@@ -1,5 +1,7 @@
 # Minomaly Game Engine
 
+- _master_ status: [![Build status](https://ci.appveyor.com/api/projects/status/1ix6lgn3objhh270/branch/master?svg=true)](https://ci.appveyor.com/project/snorrwe/minomaly/branch/master)
+
 ## Requirements
 
 - [CMake](https://cmake.org/) 2.8+
@@ -53,10 +55,6 @@ If you do not wish to use the script simply copy the provided `__template` proje
 ## CMake
 
 You can use the provided CMakeLists.txt.template in the subprojects.
-
-## Continous Integration
-
-__TBA__
 
 ## Releases
 
