@@ -7,12 +7,12 @@ class Core;
 class ILogic
 {
 public:
-    ILogic(std::shared_ptr<Core> engine) : engine(engine) {}
+    ILogic(std::shared_ptr<Core> engine) : engine(engine.get()) {}
     virtual ~ILogic() {}
 
     virtual void update() = 0;
     virtual void start() = 0;
 
 protected:
-    std::shared_ptr<Core> engine;
+    Core* engine;
 };
