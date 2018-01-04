@@ -13,6 +13,7 @@
 
 - Windows:
     - Windows SDK
+    - See also: [How to set up SDL with Visual Studio 2017](https://www.wikihow.com/Set-Up-SDL-with-Visual-Studio-2017)
 - Linux: TBA
 - OS X: TBA
 
