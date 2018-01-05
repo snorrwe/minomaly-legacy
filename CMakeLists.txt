@@ -102,7 +102,7 @@ if(examples)
 
     #[[ Includes ]]
 
-    FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES})
+    FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES} ${COMPONENT_INCLUDES})
       include_directories("${MINO_PATH}/${subdir}")
     ENDFOREACH()
 

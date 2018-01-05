@@ -1,4 +1,4 @@
-#include "__template.h"
+#include "mouse.h"
 
 using namespace Mino;
 
@@ -23,4 +23,6 @@ void Program::start()
     })};
 }
 
-void Program::update() {}
+void Program::update()
+{
+}

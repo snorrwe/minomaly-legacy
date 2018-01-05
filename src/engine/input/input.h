@@ -19,6 +19,7 @@ public:
     virtual void update() = 0;
     virtual bool isDown(SDL_Keycode const&) = 0;
     virtual bool isUp(SDL_Keycode const&) = 0;
+
     virtual ISubscription onQuit(std::function<void(uint8_t)> cb) = 0;
     virtual ISubscription onKeyDown(std::function<void(SDL_Event)>) = 0;
     virtual ISubscription onKeyUp(std::function<void(SDL_Event)>) = 0;

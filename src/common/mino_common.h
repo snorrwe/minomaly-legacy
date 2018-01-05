@@ -4,3 +4,4 @@
 #include "observer.h"
 #include "rect.h"
 #include "texture.h"
+#include "vector2.h"

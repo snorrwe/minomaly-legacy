@@ -9,7 +9,7 @@ def get_args():
         description='Generate a new example project')
     parser.add_argument('--name', metavar='Project name.', type=str,
                         help="Name of the example project to be generated",
-                        required=True)
+                        required=False)
     return parser.parse_args()
 
 
@@ -52,8 +52,9 @@ def main():
     try:
         args = get_args()
         template_path = find_template()
-        generate_project(args.name, template_path)
-        print("Project [%s] was generated successfully!" % args.name)
+        name = args.name if args.name else input("Name: ")
+        generate_project(name, template_path)
+        print("Project [%s] was generated successfully!" % name)
     except RuntimeError as e:
         print("Unexpected error happened. Check your configuration!",
               e,

@@ -1,5 +1,6 @@
 set(_MINO_ENGINE MinomalyEngine)
 set(_MINO_COMMON Common)
+set(_MINO_COMPONENT Components)
 project(${_MINO_ENGINE})
 
 #[[ Dependencies ]]
@@ -19,6 +20,7 @@ set(_COMMON_INCLUDES common
                      common/sdl
                      common/rect
                      common/font
+                     common/vector2
                     )
 
 set(_ENGINE_INCLUDES engine
@@ -27,29 +29,40 @@ set(_ENGINE_INCLUDES engine
                      engine/renderer 
                      engine/core 
                      engine/camera
+                     engine/game_object
                     )
+
+set(_COMPONENT_INCLUDES component
+                        component/transform
+                        component/sprite_renderer)
 
 include_directories(${_COMMON_INCLUDES})
 include_directories(${_ENGINE_INCLUDES})
+include_directories(${_COMPONENT_INCLUDES})
 
 add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp 
-                   ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
-                   ${PROJECT_SOURCE_DIR}/engine/renderer/renderer.cpp
-                   ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
-                   ${PROJECT_SOURCE_DIR}/engine/core/core.cpp)
+                            ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/renderer/renderer.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/game_object/game_object.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/core/core.cpp)
 
 add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
-                   ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
-                   ${PROJECT_SOURCE_DIR}/common/sdl/sdl_subsystems.cpp
-                   ${PROJECT_SOURCE_DIR}/common/font/font.cpp
-                   )
+                            ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
+                            ${PROJECT_SOURCE_DIR}/common/sdl/sdl_subsystems.cpp
+                            ${PROJECT_SOURCE_DIR}/common/font/font.cpp)
 
-# [[ Link SDL ]]
+add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/sprite_renderer/sprite_renderer.cpp
+                               ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
-target_link_libraries(${_MINO_COMMON} ${SDL2_LIBRARIES} 
-                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib"
-                             "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
-target_link_libraries(${_MINO_ENGINE} ${_MINO_COMMON})
+# [[ Link ]]
+
+target_link_libraries(${_MINO_ENGINE} 
+                      ${_MINO_COMMON} 
+                      ${__MINO_COMPONENT}  
+                      ${SDL2_LIBRARIES} 
+                      "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib"
+                      "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
 
 #[[ Set exported variables ]]
 
@@ -58,3 +71,4 @@ set(MINO_COMMON ${_MINO_COMMON} PARENT_SCOPE)
 set(MINO_PATH ${PROJECT_SOURCE_DIR} PARENT_SCOPE)
 set(COMMON_INCLUDES ${_COMMON_INCLUDES} PARENT_SCOPE)
 set(ENGINE_INCLUDES ${_ENGINE_INCLUDES} PARENT_SCOPE)
+set(COMPONENT_INCLUDES ${_COMPONENT_INCLUDES} PARENT_SCOPE)
