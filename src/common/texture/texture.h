@@ -53,6 +53,8 @@ public:
     SDL_Texture* getRaw() const { return texture->texture; }
     SDL_Rect* getSrcrect() const { return srcrect.get(); }
     void setSrcrect(std::shared_ptr<SDL_Rect> rect);
+    int getWidth() { return width; }
+    int getHeight() { return height; }
 
     void render(Vector2 const& pos) const;
     void render(Vector2 const& pos, ICamera& camera) const;
