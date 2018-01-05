@@ -50,12 +50,14 @@ endif()
 if(WIN32)
   set(SDL2_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2-2.0.7)
   set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_image-2.0.2)
+  set(SDL2_TTF_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_ttf-2.0.14)
 endif(WIN32)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
+include_directories(${SDL2_TTF_DIR}/include)
 
 MACRO(COPY_SDL_DLLS name)
     # SDL core
@@ -68,6 +70,12 @@ MACRO(COPY_SDL_DLLS name)
     add_custom_command(TARGET ${name} POST_BUILD  
         COMMAND ${CMAKE_COMMAND} -E copy_directory  
             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+    
+    # SDL TTF
+    add_custom_command(TARGET ${name} POST_BUILD  
+        COMMAND ${CMAKE_COMMAND} -E copy_directory  
+            "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
             $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 ENDMACRO()
 

@@ -7,6 +7,7 @@ project(${_MINO_ENGINE})
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
+include_directories(${SDL2_TTF_DIR}/include)
 
 #[[ Engine ]]
 
@@ -44,7 +45,8 @@ add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
 # [[ Link SDL ]]
 
 target_link_libraries(${_MINO_COMMON} ${SDL2_LIBRARIES} 
-                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib")
+                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib"
+                             "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
 target_link_libraries(${_MINO_ENGINE} ${_MINO_COMMON})
 
 #[[ Set exported variables ]]
