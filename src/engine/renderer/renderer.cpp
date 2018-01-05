@@ -38,7 +38,7 @@ void Renderer::update() { SDL_RenderPresent(renderer); }
 std::shared_ptr<Texture> Renderer::loadTexture(std::string const& name, bool flag,
                                                Color const* color)
 {
-    return Texture::loadTexture(name, *this, flag, color);
+    return Texture::loadTexture(name, *this, flag, *color);
 }
 
 void Renderer::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(renderer, viewport); }

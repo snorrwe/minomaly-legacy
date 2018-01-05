@@ -54,7 +54,7 @@ void Program::loadMedia()
                                        getRect(dudeWidth * 1, 0, dudeWidth, dudeHeight),
                                        getRect(dudeWidth * 2, 0, dudeWidth, dudeHeight),
                                        getRect(dudeWidth * 3, 0, dudeWidth, dudeHeight)},
-                                      true, &colorKey);
+                                      true, colorKey);
 }
 
 std::shared_ptr<Texture> Program::loadTexture(std::string const& name, bool flag,

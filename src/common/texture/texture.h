@@ -3,8 +3,11 @@
 #include "SDL_image.h"
 #include "camera.h"
 #include "color.h"
+#include "font.h"
+#include "p_managed_texture.h"
 #include "renderdata.h"
 #include "renderer.h"
+#include "surface.h"
 #include <array>
 #include <functional>
 #include <iostream>
@@ -19,33 +22,23 @@ namespace Mino
 class IRenderSystem;
 class ICamera;
 
-struct ManagedTexture
-{
-    ManagedTexture(SDL_Texture* texture) : texture(texture) {}
-    ManagedTexture(ManagedTexture const&) = delete;
-    ManagedTexture(ManagedTexture&&) = delete;
-    ~ManagedTexture() { SDL_DestroyTexture(texture); }
-
-    ManagedTexture& operator=(ManagedTexture const&) = delete;
-    ManagedTexture& operator=(ManagedTexture&&) = delete;
-
-    operator SDL_Texture*() { return texture; }
-
-    SDL_Texture* texture;
-};
-
 class Texture
 {
 public:
     using TSpriteSheet = std::vector<std::shared_ptr<Texture>>;
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
+    using ManagedTexture = Private::ManagedTexture;
 
     static std::shared_ptr<Texture> loadTexture(std::string const& name, IRenderSystem& renderer,
-                                                bool flag = false, Color const* colorKey = nullptr);
+                                                bool flag = false, Color const& colorKey = Color());
+    static std::shared_ptr<Texture> loadText(std::string const& text, IRenderSystem& renderer,
+                                             Font const& font, Color const& color = Color());
+    static std::shared_ptr<Texture> fromSurface(std::shared_ptr<Surface> surface,
+                                                IRenderSystem& renderer);
     static TSpriteSheet loadSpritesheet(std::string const& name, IRenderSystem& renderer,
                                         std::vector<SDL_Rect> const& rects, bool flag = false,
-                                        Color const* colorKey = nullptr);
+                                        Color const& colorKey = Color());
 
     Texture(std::shared_ptr<ManagedTexture> texture, int width, int height,
             IRenderSystem& renderer);

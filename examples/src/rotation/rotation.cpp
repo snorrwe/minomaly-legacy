@@ -64,7 +64,7 @@ void Program::loadMedia()
                                        Rectangle(dudeWidth, 0, dudeWidth, dudeHeight),
                                        Rectangle(dudeWidth * 2, 0, dudeWidth, dudeHeight),
                                        Rectangle(dudeWidth * 3, 0, dudeWidth, dudeHeight)},
-                                      true, &colorKey);
+                                      true, colorKey);
 }
 
 std::shared_ptr<Texture> Program::loadTexture(std::string const& name, bool flag,

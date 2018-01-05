@@ -30,13 +30,9 @@ public:
     virtual void start();
 
 private:
-    std::shared_ptr<Mino::Texture> loadTexture(std::string const& name, bool flag = false,
-                                               Mino::Color const* color = nullptr);
-    SDL_Rect getRect(int x, int y, int w, int h);
-
-    uint8_t count = 0;
     std::shared_ptr<Mino::IInputSystem> input;
     std::shared_ptr<Mino::IRenderSystem> renderer;
     Subscriptions subs;
-    MediaContainer images;
+    MediaContainer textures;
+    std::shared_ptr<Mino::Font> font;
 };

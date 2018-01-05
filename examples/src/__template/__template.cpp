@@ -32,7 +32,7 @@ void Program::start()
                                             Rectangle(rectW * 2, 0, rectW, rectH),
                                             Rectangle(rectW * 3, 0, rectW, rectH),
                                         },
-                                        true, &colorKey);
+                                        true, colorKey);
     */
 }
 

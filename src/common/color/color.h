@@ -8,12 +8,19 @@ struct Color
 public:
     typedef uint8_t TValue;
 
-    Color() : red(0), green(0), blue(0) {}
-    Color(TValue red, TValue green, TValue blue) : red(red), green(green), blue(blue) {}
+    Color() = default;
+    Color(TValue red, TValue green, TValue blue, TValue alpha = 1)
+        : red(red), green(green), blue(blue), alpha(alpha)
+    {
+    }
+    ~Color() = default;
 
-    TValue red;
-    TValue green;
-    TValue blue;
+    operator SDL_Color() const { return {red, green, blue, alpha}; }
+
+    TValue red = 0;
+    TValue green = 0;
+    TValue blue = 0;
+    TValue alpha = 1;
 };
 
 } // namespace Mino

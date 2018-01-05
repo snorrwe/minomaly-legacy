@@ -19,16 +19,21 @@ Program::~Program()
     }
 }
 
-void Program::start() {}
+void Program::start()
+{
+    font = Font::load("assets/fox/fox.ttf", 28);
+    textures = MediaContainer{
+        Texture::loadText("The quick brown fox jumps over the lazy dog!.?", *renderer, *font),
+        Texture::loadText("Fukin gud", *renderer, *font),
+        Texture::loadText(":*", *renderer, *font),
+    };
+}
 
 void Program::update()
 {
-    if (!(++count)) engine->stop();
-}
-
-std::shared_ptr<Texture> Program::loadTexture(std::string const& name, bool flag,
-                                              Color const* color)
-{
-    auto result = renderer->loadTexture(name, flag, color);
-    return result;
+    int pos = 0;
+    for (auto i = textures.begin(); i != textures.end(); ++i, pos += 50)
+    {
+        (*i)->render({0, pos});
+    }
 }

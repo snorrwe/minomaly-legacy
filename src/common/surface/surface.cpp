@@ -47,3 +47,8 @@ std::shared_ptr<Surface> Surface::loadImage(std::string const& name, SDL_Surface
     }
     return std::make_shared<Surface>(media);
 }
+
+std::shared_ptr<Surface> Surface::create(SDL_Surface* surface)
+{
+    return std::make_shared<Surface>(surface);
+}
