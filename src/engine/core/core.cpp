@@ -1,7 +1,7 @@
 #include "core.h"
 
-Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<Input> input,
-           std::unique_ptr<Window>&& window, std::shared_ptr<Renderer> renderer)
+Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInput> input,
+           std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderer> renderer)
     : subsystems(subsystems), input(input), window(std::move(window)), renderer(renderer)
 {
     sub = input->onQuit([&](auto const&) { active = false; });

@@ -1,6 +1,6 @@
 #include "texture.h"
 
-std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, Renderer& renderer,
+std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, IRenderer& renderer,
                                               bool flag, Color const* color)
 {
     auto media = IMG_Load(name.c_str());
@@ -28,7 +28,7 @@ std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, Renderer&
     return result;
 }
 
-Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, Renderer& renderer,
+Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, IRenderer& renderer,
                                                std::vector<SDL_Rect> const& rects, bool flag,
                                                Color const* colorKey)
 {
@@ -42,7 +42,8 @@ Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, Renderer
     return result;
 }
 
-Texture::Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, Renderer& renderer)
+Texture::Texture(std::shared_ptr<ManagedTexture> texture, int width, int height,
+                 IRenderer& renderer)
     : texture(texture), width(width), height(height), renderer(renderer)
 {
 }
@@ -54,7 +55,7 @@ void Texture::render(Vector2 const& pos) const
     });
 }
 
-void Texture::render(Vector2 const& pos, Camera& camera) const
+void Texture::render(Vector2 const& pos, ICamera& camera) const
 {
     render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
         camera.render(t, srcrect, dstrect);
@@ -75,7 +76,7 @@ void Texture::render(Vector2 const& pos, RotationData const& rotation) const
     });
 }
 
-void Texture::render(Vector2 const& pos, Camera& camera, RotationData const& rotation) const
+void Texture::render(Vector2 const& pos, ICamera& camera, RotationData const& rotation) const
 {
     render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
         camera.render(t, srcrect, dstrect, rotation);

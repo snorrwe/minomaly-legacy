@@ -12,8 +12,8 @@
 #include <memory>
 #include <string>
 
-class Window;
-class Renderer;
+class IWindow;
+class IRenderer;
 
 class Core
 {
@@ -22,8 +22,8 @@ public:
     static std::shared_ptr<Core> create(std::string const& name, size_t screenWidth,
                                         size_t screenHeight);
 
-    Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<Input> input,
-         std::unique_ptr<Window>&& window, std::shared_ptr<Renderer> renderer);
+    Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInput> input,
+         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderer> renderer);
     Core(Core const&) = delete;
     Core(Core&&) = delete;
     ~Core();
@@ -34,19 +34,19 @@ public:
     void run();
     void stop();
 
-    Window* getWindow() { return window.get(); }
-    std::shared_ptr<Input> getInput() { return input; }
-    std::shared_ptr<Renderer> getRenderer() { return renderer; }
+    IWindow* getWindow() { return window.get(); }
+    std::shared_ptr<IInput> getInput() { return input; }
+    std::shared_ptr<IRenderer> getRenderer() { return renderer; }
     std::shared_ptr<ILogic> getLogic() { return logic; }
     void setLogic(std::shared_ptr<ILogic> logic) { this->logic = logic; }
 
 private:
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
-    std::shared_ptr<Input> input;
-    std::unique_ptr<Window> window;
+    std::shared_ptr<IInput> input;
+    std::unique_ptr<IWindow> window;
     std::shared_ptr<ILogic> logic;
-    std::shared_ptr<Renderer> renderer;
+    std::shared_ptr<IRenderer> renderer;
     ISubscription sub;
 };
 

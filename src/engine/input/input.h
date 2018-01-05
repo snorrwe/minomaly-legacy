@@ -8,7 +8,20 @@
 #include <stdexcept>
 #include <vector>
 
-class Input
+class IInput
+{
+public:
+    virtual ~IInput() {}
+
+    virtual void update() = 0;
+    virtual bool isDown(SDL_Keycode const&) = 0;
+    virtual bool isUp(SDL_Keycode const&) = 0;
+    virtual ISubscription onQuit(std::function<void(uint8_t)> cb) = 0;
+    virtual ISubscription onKeyDown(std::function<void(SDL_Event)>) = 0;
+    virtual ISubscription onKeyUp(std::function<void(SDL_Event)>) = 0;
+};
+
+class Input : public IInput
 {
 public:
     static std::shared_ptr<Input> create();
@@ -16,19 +29,20 @@ public:
     Input() = default;
     Input(Input const&) = delete;
     Input(Input&&) = delete;
+    virtual ~Input() {}
 
     Input& operator=(Input const&) = delete;
     Input& operator=(Input&&) = delete;
 
     std::vector<SDL_Event>& getEvents() { return events; }
 
-    void update();
-    bool isDown(SDL_Keycode const&);
-    bool isUp(SDL_Keycode const&);
+    virtual void update();
+    virtual bool isDown(SDL_Keycode const&);
+    virtual bool isUp(SDL_Keycode const&);
 
-    ISubscription onQuit(std::function<void(uint8_t)> cb);
-    ISubscription onKeyDown(std::function<void(SDL_Event)>);
-    ISubscription onKeyUp(std::function<void(SDL_Event)>);
+    virtual ISubscription onQuit(std::function<void(uint8_t)> cb);
+    virtual ISubscription onKeyDown(std::function<void(SDL_Event)>);
+    virtual ISubscription onKeyUp(std::function<void(SDL_Event)>);
 
 private:
     Subject<uint8_t> onQuitSubject;

@@ -12,35 +12,56 @@
 class Core;
 class Texture;
 
-class Renderer
+class IRenderer
 {
 public:
     friend class Core;
+
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<Renderer> create(SDL_Window* window);
+    virtual ~IRenderer() {}
+
+    virtual void render(Texture const& texture, SDL_Rect* srcrect = nullptr,
+                        SDL_Rect* dstrect = nullptr) = 0;
+    virtual void render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
+                        RotationData const& rotation) = 0;
+    virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
+                                                 Color const* color = nullptr) = 0;
+    virtual void setViewport(SDL_Rect* viewport) = 0;
+    virtual void clear() = 0;
+    virtual void update() = 0;
+
+    virtual SDL_Renderer* getRaw() = 0;
+};
+
+class Renderer : public IRenderer
+{
+public:
+    using RotationData = RenderData::RotationData;
+    using Vector2 = RenderData::Vector2;
+
+    static std::shared_ptr<IRenderer> create(SDL_Window* window);
 
     Renderer(SDL_Renderer* renderer);
     Renderer(Renderer const&) = default;
     Renderer(Renderer&&) = default;
-    ~Renderer();
+    virtual ~Renderer();
 
     Renderer& operator=(Renderer const&) = default;
     Renderer& operator=(Renderer&&) = default;
 
-    void render(Texture const& texture, SDL_Rect* srcrect = nullptr, SDL_Rect* dstrect = nullptr);
-    void render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
-                RotationData const& rotation);
-    std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
-                                         Color const* color = nullptr);
-    void setViewport(SDL_Rect* viewport);
+    virtual void render(Texture const& texture, SDL_Rect* srcrect = nullptr,
+                        SDL_Rect* dstrect = nullptr);
+    virtual void render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
+                        RotationData const& rotation);
+    virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
+                                                 Color const* color = nullptr);
+    virtual void setViewport(SDL_Rect* viewport);
+    virtual void clear();
+    virtual void update();
 
-    SDL_Renderer* getRaw() { return renderer; }
-
-protected:
-    void clear();
-    void update();
+    virtual SDL_Renderer* getRaw() { return renderer; }
 
 private:
     SDL_Renderer* renderer;

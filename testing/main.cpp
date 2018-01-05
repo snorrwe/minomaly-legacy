@@ -1,9 +1,6 @@
 #include "gtest/gtest.h"
 #include <iostream>
 
-/* Test files */
-#include "test_core.cpp"
-
 /* Exception handling */
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
 #include <execinfo.h>

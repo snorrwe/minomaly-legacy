@@ -7,7 +7,17 @@
 
 class Core;
 
-class Window
+class IWindow
+{
+public:
+    virtual ~IWindow() {}
+
+    virtual void fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue) = 0;
+    virtual void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect) = 0;
+    virtual void blitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect) = 0;
+};
+
+class Window : public IWindow
 {
 public:
     friend class Core;
@@ -18,14 +28,14 @@ public:
     Window(SDL_Window* window) : window(window), surface(SDL_GetWindowSurface(window)) {}
     Window(Window const&) = delete;
     Window(Window&& w) = delete;
-    ~Window() { SDL_DestroyWindow(window); }
+    virtual ~Window() { SDL_DestroyWindow(window); }
 
     Window& operator=(Window&& w) = delete;
     Window& operator=(Window const&) = delete;
 
-    void fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue);
-    void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
-    void blitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
+    virtual void fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue);
+    virtual void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
+    virtual void blitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
 
     SDL_Surface* getSurface() { return surface; }
     SDL_Window* getWindow() { return window; }

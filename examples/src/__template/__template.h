@@ -41,8 +41,8 @@ private:
     SDL_Rect getRect(int x, int y, int w, int h);
 
     uint8_t count = 0;
-    std::shared_ptr<Input> input;
-    std::shared_ptr<Renderer> renderer;
+    std::shared_ptr<IInput> input;
+    std::shared_ptr<IRenderer> renderer;
     Subscriptions subs;
     MediaContainer images;
 };

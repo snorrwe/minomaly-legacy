@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(std::shared_ptr<Renderer> renderer) : viewport(), renderer(renderer)
+Camera::Camera(std::shared_ptr<IRenderer> renderer) : viewport(), renderer(renderer)
 {
     updateViewport();
 }

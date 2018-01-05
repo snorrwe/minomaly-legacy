@@ -13,8 +13,8 @@
 #include <string>
 #include <vector>
 
-class Renderer;
-class Camera;
+class IRenderer;
+class ICamera;
 
 struct ManagedTexture
 {
@@ -38,13 +38,13 @@ public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<Texture> loadTexture(std::string const& name, Renderer& renderer,
+    static std::shared_ptr<Texture> loadTexture(std::string const& name, IRenderer& renderer,
                                                 bool flag = false, Color const* colorKey = nullptr);
-    static TSpriteSheet loadSpritesheet(std::string const& name, Renderer& renderer,
+    static TSpriteSheet loadSpritesheet(std::string const& name, IRenderer& renderer,
                                         std::vector<SDL_Rect> const& rects, bool flag = false,
                                         Color const* colorKey = nullptr);
 
-    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, Renderer& renderer);
+    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, IRenderer& renderer);
     Texture(Texture const& t) = default;
     Texture(Texture&&) = default;
     ~Texture() {}
@@ -58,9 +58,9 @@ public:
     void setSrcrect(std::shared_ptr<SDL_Rect> rect);
 
     void render(Vector2 const& pos) const;
-    void render(Vector2 const& pos, Camera& camera) const;
+    void render(Vector2 const& pos, ICamera& camera) const;
     void render(Vector2 const& pos, RotationData const& rotation) const;
-    void render(Vector2 const& pos, Camera& camera, RotationData const& rotation) const;
+    void render(Vector2 const& pos, ICamera& camera, RotationData const& rotation) const;
     void render(Vector2 const& pos,
                 std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)>) const;
     void color(Color const& color);
@@ -72,5 +72,5 @@ private:
     std::shared_ptr<ManagedTexture> texture;
     int width;
     int height;
-    Renderer& renderer;
+    IRenderer& renderer;
 };

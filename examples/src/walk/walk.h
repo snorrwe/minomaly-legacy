@@ -47,11 +47,11 @@ private:
     size_t dudeWidth = 265 / 4;
     int x = SCREEN_WIDTH / 2 - dudeWidth / 2;
     int y = SCREEN_HEIGHT / 2 - dudeHeight / 2;
-    Window* window;
-    std::shared_ptr<Input> input;
-    std::shared_ptr<Camera> camera;
-    std::shared_ptr<Renderer> renderer;
+
+    std::shared_ptr<IInput> input;
+    std::shared_ptr<ICamera> camera;
+    std::shared_ptr<IRenderer> renderer;
     Subscriptions subs;
     MediaContainer images;
 };
-}
+} // namespace Walk

@@ -13,7 +13,7 @@ public:
     SdlSubsystems() = default;
     SdlSubsystems(SdlSubsystems const&) = delete;
     SdlSubsystems(SdlSubsystems&&) = delete;
-    ~SdlSubsystems();
+    virtual ~SdlSubsystems();
 
     SdlSubsystems& operator=(SdlSubsystems const&) = delete;
     SdlSubsystems& operator=(SdlSubsystems&&) = delete;
