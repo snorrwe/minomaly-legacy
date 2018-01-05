@@ -8,11 +8,7 @@ include_directories(gmock gmock_main)
 
 #[[ Tests ]]
 
-set(TEST_DIRS engine/core)
-
-include_directories(${TEST_DIRS})
-
-set(TEST_SOURCES ${TEST_DIRS}/test_core.cpp)
+FILE(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_LIST_DIR}/test_*.cpp")
 
 FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES})
     include_directories("${MINO_PATH}/${subdir}")
