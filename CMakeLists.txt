@@ -62,13 +62,13 @@ MACRO(COPY_SDL_DLLS name)
     add_custom_command(TARGET ${name} POST_BUILD  
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  
             "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
-            $<TARGET_FILE_DIR:${_MINO_TEST}>) # <--this is out-file path
+            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 
     # SDL Image
     add_custom_command(TARGET ${name} POST_BUILD  
         COMMAND ${CMAKE_COMMAND} -E copy_directory  
             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
-            $<TARGET_FILE_DIR:${_MINO_TEST}>) # <--this is out-file path
+            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 ENDMACRO()
 
 #[[ Engine ]]
