@@ -1,6 +1,4 @@
-#include "SDL.h"
-#undef main
-#include "core.h"
+#include "mino.h"
 #include "rotation.h"
 #include <iostream>
 #include <stdexcept>

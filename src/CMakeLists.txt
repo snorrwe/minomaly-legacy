@@ -10,14 +10,16 @@ include_directories(${SDL2_IMAGE_DIR}/include)
 
 #[[ Engine ]]
 
-set(_COMMON_INCLUDES common/surface 
+set(_COMMON_INCLUDES common
+                     common/surface 
                      common/texture 
                      common/observer 
                      common/color 
                      common/sdl
                     )
 
-set(_ENGINE_INCLUDES engine/window 
+set(_ENGINE_INCLUDES engine
+                     engine/window 
                      engine/input 
                      engine/renderer 
                      engine/core 

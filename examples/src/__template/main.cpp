@@ -1,5 +1,5 @@
 #include "__template.h"
-#include "core.h"
+#include "mino.h"
 #include <iostream>
 #include <stdexcept>
 

@@ -1,5 +1,5 @@
 #include "alpha.h"
-#include "core.h"
+#include "mino.h"
 #include <iostream>
 #include <stdexcept>
 

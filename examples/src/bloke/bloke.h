@@ -1,11 +1,5 @@
 #pragma once
-#include "SDL.h"
-#include "camera.h"
-#include "color.h"
-#include "core.h"
-#include "input.h"
-#include "surface.h"
-#include "window.h"
+#include "mino.h"
 #include <array>
 #include <iostream>
 #include <memory>

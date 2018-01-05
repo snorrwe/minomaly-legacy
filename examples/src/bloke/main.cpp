@@ -1,7 +1,5 @@
-#include "SDL.h"
-#undef main
 #include "bloke.h"
-#include "core.h"
+#include "mino.h"
 #include <iostream>
 #include <stdexcept>
 
