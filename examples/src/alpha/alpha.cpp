@@ -1,6 +1,6 @@
 #include "alpha.h"
 
-Program::Program(std::shared_ptr<Core> core) : ILogic(core)
+Program::Program(std::shared_ptr<Core> core) : ILogicSystem(core)
 {
     renderer = engine->getRenderer();
     camera = Camera::create(renderer);

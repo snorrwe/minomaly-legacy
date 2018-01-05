@@ -17,7 +17,7 @@ public:
     MOCK_METHOD3(blitScaled, void(SDL_Surface*, const SDL_Rect*, SDL_Rect*));
 };
 
-class MockInput : public IInput
+class MockInput : public IInputSystem
 {
 public:
     MOCK_METHOD0(update, void());
@@ -28,7 +28,7 @@ public:
     MOCK_METHOD1(onKeyUp, ISubscription(std::function<void(SDL_Event)>));
 };
 
-class MockRenderer : public IRenderer
+class MockRenderer : public IRenderSystem
 {
 public:
     MOCK_METHOD3(render, void(Texture const&, SDL_Rect*, SDL_Rect*));
@@ -40,10 +40,10 @@ public:
     MOCK_METHOD0(update, void());
 };
 
-class FakeProgram : public ILogic
+class FakeProgram : public ILogicSystem
 {
 public:
-    FakeProgram(std::shared_ptr<Core> engine) : ILogic(engine) {}
+    FakeProgram(std::shared_ptr<Core> engine) : ILogicSystem(engine) {}
     virtual ~FakeProgram() {}
 
     virtual void start() { starts++; }

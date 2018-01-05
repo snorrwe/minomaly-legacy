@@ -1,6 +1,6 @@
 #include "texture.h"
 
-std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, IRenderer& renderer,
+std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, IRenderSystem& renderer,
                                               bool flag, Color const* color)
 {
     auto media = IMG_Load(name.c_str());
@@ -28,7 +28,7 @@ std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, IRenderer
     return result;
 }
 
-Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, IRenderer& renderer,
+Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, IRenderSystem& renderer,
                                                std::vector<SDL_Rect> const& rects, bool flag,
                                                Color const* colorKey)
 {
@@ -43,7 +43,7 @@ Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, IRendere
 }
 
 Texture::Texture(std::shared_ptr<ManagedTexture> texture, int width, int height,
-                 IRenderer& renderer)
+                 IRenderSystem& renderer)
     : texture(texture), width(width), height(height), renderer(renderer)
 {
 }

@@ -8,10 +8,10 @@
 #include <stdexcept>
 #include <vector>
 
-class IInput
+class IInputSystem
 {
 public:
-    virtual ~IInput() {}
+    virtual ~IInputSystem() {}
 
     virtual void update() = 0;
     virtual bool isDown(SDL_Keycode const&) = 0;
@@ -21,7 +21,7 @@ public:
     virtual ISubscription onKeyUp(std::function<void(SDL_Event)>) = 0;
 };
 
-class Input : public IInput
+class Input : public IInputSystem
 {
 public:
     static std::shared_ptr<Input> create();

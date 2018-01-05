@@ -16,7 +16,7 @@
 const size_t SCREEN_WIDTH = 640;
 const size_t SCREEN_HEIGHT = 480;
 
-class Program : public ILogic
+class Program : public ILogicSystem
 {
 public:
     using RotationData = RenderData::RotationData;
@@ -41,8 +41,8 @@ private:
     SDL_Rect getRect(int x, int y, int w, int h);
 
     uint8_t count = 0;
-    std::shared_ptr<IInput> input;
-    std::shared_ptr<IRenderer> renderer;
+    std::shared_ptr<IInputSystem> input;
+    std::shared_ptr<IRenderSystem> renderer;
     Subscriptions subs;
     MediaContainer images;
 };

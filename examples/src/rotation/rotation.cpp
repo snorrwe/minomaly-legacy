@@ -2,7 +2,7 @@
 
 using namespace Rotation;
 
-Program::Program(std::shared_ptr<Core> core) : ILogic(core)
+Program::Program(std::shared_ptr<Core> core) : ILogicSystem(core)
 {
 
     renderer = engine->getRenderer();

@@ -13,40 +13,49 @@
 #include <string>
 
 class IWindow;
-class IRenderer;
+class IRenderSystem;
 
-class Core
+class IEngineCore
+{
+public:
+    virtual ~IEngineCore() {}
+
+    virtual void run() = 0;
+    virtual void stop() = 0;
+};
+
+class Core : public IEngineCore
 {
 public:
     template <typename TLogic>
     static std::shared_ptr<Core> create(std::string const& name, size_t screenWidth,
                                         size_t screenHeight);
 
-    Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInput> input,
-         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderer> renderer);
+    Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
+         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer);
     Core(Core const&) = delete;
     Core(Core&&) = delete;
-    ~Core();
+    virtual ~Core();
 
     Core& operator=(Core const&) = delete;
     Core& operator=(Core&&) = delete;
 
-    void run();
-    void stop();
+    virtual void run();
+    virtual void stop();
 
     IWindow* getWindow() { return window.get(); }
-    std::shared_ptr<IInput> getInput() { return input; }
-    std::shared_ptr<IRenderer> getRenderer() { return renderer; }
-    std::shared_ptr<ILogic> getLogic() { return logic; }
-    void setLogic(std::shared_ptr<ILogic> logic) { this->logic = logic; }
+    std::shared_ptr<IInputSystem> getInput() { return input; }
+    std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
+    std::shared_ptr<ILogicSystem> getLogic() { return logic; }
+    void setLogic(std::shared_ptr<ILogicSystem> logic) { this->logic = logic; }
 
 private:
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
-    std::shared_ptr<IInput> input;
+    std::shared_ptr<IInputSystem> input;
     std::unique_ptr<IWindow> window;
-    std::shared_ptr<ILogic> logic;
-    std::shared_ptr<IRenderer> renderer;
+    std::shared_ptr<ILogicSystem> logic;
+    std::shared_ptr<IRenderSystem> renderer;
     ISubscription sub;
 };
 

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-class IRenderer;
+class IRenderSystem;
 class Texture;
 
 class ICamera
@@ -30,12 +30,12 @@ class Camera : public ICamera
 public:
     using RotationData = RenderData::RotationData;
 
-    static std::shared_ptr<Camera> create(std::shared_ptr<IRenderer> renderer)
+    static std::shared_ptr<Camera> create(std::shared_ptr<IRenderSystem> renderer)
     {
         return std::make_shared<Camera>(renderer);
     }
 
-    Camera(std::shared_ptr<IRenderer> renderer);
+    Camera(std::shared_ptr<IRenderSystem> renderer);
     Camera(Camera const&) = default;
     Camera(Camera&&) = default;
     ~Camera();
@@ -49,7 +49,7 @@ public:
     virtual void render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
                         RotationData const& rotation);
 
-    std::shared_ptr<IRenderer> getRenderer() { return renderer; }
+    std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
 
 private:
     void updateViewport();
@@ -59,5 +59,5 @@ private:
     int width = 0;
     int height = 0;
     SDL_Rect viewport;
-    std::shared_ptr<IRenderer> renderer;
+    std::shared_ptr<IRenderSystem> renderer;
 };

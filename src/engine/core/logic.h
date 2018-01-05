@@ -4,11 +4,11 @@
 
 class Core;
 
-class ILogic
+class ILogicSystem
 {
 public:
-    ILogic(std::shared_ptr<Core> engine) : engine(engine.get()) {}
-    virtual ~ILogic() {}
+    ILogicSystem(std::shared_ptr<Core> engine) : engine(engine.get()) {}
+    virtual ~ILogicSystem() {}
 
     virtual void update() = 0;
     virtual void start() = 0;

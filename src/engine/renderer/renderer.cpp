@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-std::shared_ptr<IRenderer> Renderer::create(SDL_Window* window)
+std::shared_ptr<IRenderSystem> Renderer::create(SDL_Window* window)
 {
     auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == NULL)

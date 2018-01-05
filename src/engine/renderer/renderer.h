@@ -12,7 +12,7 @@
 class Core;
 class Texture;
 
-class IRenderer
+class IRenderSystem
 {
 public:
     friend class Core;
@@ -20,7 +20,7 @@ public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    virtual ~IRenderer() {}
+    virtual ~IRenderSystem() {}
 
     virtual void render(Texture const& texture, SDL_Rect* srcrect = nullptr,
                         SDL_Rect* dstrect = nullptr) = 0;
@@ -35,13 +35,13 @@ public:
     virtual SDL_Renderer* getRaw() = 0;
 };
 
-class Renderer : public IRenderer
+class Renderer : public IRenderSystem
 {
 public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<IRenderer> create(SDL_Window* window);
+    static std::shared_ptr<IRenderSystem> create(SDL_Window* window);
 
     Renderer(SDL_Renderer* renderer);
     Renderer(Renderer const&) = default;

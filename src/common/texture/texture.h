@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-class IRenderer;
+class IRenderSystem;
 class ICamera;
 
 struct ManagedTexture
@@ -38,13 +38,13 @@ public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<Texture> loadTexture(std::string const& name, IRenderer& renderer,
+    static std::shared_ptr<Texture> loadTexture(std::string const& name, IRenderSystem& renderer,
                                                 bool flag = false, Color const* colorKey = nullptr);
-    static TSpriteSheet loadSpritesheet(std::string const& name, IRenderer& renderer,
+    static TSpriteSheet loadSpritesheet(std::string const& name, IRenderSystem& renderer,
                                         std::vector<SDL_Rect> const& rects, bool flag = false,
                                         Color const* colorKey = nullptr);
 
-    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, IRenderer& renderer);
+    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, IRenderSystem& renderer);
     Texture(Texture const& t) = default;
     Texture(Texture&&) = default;
     ~Texture() {}
@@ -72,5 +72,5 @@ private:
     std::shared_ptr<ManagedTexture> texture;
     int width;
     int height;
-    IRenderer& renderer;
+    IRenderSystem& renderer;
 };
