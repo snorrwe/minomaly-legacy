@@ -31,8 +31,6 @@ build_script:
 
 test_script:
   - cd bin\%CONFIGURATION%
-    # See if the simplest example app runs
-  - __template.exe
     # Run MinoTests
   - MinoTest.exe
 
