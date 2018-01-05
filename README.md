@@ -20,18 +20,26 @@
 ## Installing
 
 - Windows:
-    - Clone the repository. `https://github.com/snorrwe/minomaly.git`
+    - Clone the repository. `git clone --recursive https://github.com/snorrwe/minomaly.git` <br>
+        _Note: the --recursive flag is required to pull the submodules with the project_
     - Move to Setup
 - Linux: TBA
 - OS X: TBA
 
 ## Setup
 
-- Windows:
-    - Init CMake. `cmake -H. -Bbuild`
-    - You're all set!
-- Linux: TBA
-- OS X: TBA
+### General
+- Init CMake. `cmake -H. -Bbuild`
+
+### CMake options
+
+Use options during _CMake_ configuration e.g. `cmake -H. -Bbuild -Dtest=OFF`
+
+| Option name | Description | Default |
+| ----------- | ----------- | ------- |
+| test | enables/disables building tests | ON |
+| examples | enables/disables building examples projects | ON |
+
 
 ## Building
 
@@ -48,14 +56,14 @@ examples/
     assets/     # example assets go here
     src/        # example sources go here
 
-lib/            # external dependencies
+lib/----------  # external dependencies
 
 src/
     common/     # common, not directly engine related stuff
     engine/     # engine code goes here
 ```
 
-## Adding new project
+## Adding example new project
 
 Example projects can be added by the `generate_example.py` script.
 
@@ -75,3 +83,4 @@ __TBA__
 - [LazyFoo](http://www.lazyfoo.net/tutorials/SDL/index.php)
 - [LLVM](https://llvm.org/)
 - [CMake](https://cmake.org/)
+- [Google Test](https://github.com/google/googletest)
