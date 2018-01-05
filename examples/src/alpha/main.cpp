@@ -7,7 +7,7 @@ int main(int argc, char const* argv[])
 {
     try
     {
-        auto engine = Core::create<Program>("SDL test", SCREEN_WIDTH, SCREEN_HEIGHT);
+        auto engine = Mino::Core::create<Program>("SDL test", SCREEN_WIDTH, SCREEN_HEIGHT);
         engine->run();
         return 0;
     }

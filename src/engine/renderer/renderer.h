@@ -9,6 +9,9 @@
 #include <stdexcept>
 #include <vector>
 
+namespace Mino
+{
+
 class Core;
 class Texture;
 
@@ -66,3 +69,4 @@ public:
 private:
     SDL_Renderer* renderer;
 };
+} // namespace Mino

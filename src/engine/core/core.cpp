@@ -1,5 +1,7 @@
 #include "core.h"
 
+using namespace Mino;
+
 Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
            std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer)
     : subsystems(subsystems), input(input), window(std::move(window)), renderer(renderer)

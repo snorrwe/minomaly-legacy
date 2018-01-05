@@ -1,5 +1,8 @@
 #pragma once
 
+namespace Mino
+{
+
 struct Color
 {
 public:
@@ -12,3 +15,5 @@ public:
     TValue green;
     TValue blue;
 };
+
+} // namespace Mino

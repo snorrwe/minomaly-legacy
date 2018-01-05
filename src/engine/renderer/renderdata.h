@@ -1,7 +1,7 @@
 #pragma once
 #include "SDL.h"
 
-namespace RenderData
+namespace Mino::RenderData
 {
 struct Vector2
 {
@@ -42,4 +42,4 @@ struct RotationData
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Vector2 center = Vector2();
 };
-}
+} // namespace Mino::RenderData

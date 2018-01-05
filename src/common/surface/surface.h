@@ -6,13 +6,16 @@
 #include <stdexcept>
 #include <string>
 
+namespace Mino
+{
+
 class Surface
 {
 public:
     static std::shared_ptr<Surface> loadBmp(std::string const& name,
-                                          SDL_Surface* screenSurface = nullptr);
-    static std::shared_ptr<Surface> loadImage(std::string const& name,
                                             SDL_Surface* screenSurface = nullptr);
+    static std::shared_ptr<Surface> loadImage(std::string const& name,
+                                              SDL_Surface* screenSurface = nullptr);
 
     Surface(SDL_Surface* media) : media(media) {}
     ~Surface() { SDL_FreeSurface(media); }
@@ -22,3 +25,5 @@ public:
 private:
     SDL_Surface* media;
 };
+
+} // namespace Mino

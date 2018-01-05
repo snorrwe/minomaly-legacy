@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+using namespace Mino;
+
 std::shared_ptr<IRenderSystem> Renderer::create(SDL_Window* window)
 {
     auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);

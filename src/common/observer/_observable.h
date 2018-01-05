@@ -3,6 +3,9 @@
 #include <functional>
 #include <map>
 
+namespace Mino
+{
+
 template <typename T> class Observable
 {
 public:
@@ -28,3 +31,5 @@ protected:
     std::map<size_t, std::function<void(T)>> subscriptions;
     size_t nextSub = 0;
 };
+
+} // namespace Mino

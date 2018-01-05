@@ -5,6 +5,9 @@
 #include <iostream>
 #include <memory>
 
+namespace Mino
+{
+
 class SdlSubsystems
 {
 public:
@@ -22,3 +25,5 @@ private:
     static bool isInitialized;
     static SdlSubsystems* instance;
 };
+
+} // namespace Mino

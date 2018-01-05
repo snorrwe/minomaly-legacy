@@ -1,5 +1,7 @@
 #include "window.h"
 
+using namespace Mino;
+
 void Window::fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue)
 {
     auto color = SDL_MapRGB(surface->format, red, green, blue);

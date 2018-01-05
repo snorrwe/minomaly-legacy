@@ -17,13 +17,13 @@ namespace BlokeGame
 const size_t SCREEN_WIDTH = 640;
 const size_t SCREEN_HEIGHT = 480;
 
-class Program : public ILogicSystem
+class Program : public Mino::ILogicSystem
 {
 public:
-    typedef std::array<ISubscription, 1> Subscriptions;
-    typedef std::array<std::shared_ptr<Texture>, 2> MediaContainer;
+    typedef std::array<Mino::ISubscription, 1> Subscriptions;
+    typedef std::array<std::shared_ptr<Mino::Texture>, 2> MediaContainer;
 
-    Program(std::shared_ptr<Core> core);
+    Program(std::shared_ptr<Mino::Core> core);
     Program(Program const&) = delete;
     Program(Program&&) = delete;
     ~Program();
@@ -37,12 +37,12 @@ public:
 private:
     void loadMedia();
     void handleKey(SDL_Keycode const&, int vx, int vy);
-    std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
-                                         Color const* color = nullptr);
+    std::shared_ptr<Mino::Texture> loadTexture(std::string const& name, bool flag = false,
+                                               Mino::Color const* color = nullptr);
 
-    std::shared_ptr<IInputSystem> input;
-    std::shared_ptr<ICamera> camera;
-    std::shared_ptr<IRenderSystem> renderer;
+    std::shared_ptr<Mino::IInputSystem> input;
+    std::shared_ptr<Mino::ICamera> camera;
+    std::shared_ptr<Mino::IRenderSystem> renderer;
     Subscriptions subs;
     MediaContainer images;
 

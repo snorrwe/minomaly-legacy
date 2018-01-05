@@ -1,5 +1,7 @@
 #include "camera.h"
 
+using namespace Mino;
+
 Camera::Camera(std::shared_ptr<IRenderSystem> renderer) : viewport(), renderer(renderer)
 {
     updateViewport();

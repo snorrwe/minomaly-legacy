@@ -1,6 +1,7 @@
 #include "walk.h"
 
 using namespace Walk;
+using namespace Mino;
 
 Program::Program(std::shared_ptr<Core> core) : ILogicSystem(core)
 {

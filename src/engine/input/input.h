@@ -8,6 +8,9 @@
 #include <stdexcept>
 #include <vector>
 
+namespace Mino
+{
+
 class IInputSystem
 {
 public:
@@ -51,3 +54,5 @@ private:
     std::vector<SDL_Event> events;
     std::map<size_t, bool> keysDown;
 };
+
+} // namespace Mino

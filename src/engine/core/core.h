@@ -12,6 +12,9 @@
 #include <memory>
 #include <string>
 
+namespace Mino
+{
+
 class IWindow;
 class IRenderSystem;
 
@@ -72,3 +75,4 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
     core->setLogic(logic);
     return core;
 }
+} // namespace Mino

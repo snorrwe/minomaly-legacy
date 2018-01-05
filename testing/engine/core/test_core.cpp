@@ -2,7 +2,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <memory>
+
 using ::testing::AtLeast;
+using namespace Mino;
 
 class MockSubsystems : public SdlSubsystems
 {

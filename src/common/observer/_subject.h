@@ -2,6 +2,9 @@
 #include "_observable.h"
 #include "_subscription.h"
 
+namespace Mino
+{
+
 template <typename T> class Subject : public Observable<T>
 {
 public:
@@ -21,3 +24,5 @@ public:
         }
     }
 };
+
+} // namespace Mino

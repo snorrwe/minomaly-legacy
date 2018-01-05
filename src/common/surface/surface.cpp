@@ -1,5 +1,7 @@
 #include "surface.h"
 
+using namespace Mino;
+
 std::shared_ptr<Surface> Surface::loadBmp(std::string const& name, SDL_Surface* screenSurface)
 {
     auto media = SDL_LoadBMP(name.c_str());

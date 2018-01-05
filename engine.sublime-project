@@ -25,38 +25,6 @@
 					"shell_cmd": "cmake --build . --target ZERO_CHECK"
 				},
 				{
-					"name": "examples/alpha/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/alpha/ALL_BUILD"
-				},
-				{
-					"name": "examples/alpha/alpha",
-					"shell_cmd": "cmake --build . --target examples/alpha/alpha"
-				},
-				{
-					"name": "examples/bloke/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/bloke/ALL_BUILD"
-				},
-				{
-					"name": "examples/bloke/bloke",
-					"shell_cmd": "cmake --build . --target examples/bloke/bloke"
-				},
-				{
-					"name": "examples/rotation/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/rotation/ALL_BUILD"
-				},
-				{
-					"name": "examples/rotation/rotation",
-					"shell_cmd": "cmake --build . --target examples/rotation/rotation"
-				},
-				{
-					"name": "examples/spritesheet/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/spritesheet/ALL_BUILD"
-				},
-				{
-					"name": "examples/spritesheet/spritesheet",
-					"shell_cmd": "cmake --build . --target examples/spritesheet/spritesheet"
-				},
-				{
 					"name": "examples/src/alpha/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/alpha/ALL_BUILD"
 				},
@@ -105,14 +73,6 @@
 					"shell_cmd": "cmake --build . --target examples/src/rotation/RUN_TESTS"
 				},
 				{
-					"name": "examples/src/spritesheet/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/src/spritesheet/ALL_BUILD"
-				},
-				{
-					"name": "examples/src/spritesheet/spritesheet",
-					"shell_cmd": "cmake --build . --target examples/src/spritesheet/spritesheet"
-				},
-				{
 					"name": "examples/src/walk/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/walk/ALL_BUILD"
 				},
@@ -143,22 +103,6 @@
 				{
 					"name": "examples/src/__template/__template",
 					"shell_cmd": "cmake --build . --target examples/src/__template/__template"
-				},
-				{
-					"name": "examples/walk/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/walk/ALL_BUILD"
-				},
-				{
-					"name": "examples/walk/walk",
-					"shell_cmd": "cmake --build . --target examples/walk/walk"
-				},
-				{
-					"name": "examples/__template/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/__template/ALL_BUILD"
-				},
-				{
-					"name": "examples/__template/__template",
-					"shell_cmd": "cmake --build . --target examples/__template/__template"
 				},
 				{
 					"name": "lib/googletest/ALL_BUILD",
@@ -213,32 +157,12 @@
 					"shell_cmd": "cmake --build . --target lib/googletest/googlemock/gtest/RUN_TESTS"
 				},
 				{
-					"name": "lib/googletest/googletest/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target lib/googletest/googletest/ALL_BUILD"
-				},
-				{
-					"name": "lib/googletest/googletest/gtest",
-					"shell_cmd": "cmake --build . --target lib/googletest/googletest/gtest"
-				},
-				{
-					"name": "lib/googletest/googletest/gtest_main",
-					"shell_cmd": "cmake --build . --target lib/googletest/googletest/gtest_main"
-				},
-				{
-					"name": "lib/googletest/googletest/RUN_TESTS",
-					"shell_cmd": "cmake --build . --target lib/googletest/googletest/RUN_TESTS"
-				},
-				{
 					"name": "src/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target src/ALL_BUILD"
 				},
 				{
 					"name": "src/Common",
 					"shell_cmd": "cmake --build . --target src/Common"
-				},
-				{
-					"name": "src/Engine",
-					"shell_cmd": "cmake --build . --target src/Engine"
 				},
 				{
 					"name": "src/INSTALL",
@@ -253,88 +177,20 @@
 					"shell_cmd": "cmake --build . --target src/RUN_TESTS"
 				},
 				{
-					"name": "src/game_logic/alpha/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/alpha/ALL_BUILD"
+					"name": "testing/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/ALL_BUILD"
 				},
 				{
-					"name": "src/game_logic/alpha/alpha",
-					"shell_cmd": "cmake --build . --target src/game_logic/alpha/alpha"
+					"name": "testing/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/INSTALL"
 				},
 				{
-					"name": "src/game_logic/alpha/alpha_lib",
-					"shell_cmd": "cmake --build . --target src/game_logic/alpha/alpha_lib"
+					"name": "testing/MinoTest",
+					"shell_cmd": "cmake --build . --target testing/MinoTest"
 				},
 				{
-					"name": "src/game_logic/bloke/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/bloke/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/bloke/bloke",
-					"shell_cmd": "cmake --build . --target src/game_logic/bloke/bloke"
-				},
-				{
-					"name": "src/game_logic/bloke/bloke_lib",
-					"shell_cmd": "cmake --build . --target src/game_logic/bloke/bloke_lib"
-				},
-				{
-					"name": "src/game_logic/fox/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/fox/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/fox/fox",
-					"shell_cmd": "cmake --build . --target src/game_logic/fox/fox"
-				},
-				{
-					"name": "src/game_logic/quick_brown_fox/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/quick_brown_fox/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/quick_brown_fox/quick_brown_fox",
-					"shell_cmd": "cmake --build . --target src/game_logic/quick_brown_fox/quick_brown_fox"
-				},
-				{
-					"name": "src/game_logic/rotation/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/rotation/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/rotation/rotation",
-					"shell_cmd": "cmake --build . --target src/game_logic/rotation/rotation"
-				},
-				{
-					"name": "src/game_logic/rotation/rotation_lib",
-					"shell_cmd": "cmake --build . --target src/game_logic/rotation/rotation_lib"
-				},
-				{
-					"name": "src/game_logic/spritesheet/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/spritesheet/spritesheet",
-					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/spritesheet"
-				},
-				{
-					"name": "src/game_logic/spritesheet/spritesheet_lib",
-					"shell_cmd": "cmake --build . --target src/game_logic/spritesheet/spritesheet_lib"
-				},
-				{
-					"name": "src/game_logic/walk/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/walk/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/walk/walk",
-					"shell_cmd": "cmake --build . --target src/game_logic/walk/walk"
-				},
-				{
-					"name": "src/game_logic/walk/walk_lib",
-					"shell_cmd": "cmake --build . --target src/game_logic/walk/walk_lib"
-				},
-				{
-					"name": "src/game_logic/__template/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target src/game_logic/__template/ALL_BUILD"
-				},
-				{
-					"name": "src/game_logic/__template/__template",
-					"shell_cmd": "cmake --build . --target src/game_logic/__template/__template"
+					"name": "testing/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target testing/RUN_TESTS"
 				}
 			],
 			"working_dir": "${project_path}/build"

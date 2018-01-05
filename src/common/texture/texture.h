@@ -13,6 +13,9 @@
 #include <string>
 #include <vector>
 
+namespace Mino
+{
+
 class IRenderSystem;
 class ICamera;
 
@@ -44,7 +47,8 @@ public:
                                         std::vector<SDL_Rect> const& rects, bool flag = false,
                                         Color const* colorKey = nullptr);
 
-    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height, IRenderSystem& renderer);
+    Texture(std::shared_ptr<ManagedTexture> texture, int width, int height,
+            IRenderSystem& renderer);
     Texture(Texture const& t) = default;
     Texture(Texture&&) = default;
     ~Texture() {}
@@ -74,3 +78,5 @@ private:
     int height;
     IRenderSystem& renderer;
 };
+
+} // namespace Mino

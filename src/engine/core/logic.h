@@ -2,6 +2,9 @@
 #include "core.h"
 #include <memory>
 
+namespace Mino
+{
+
 class Core;
 
 class ILogicSystem
@@ -16,3 +19,5 @@ public:
 protected:
     Core* engine;
 };
+
+} // namespace Mino

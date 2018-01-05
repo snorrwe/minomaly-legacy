@@ -5,6 +5,9 @@
 #include <memory>
 #include <stdexcept>
 
+namespace Mino
+{
+
 class Core;
 
 class IWindow
@@ -44,3 +47,5 @@ private:
     SDL_Window* window;
     SDL_Surface* surface;
 };
+
+} // namespace Mino

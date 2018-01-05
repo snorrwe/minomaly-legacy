@@ -1,5 +1,7 @@
 #include "input.h"
 
+using namespace Mino;
+
 std::shared_ptr<Input> Input::create()
 {
     static std::shared_ptr<Input> instance = std::make_shared<Input>();

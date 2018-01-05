@@ -1,5 +1,7 @@
 #include "sdl_subsystems.h"
 
+using namespace Mino;
+
 bool SdlSubsystems::isInitialized = false;
 SdlSubsystems* SdlSubsystems::instance = nullptr;
 

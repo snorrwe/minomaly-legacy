@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <vector>
 
+namespace Mino
+{
 class IRenderSystem;
 class Texture;
 
@@ -61,3 +63,4 @@ private:
     SDL_Rect viewport;
     std::shared_ptr<IRenderSystem> renderer;
 };
+} // namespace Mino

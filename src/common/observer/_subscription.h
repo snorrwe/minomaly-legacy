@@ -1,6 +1,9 @@
 #pragma once
 #include "_observable.h"
 
+namespace Mino
+{
+
 template <typename T> class Observable;
 
 class ISubscription
@@ -30,3 +33,5 @@ private:
     Observable<T>* observable;
     size_t key;
 };
+
+} // namespace Mino

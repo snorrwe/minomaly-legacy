@@ -1,5 +1,7 @@
 #include "alpha.h"
 
+using namespace Mino;
+
 Program::Program(std::shared_ptr<Core> core) : ILogicSystem(core)
 {
     renderer = engine->getRenderer();

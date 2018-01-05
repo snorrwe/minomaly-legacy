@@ -1,5 +1,7 @@
 #include "texture.h"
 
+using namespace Mino;
+
 std::shared_ptr<Texture> Texture::loadTexture(std::string const& name, IRenderSystem& renderer,
                                               bool flag, Color const* color)
 {
