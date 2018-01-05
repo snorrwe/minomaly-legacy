@@ -27,23 +27,13 @@ void Program::start()
       const auto rectW = 265 / 4;
       images = Texture::loadSpritesheet("assets/__template/__template.png", *renderer,
                                         {
-                                            getRect(0, 0, rectW, rectH),
-                                            getRect(rectW, 0, rectW, rectH),
-                                            getRect(rectW * 2, 0, rectW, rectH),
-                                            getRect(rectW * 3, 0, rectW, rectH),
+                                            Rectangle(0, 0, rectW, rectH),
+                                            Rectangle(rectW, 0, rectW, rectH),
+                                            Rectangle(rectW * 2, 0, rectW, rectH),
+                                            Rectangle(rectW * 3, 0, rectW, rectH),
                                         },
                                         true, &colorKey);
     */
-}
-
-SDL_Rect Program::getRect(int x, int y, int w, int h)
-{
-    auto rect = SDL_Rect();
-    rect.x = x;
-    rect.y = y;
-    rect.w = w;
-    rect.h = h;
-    return rect;
 }
 
 void Program::update()

@@ -32,16 +32,6 @@ void Program::start()
     rotation.center.y = dudeHeight / 2;
 }
 
-SDL_Rect Program::getRect(int x, int y, int w, int h)
-{
-    auto rect = SDL_Rect();
-    rect.x = x;
-    rect.y = y;
-    rect.w = w;
-    rect.h = h;
-    return rect;
-}
-
 void Program::update()
 {
     if (!(++delay))
@@ -70,10 +60,10 @@ void Program::loadMedia()
 {
     const auto colorKey = Color(0, 0xFF, 0xFF);
     images = Texture::loadSpritesheet("assets/walk/walk.png", *renderer,
-                                      {getRect(0, 0, dudeWidth, dudeHeight),
-                                       getRect(dudeWidth, 0, dudeWidth, dudeHeight),
-                                       getRect(dudeWidth * 2, 0, dudeWidth, dudeHeight),
-                                       getRect(dudeWidth * 3, 0, dudeWidth, dudeHeight)},
+                                      {Rectangle(0, 0, dudeWidth, dudeHeight),
+                                       Rectangle(dudeWidth, 0, dudeWidth, dudeHeight),
+                                       Rectangle(dudeWidth * 2, 0, dudeWidth, dudeHeight),
+                                       Rectangle(dudeWidth * 3, 0, dudeWidth, dudeHeight)},
                                       true, &colorKey);
 }
 

@@ -16,6 +16,7 @@ set(_COMMON_INCLUDES common
                      common/observer 
                      common/color 
                      common/sdl
+                     common/rect
                     )
 
 set(_ENGINE_INCLUDES engine
