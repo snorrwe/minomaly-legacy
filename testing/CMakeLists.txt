@@ -17,3 +17,5 @@ ENDFOREACH()
 
 add_executable(${_MINO_TEST} main.cpp)
 target_link_libraries(${_MINO_TEST} ${MINO_ENGINE} gtest gtest_main)
+
+COPY_SDL_DLLS(${_MINO_TEST})

@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
-option(test "Build all tests." ON) # Makes boolean 'test' available.
+option(test "Build tests." ON) # Makes boolean 'test' available.
+option(examples "Build examples." ON) # Makes boolean 'examples' available.
 
 set(MASTER_NAME Minomaly CXX)
 project(${MASTER_NAME})
@@ -56,59 +57,69 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
 
+MACRO(COPY_SDL_DLLS name)
+    # SDL core
+    add_custom_command(TARGET ${name} POST_BUILD  
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different  
+            "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
+            $<TARGET_FILE_DIR:${_MINO_TEST}>) # <--this is out-file path
+
+    # SDL Image
+    add_custom_command(TARGET ${name} POST_BUILD  
+        COMMAND ${CMAKE_COMMAND} -E copy_directory  
+            "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+            $<TARGET_FILE_DIR:${_MINO_TEST}>) # <--this is out-file path
+ENDMACRO()
+
 #[[ Engine ]]
 
 add_subdirectory(src)
 
 #[[ Example projects ]]
 
-MACRO(SUBDIRLIST result curdir)
-  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-  SET(dirlist "")
-  FOREACH(child ${children})
-    IF(IS_DIRECTORY ${curdir}/${child})
-      LIST(APPEND dirlist ${child})
-    ENDIF()
+if(examples)
+
+  MACRO(SUBDIRLIST result curdir)
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    SET(dirlist "")
+    FOREACH(child ${children})
+      IF(IS_DIRECTORY ${curdir}/${child})
+        LIST(APPEND dirlist ${child})
+      ENDIF()
+    ENDFOREACH()
+    SET(${result} ${dirlist})
+  ENDMACRO()
+
+  MACRO(LINK_EXAMPLE name)
+
+    #[[ Includes ]]
+
+    FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES})
+      include_directories("${MINO_PATH}/${subdir}")
+    ENDFOREACH()
+
+    #[[ Link ]]
+
+    target_link_libraries(${name} ${MINO_ENGINE})
+
+    #[[ Copy DLLs ]]
+
+    COPY_SDL_DLLS(${name})
+
+  ENDMACRO()
+
+  set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/examples/src)
+  SUBDIRLIST(EXAMPLE_PROJECT_DIRS ${GAME_LOGIC_DIR})
+
+  FOREACH(subdir ${EXAMPLE_PROJECT_DIRS})
+    add_subdirectory("${GAME_LOGIC_DIR}/${subdir}")
   ENDFOREACH()
-  SET(${result} ${dirlist})
-ENDMACRO()
-
-MACRO(LINK_EXAMPLE name)
-
-  #[[ Includes ]]
-
-  FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES})
-    include_directories("${MINO_PATH}/${subdir}")
-  ENDFOREACH()
-
-  #[[ Link ]]
-
-  target_link_libraries(${name} ${MINO_ENGINE})
-
-  #[[ Copy DLLs ]]
-
-  # SDL core
-  add_custom_command(TARGET ${name} POST_BUILD  
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different  
-          "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
-          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
-
-  # SDL Image
-  add_custom_command(TARGET ${name} POST_BUILD  
-      COMMAND ${CMAKE_COMMAND} -E copy_directory  
-          "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
-          $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
-ENDMACRO()
-
-set(GAME_LOGIC_DIR ${PROJECT_SOURCE_DIR}/examples/src)
-SUBDIRLIST(EXAMPLE_PROJECT_DIRS ${GAME_LOGIC_DIR})
-
-FOREACH(subdir ${EXAMPLE_PROJECT_DIRS})
-  add_subdirectory("${GAME_LOGIC_DIR}/${subdir}")
-ENDFOREACH()
+endif()
 
 #[[ TESTS ]]
+
 if(test)
+
   if (APPLE)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE)
     add_definitions(-D__GLIBCXX__)
