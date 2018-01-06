@@ -30,7 +30,7 @@ std::shared_ptr<TRender> RendererComponent::create(GameObject* gameObject)
     static_assert(std::is_convertible<TRender*, RendererComponent*>::value);
 
     auto renderSystem = gameObject->getScene()->getEngineCore()->getRenderer();
-    auto result = renderSystem->createRenderer<SpriteRendererComponent>();
+    auto result = renderSystem->createRenderer<TRender>();
     result->gameObject = gameObject;
     result->self = std::weak_ptr<Component>(result);
     result->renderSystem = renderSystem;

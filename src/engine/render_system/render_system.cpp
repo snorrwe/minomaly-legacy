@@ -36,7 +36,8 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
 
 void RenderSystem::update()
 {
-    for (auto i = renderComponentRefs.begin(); i != renderComponentRefs.end(); ++i)
+    for (auto i = renderComponentRefs.begin(); i != renderComponentRefs.begin() + enabledRenderers;
+         ++i)
     {
         (*i)->render();
     }
@@ -53,8 +54,7 @@ void RenderSystem::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(rende
 
 void IRenderSystem::removeRenderer(std::shared_ptr<RendererComponent> renderer)
 {
-    auto it =
-        std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
+    auto it = std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
     {
         renderComponentRefs.erase(it);
@@ -63,25 +63,27 @@ void IRenderSystem::removeRenderer(std::shared_ptr<RendererComponent> renderer)
 
 void IRenderSystem::enableRenderer(std::shared_ptr<RendererComponent> renderer)
 {
-    auto it = std::find(renderComponentRefs.begin() + enabledRenderers,
-                        renderComponentRefs.end(), renderer);
+    /* TODO abstract this container */
+    auto first = renderComponentRefs.begin() + enabledRenderers;
+    auto it = std::find(first, renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
     {
-        auto last = renderComponentRefs.begin() + enabledRenderers;
-        std::iter_swap(it, last);
+        std::iter_swap(it, first);
         ++enabledRenderers;
     }
 }
 
 void IRenderSystem::disableRenderer(std::shared_ptr<RendererComponent> renderer)
 {
-
+    /* TODO abstract this */
     auto last = renderComponentRefs.begin() + enabledRenderers;
     auto it = std::find(renderComponentRefs.begin(), last, renderer);
     if (it != last)
     {
-        auto last = renderComponentRefs.begin() + enabledRenderers;
-        std::iter_swap(it, last);
+        if (renderComponentRefs.size() > enabledRenderers)
+            std::iter_swap(it, --last);
+        else
+            std::iter_swap(it, renderComponentRefs.rbegin());
         --enabledRenderers;
     }
 }

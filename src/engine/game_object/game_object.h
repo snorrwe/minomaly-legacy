@@ -13,6 +13,7 @@ namespace Mino
 
 class Component;
 class Scene;
+
 class GameObject
 {
 public:
@@ -30,10 +31,10 @@ public:
 
     template <typename TComponent> std::shared_ptr<TComponent> addComponent();
     template <typename TComponent> std::shared_ptr<TComponent> getComponent() const;
-    void disableComponent(std::shared_ptr<Component>);
-    void enableComponent(std::shared_ptr<Component>);
+    virtual void disableComponent(std::shared_ptr<Component>);
+    virtual void enableComponent(std::shared_ptr<Component>);
 
-    void update();
+    virtual void update();
 
     Scene* getScene() { return scene; }
 

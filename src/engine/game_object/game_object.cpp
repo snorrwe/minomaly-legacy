@@ -9,7 +9,7 @@ void GameObject::disableComponent(std::shared_ptr<Component> component)
     if (target != last)
     {
         if (components.size() > enabled)
-            std::iter_swap(target, last);
+            std::iter_swap(target, --last);
         else
             std::iter_swap(target, components.rbegin());
         --enabled;

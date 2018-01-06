@@ -88,6 +88,7 @@ template <typename TRenderer> std::shared_ptr<TRenderer> IRenderSystem::createRe
     static_assert(std::is_convertible<TRenderer*, RendererComponent*>::value);
     auto result = std::make_shared<TRenderer>();
     renderComponentRefs.insert(renderComponentRefs.begin() + enabledRenderers, result);
+    ++enabledRenderers;
     return result;
 }
 

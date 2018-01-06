@@ -22,7 +22,7 @@ class SpriteRendererTests : public ::testing::Test
 public:
 };
 
-TEST_F(SpriteRendererTests, CanCreateViewRenderSystem)
+TEST_F(SpriteRendererTests, CanBeCreatedByRenderSystem)
 {
     auto system = std::make_shared<MockRenderSystem>();
 
