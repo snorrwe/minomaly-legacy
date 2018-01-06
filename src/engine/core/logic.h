@@ -14,7 +14,7 @@ public:
     virtual ~ILogicSystem() {}
 
     virtual void update() = 0;
-    virtual void start() = 0;
+    virtual void start() {}
 
 protected:
     Core* engine;

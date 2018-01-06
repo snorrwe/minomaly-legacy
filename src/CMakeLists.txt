@@ -53,6 +53,7 @@ add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
                             ${PROJECT_SOURCE_DIR}/common/font/font.cpp)
 
 add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/sprite_renderer/sprite_renderer.cpp
+                               ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
 # [[ Link ]]
@@ -68,6 +69,7 @@ target_link_libraries(${_MINO_ENGINE}
 
 set(MINO_ENGINE ${_MINO_ENGINE} PARENT_SCOPE)
 set(MINO_COMMON ${_MINO_COMMON} PARENT_SCOPE)
+set(MINO_COMPONENT ${_MINO_COMPONENT} PARENT_SCOPE)
 set(MINO_PATH ${PROJECT_SOURCE_DIR} PARENT_SCOPE)
 set(COMMON_INCLUDES ${_COMMON_INCLUDES} PARENT_SCOPE)
 set(ENGINE_INCLUDES ${_ENGINE_INCLUDES} PARENT_SCOPE)

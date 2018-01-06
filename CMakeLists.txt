@@ -59,24 +59,28 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
 include_directories(${SDL2_TTF_DIR}/include)
 
+set(COPY TRUE)
 MACRO(COPY_SDL_DLLS name)
-    # SDL core
-    add_custom_command(TARGET ${name} POST_BUILD  
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different  
-            "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
-            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+    if(COPY)
+      set(COPY FALSE)
+      # SDL core
+      add_custom_command(TARGET ${name} POST_BUILD  
+          COMMAND ${CMAKE_COMMAND} -E copy_if_different  
+              "${SDL2_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2.dll" # <--this is in-file
+              $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
 
-    # SDL Image
-    add_custom_command(TARGET ${name} POST_BUILD  
-        COMMAND ${CMAKE_COMMAND} -E copy_directory  
-            "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
-            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
-    
-    # SDL TTF
-    add_custom_command(TARGET ${name} POST_BUILD  
-        COMMAND ${CMAKE_COMMAND} -E copy_directory  
-            "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
-            $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+      # SDL Image
+      add_custom_command(TARGET ${name} POST_BUILD  
+          COMMAND ${CMAKE_COMMAND} -E copy_directory  
+              "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+              $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+      
+      # SDL TTF
+      add_custom_command(TARGET ${name} POST_BUILD   
+          COMMAND ${CMAKE_COMMAND} -E copy_directory  
+              "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
+              $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
+    endif(COPY)
 ENDMACRO()
 
 #[[ Engine ]]

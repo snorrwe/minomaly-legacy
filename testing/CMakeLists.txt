@@ -15,6 +15,6 @@ FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES} ${COMPONENT_INCLUDES})
 ENDFOREACH()
 
 add_executable(${_MINO_TEST} main.cpp ${TEST_SOURCES})
-target_link_libraries(${_MINO_TEST} ${MINO_ENGINE} gtest gtest_main gmock gmock_main)
+target_link_libraries(${_MINO_TEST} ${MINO_ENGINE} ${MINO_COMPONENT} ${MINO_COMMON} gtest gtest_main gmock gmock_main)
 
 COPY_SDL_DLLS(${_MINO_TEST})

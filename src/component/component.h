@@ -19,16 +19,32 @@ public:
     virtual void start() {}
     virtual void update() {}
 
+    virtual void enable();
+    virtual void disable();
+
+    bool isEnabled() { return enabled; }
+
 protected:
+    template <typename TComponent> static std::shared_ptr<TComponent> create();
+
     GameObject* gameObject = nullptr;
+    std::weak_ptr<Component> self = std::weak_ptr<Component>(std::shared_ptr<Component>(nullptr));
+    bool enabled = true;
 };
 
 template <typename TComponent> std::shared_ptr<TComponent> Component::create(GameObject* gameObject)
 {
     static_assert(std::is_convertible<TComponent*, Component*>::value);
-    auto result = std::make_shared<TComponent>();
+    auto result = create<TComponent>();
     result->gameObject = gameObject;
+    result->self = std::weak_ptr<Component>(result);
+    result->start();
     return result;
+}
+
+template <typename TComponent> static std::shared_ptr<TComponent> Component::create()
+{
+    return std::make_shared<TComponent>();
 }
 
 } // namespace Mino
