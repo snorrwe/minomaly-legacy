@@ -15,6 +15,7 @@ class Transform
 public:
     using ChildrenContainer = std::vector<Transform>;
     using RotationData = Mino::RenderData::RotationData;
+    using Vector = Vector2<double>;
 
     static std::shared_ptr<Transform> create(std::shared_ptr<Transform> parent = nullptr);
 
@@ -33,11 +34,17 @@ public:
     virtual void removeChild(Transform& child);
     std::vector<Transform> getChildren() { return children; }
     size_t childCount() { return children.size(); }
+
     Transform* getParent() { return parent; }
+
+    Vector& getPosition() { return position; }
+    Vector const& getPosition() const { return position; }
+    RotationData& getRotation() { return rotation; }
+    RotationData const& getRotation() const { return rotation; }
 
 protected:
     Transform* parent = nullptr;
-    Vector2<> position = Vector2<>{};
+    Vector position = Vector{};
     RotationData rotation = RotationData{};
     ChildrenContainer children = ChildrenContainer{};
 

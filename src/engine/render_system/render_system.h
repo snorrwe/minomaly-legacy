@@ -3,7 +3,9 @@
 #include "color.h"
 #include "core.h"
 #include "renderdata.h"
+#include "renderer.h"
 #include "texture.h"
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -14,12 +16,14 @@ namespace Mino
 
 class Core;
 class Texture;
+class RendererComponent;
 
 class IRenderSystem
 {
 public:
     friend class Core;
 
+    using RenderComponentReferences = std::vector<std::shared_ptr<RendererComponent>>;
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
@@ -36,9 +40,18 @@ public:
     virtual void update() = 0;
 
     virtual SDL_Renderer* getRaw() = 0;
+
+    template <typename TRenderer> std::shared_ptr<TRenderer> createRenderer();
+    void removeRenderer(std::shared_ptr<RendererComponent>);
+    void enableRenderer(std::shared_ptr<RendererComponent>);
+    void disableRenderer(std::shared_ptr<RendererComponent>);
+
+protected:
+    RenderComponentReferences renderComponentRefs;
+    size_t enabledRenderers = 0;
 };
 
-class Renderer : public IRenderSystem
+class RenderSystem : public IRenderSystem
 {
 public:
     using RotationData = RenderData::RotationData;
@@ -46,13 +59,13 @@ public:
 
     static std::shared_ptr<IRenderSystem> create(SDL_Window* window);
 
-    Renderer(SDL_Renderer* renderer);
-    Renderer(Renderer const&) = default;
-    Renderer(Renderer&&) = default;
-    virtual ~Renderer();
+    RenderSystem(SDL_Renderer* renderer);
+    RenderSystem(RenderSystem const&) = default;
+    RenderSystem(RenderSystem&&) = default;
+    virtual ~RenderSystem();
 
-    Renderer& operator=(Renderer const&) = default;
-    Renderer& operator=(Renderer&&) = default;
+    RenderSystem& operator=(RenderSystem const&) = default;
+    RenderSystem& operator=(RenderSystem&&) = default;
 
     virtual void render(Texture const& texture, SDL_Rect* srcrect = nullptr,
                         SDL_Rect* dstrect = nullptr);
@@ -69,4 +82,13 @@ public:
 private:
     SDL_Renderer* renderer;
 };
+
+template <typename TRenderer> std::shared_ptr<TRenderer> IRenderSystem::createRenderer()
+{
+    static_assert(std::is_convertible<TRenderer*, RendererComponent*>::value);
+    auto result = std::make_shared<TRenderer>();
+    renderComponentRefs.insert(renderComponentRefs.begin() + enabledRenderers, result);
+    return result;
+}
+
 } // namespace Mino

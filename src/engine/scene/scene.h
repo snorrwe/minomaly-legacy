@@ -1,6 +1,10 @@
 #pragma once
 #include "core.h"
+#include "game_object.h"
+#include "transform.h"
+#include <algorithm>
 #include <memory>
+#include <vector>
 
 namespace Mino
 {
@@ -16,7 +20,14 @@ public:
     virtual void update() = 0;
     virtual void start() {}
 
+    GameObject& createGameObject();
+    void destroyGameObject(GameObject&);
+
+    Core* getEngineCore() { return engine; }
+
 protected:
+    std::shared_ptr<Transform> rootTransform = Transform::create();
+    std::vector<GameObject> gameObjects;
     Core* engine;
 };
 

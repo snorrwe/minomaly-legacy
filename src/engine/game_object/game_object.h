@@ -12,13 +12,18 @@ namespace Mino
 {
 
 class Component;
-
+class Scene;
 class GameObject
 {
 public:
     typedef std::vector<std::shared_ptr<Component>> ComponentContainer;
 
     GameObject() = default;
+    GameObject(std::shared_ptr<Transform> transform) : transform(transform) {}
+    GameObject(std::shared_ptr<Transform> transform, Scene* scene)
+        : transform(transform), scene(scene)
+    {
+    }
     virtual ~GameObject() {}
 
     std::shared_ptr<Transform> getTransform() const { return transform; }
@@ -30,10 +35,13 @@ public:
 
     void update();
 
+    Scene* getScene() { return scene; }
+
 protected:
-    std::shared_ptr<Transform> transform;
-    ComponentContainer components;
+    ComponentContainer components = ComponentContainer{};
     size_t enabled = 0;
+    std::shared_ptr<Transform> transform = nullptr;
+    Scene* scene = nullptr;
 };
 
 template <typename TComponent> std::shared_ptr<TComponent> GameObject::addComponent()

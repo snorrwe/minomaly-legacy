@@ -59,10 +59,7 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
 include_directories(${SDL2_TTF_DIR}/include)
 
-set(COPY TRUE)
 MACRO(COPY_SDL_DLLS name)
-    if(COPY)
-      set(COPY FALSE)
       # SDL core
       add_custom_command(TARGET ${name} POST_BUILD  
           COMMAND ${CMAKE_COMMAND} -E copy_if_different  
@@ -80,7 +77,6 @@ MACRO(COPY_SDL_DLLS name)
           COMMAND ${CMAKE_COMMAND} -E copy_directory  
               "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}" # <--this is in-file
               $<TARGET_FILE_DIR:${name}>) # <--this is out-file path
-    endif(COPY)
 ENDMACRO()
 
 #[[ Engine ]]
@@ -112,7 +108,7 @@ if(examples)
 
     #[[ Link ]]
 
-    target_link_libraries(${name} ${MINO_ENGINE})
+    target_link_libraries(${name} ${MINO_ENGINE} ${MINO_COMPONENT})
 
     #[[ Copy DLLs ]]
 

@@ -5,8 +5,8 @@
 #include "color.h"
 #include "font.h"
 #include "p_managed_texture.h"
+#include "render_system.h"
 #include "renderdata.h"
-#include "renderer.h"
 #include "surface.h"
 #include <array>
 #include <functional>

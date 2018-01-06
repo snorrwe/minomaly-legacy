@@ -3,7 +3,7 @@
 #include "SDL_image.h"
 #include "input.h"
 #include "observer.h"
-#include "renderer.h"
+#include "render_system.h"
 #include "scene.h"
 #include "sdl_subsystems.h"
 #include "surface.h"
@@ -17,6 +17,7 @@ namespace Mino
 
 class IWindow;
 class IRenderSystem;
+class Scene;
 
 class IEngineCore
 {
@@ -69,7 +70,7 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
     auto inp = Input::create();
     auto window = Window::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                  screenWidth, screenHeight, SDL_WINDOW_SHOWN);
-    auto renderer = Renderer::create(*window);
+    auto renderer = RenderSystem::create(*window);
     auto core = std::make_shared<Core>(subsystems, inp, std::move(window), renderer);
     auto logic = std::make_shared<TLogic>(core);
     core->setLogic(logic);

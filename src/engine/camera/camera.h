@@ -1,8 +1,8 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "render_system.h"
 #include "renderdata.h"
-#include "renderer.h"
 #include <iostream>
 #include <memory>
 #include <stdexcept>
