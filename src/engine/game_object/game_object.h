@@ -21,7 +21,7 @@ public:
     GameObject() = default;
     virtual ~GameObject() {}
 
-    Transform getTransform() const { return transform; }
+    std::shared_ptr<Transform> getTransform() const { return transform; }
 
     template <typename TComponent> std::shared_ptr<TComponent> addComponent();
     template <typename TComponent> std::shared_ptr<TComponent> getComponent() const;
@@ -31,7 +31,7 @@ public:
     void update();
 
 protected:
-    Transform transform;
+    std::shared_ptr<Transform> transform;
     ComponentContainer components;
     size_t enabled = 0;
 };

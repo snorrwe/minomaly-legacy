@@ -67,10 +67,10 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
 {
     auto subsystems = SdlSubsystems::initialize();
     auto inp = Input::create();
-    auto win = Window::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                              screenWidth, screenHeight, SDL_WINDOW_SHOWN);
-    auto renderer = Renderer::create(win->getWindow());
-    auto core = std::make_shared<Core>(subsystems, inp, std::move(win), renderer);
+    auto window = Window::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                 screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+    auto renderer = Renderer::create(*window);
+    auto core = std::make_shared<Core>(subsystems, inp, std::move(window), renderer);
     auto logic = std::make_shared<TLogic>(core);
     core->setLogic(logic);
     return core;

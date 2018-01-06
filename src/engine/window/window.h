@@ -40,8 +40,8 @@ public:
     virtual void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
     virtual void blitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
 
-    SDL_Surface* getSurface() { return surface; }
-    SDL_Window* getWindow() { return window; }
+    operator SDL_Window*() { return window; }
+    operator SDL_Surface*() { return surface; }
 
 private:
     SDL_Window* window;
