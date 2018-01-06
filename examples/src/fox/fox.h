@@ -10,7 +10,7 @@
 const size_t SCREEN_WIDTH = 640;
 const size_t SCREEN_HEIGHT = 480;
 
-class Program : public Mino::ILogicSystem
+class Program : public Mino::Scene
 {
 public:
     using RotationData = Mino::RenderData::RotationData;

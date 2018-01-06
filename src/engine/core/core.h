@@ -2,9 +2,9 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "input.h"
-#include "logic.h"
 #include "observer.h"
 #include "renderer.h"
+#include "scene.h"
 #include "sdl_subsystems.h"
 #include "surface.h"
 #include "window.h"
@@ -49,15 +49,15 @@ public:
     IWindow* getWindow() { return window.get(); }
     std::shared_ptr<IInputSystem> getInput() { return input; }
     std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
-    std::shared_ptr<ILogicSystem> getLogic() { return logic; }
-    void setLogic(std::shared_ptr<ILogicSystem> logic) { this->logic = logic; }
+    std::shared_ptr<Scene> getLogic() { return logic; }
+    void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
 
 private:
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
     std::unique_ptr<IWindow> window;
-    std::shared_ptr<ILogicSystem> logic;
+    std::shared_ptr<Scene> logic;
     std::shared_ptr<IRenderSystem> renderer;
     ISubscription sub;
 };

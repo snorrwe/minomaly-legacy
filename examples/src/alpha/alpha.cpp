@@ -2,7 +2,7 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<Core> core) : ILogicSystem(core)
+Program::Program(std::shared_ptr<Core> core) : Scene(core)
 {
     renderer = engine->getRenderer();
     camera = Camera::create(renderer);

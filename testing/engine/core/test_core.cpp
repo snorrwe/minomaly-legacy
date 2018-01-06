@@ -42,10 +42,10 @@ public:
     MOCK_METHOD0(update, void());
 };
 
-class FakeProgram : public ILogicSystem
+class FakeProgram : public Scene
 {
 public:
-    FakeProgram(std::shared_ptr<Core> engine) : ILogicSystem(engine) {}
+    FakeProgram(std::shared_ptr<Core> engine) : Scene(engine) {}
     virtual ~FakeProgram() {}
 
     virtual void start() { starts++; }

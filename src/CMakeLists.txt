@@ -30,6 +30,7 @@ set(_ENGINE_INCLUDES engine
                      engine/core 
                      engine/camera
                      engine/game_object
+                     engine/scene
                     )
 
 set(_COMPONENT_INCLUDES component

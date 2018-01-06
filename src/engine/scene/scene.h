@@ -7,11 +7,11 @@ namespace Mino
 
 class Core;
 
-class ILogicSystem
+class Scene
 {
 public:
-    ILogicSystem(std::shared_ptr<Core> engine) : engine(engine.get()) {}
-    virtual ~ILogicSystem() {}
+    Scene(std::shared_ptr<Core> engine) : engine(engine.get()) {}
+    virtual ~Scene() {}
 
     virtual void update() = 0;
     virtual void start() {}
