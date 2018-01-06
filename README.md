@@ -38,7 +38,7 @@ Use options during _CMake_ configuration e.g. `cmake -H. -Bbuild -Dtest=OFF`
 | Option name | Description | Default |
 | ----------- | ----------- | ------- |
 | test | enables/disables building tests | ON |
-| examples | enables/disables building examples projects | ON |
+| examples | enables/disables building example projects | ON |
 
 
 ## Building
