@@ -17,8 +17,9 @@ public:
     IterablePool();
     virtual ~IterablePool();
 
-    Reference* create();
-    void remove(Reference& item);
+    Reference* enable();
+    Reference* enable(Reference& item);
+    void disable(Reference& item);
     bool canCreate();
 
     void iterateActive(std::function<void(T&)> callback);
@@ -46,7 +47,7 @@ template <class T, size_t size> IterablePool<T, size>::IterablePool()
 template <class T, size_t size> IterablePool<T, size>::~IterablePool() {}
 
 template <class T, size_t size>
-typename IterablePool<T, size>::Reference* IterablePool<T, size>::create()
+typename IterablePool<T, size>::Reference* IterablePool<T, size>::enable()
 {
     assert(next < size);
     auto& result = pool[next];
@@ -55,7 +56,16 @@ typename IterablePool<T, size>::Reference* IterablePool<T, size>::create()
 }
 
 template <class T, size_t size>
-void IterablePool<T, size>::remove(typename IterablePool<T, size>::Reference& item)
+typename IterablePool<T, size>::Reference* IterablePool<T, size>::enable(Reference& ref)
+{
+    auto result = &refs[pool[ref.poolIndex].refIndex];
+    if (ref.poolIndex < size) return result;
+    swapItems(++next, result->poolIndex);
+    return result;
+}
+
+template <class T, size_t size>
+void IterablePool<T, size>::disable(typename IterablePool<T, size>::Reference& item)
 {
     if (item.poolIndex < --next)
     {

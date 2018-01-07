@@ -35,6 +35,7 @@ public:
     T* operator->() const { return item; }
 
     operator T&() const { return *item; }
+    operator T*() const { return item; }
 
 private:
     void set(size_t ind, T* i)

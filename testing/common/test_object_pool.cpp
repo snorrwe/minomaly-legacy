@@ -36,6 +36,7 @@ public:
     void SetUp() { FakeType::calls = 0; }
 
     void someCallbackExpectingFake(FakeType const& f) {}
+    void someCallbackExpectingFakePtr(FakeType const* f) {}
 
     Pool pool = Pool{};
 };
@@ -46,7 +47,7 @@ TEST_F(ObjectPoolTests, CanCreateItems)
 {
     for (int i = 0; i < 5; ++i)
     {
-        pool.create();
+        pool.enable();
     }
 }
 
@@ -54,7 +55,7 @@ TEST_F(ObjectPoolTests, CanIterate)
 {
     for (int i = 0; i < 5; ++i)
     {
-        pool.create();
+        pool.enable();
     }
     FakeType::calls = 0;
     pool.iterateActive([](auto& i) { i.update(); });
@@ -65,7 +66,7 @@ TEST_F(ObjectPoolTests, CanIterate)
 TEST_F(ObjectPoolTests, CanAccessReferencedItems)
 {
     std::vector<Pool::Reference*> myItems{
-        pool.create(), pool.create(), pool.create(), pool.create(), pool.create(),
+        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
     };
 
     pool.iterateActive([](auto& i) { i.update(); });
@@ -80,10 +81,10 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInavtive)
 {
 
     std::vector<Pool::Reference*> myItems{
-        pool.create(), pool.create(), pool.create(), pool.create(), pool.create(),
+        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
     };
 
-    pool.remove(*myItems[2]);
+    pool.disable(*myItems[2]);
     pool.iterateActive([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, 4);
@@ -93,12 +94,12 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInavtive)
 TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 {
     std::vector<Pool::Reference*> myItems{
-        pool.create(), pool.create(), pool.create(), pool.create(), pool.create(),
+        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
     };
 
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
     {
-        pool.remove(**i);
+        pool.disable(**i);
     }
 
     pool.iterateAll([](auto& i) { i.update(); });
@@ -113,7 +114,19 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 TEST_F(ObjectPoolTests, ReferencesShouldConvertToUnderlyingTypeImplicitly)
 {
 
-    auto ref = pool.create();
-
+    auto ref = pool.enable();
     someCallbackExpectingFake(*ref);
+    someCallbackExpectingFakePtr(*ref);
+}
+
+TEST_F(ObjectPoolTests, CanReenableAlreadyUsedItem)
+{
+
+    auto ref1 = pool.enable();
+    auto ref2 = ref1;
+
+    pool.disable(*ref1);
+    ref1 = pool.enable(*ref1);
+
+    ASSERT_EQ(ref1, ref2);
 }
