@@ -35,6 +35,8 @@ public:
 
     void SetUp() { FakeType::calls = 0; }
 
+    void someCallbackExpectingFake(FakeType const& f) {}
+
     Pool pool = Pool{};
 };
 
@@ -106,4 +108,12 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
     {
         ASSERT_EQ((**i)->thisCalls, 1);
     }
+}
+
+TEST_F(ObjectPoolTests, ReferencesShouldConvertToUnderlyingTypeImplicitly)
+{
+
+    auto ref = pool.create();
+
+    someCallbackExpectingFake(*ref);
 }
