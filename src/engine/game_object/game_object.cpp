@@ -4,25 +4,29 @@ using namespace Mino;
 
 void GameObject::disableComponent(std::shared_ptr<Component> component)
 {
+    using std::iter_swap;
+
     auto last = components.begin() + enabled;
     auto target = std::find(components.begin(), last, component);
     if (target != last)
     {
         if (components.size() > enabled)
-            std::iter_swap(target, --last);
+            iter_swap(target, --last);
         else
-            std::iter_swap(target, components.rbegin());
+            iter_swap(target, components.rbegin());
         --enabled;
     }
 }
 
 void GameObject::enableComponent(std::shared_ptr<Component> component)
 {
+    using std::iter_swap;
+
     auto first = components.begin() + enabled;
     auto target = std::find(first, components.end(), component);
     if (target != components.end())
     {
-        std::iter_swap(first, target);
+        iter_swap(first, target);
         ++enabled;
     }
 }

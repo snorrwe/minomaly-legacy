@@ -34,7 +34,8 @@ protected:
 
 template <typename TComponent> std::shared_ptr<TComponent> Component::create(GameObject* gameObject)
 {
-    static_assert(std::is_convertible<TComponent*, Component*>::value);
+    static_assert(std::is_convertible<TComponent*, Component*>::value,
+                  "Components must derive from Component!");
     auto result = create<TComponent>();
     result->gameObject = gameObject;
     result->self = std::weak_ptr<Component>(result);

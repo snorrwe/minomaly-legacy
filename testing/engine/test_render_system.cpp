@@ -8,7 +8,7 @@
 
 using namespace Mino;
 
-class MockRenderComponent : public RendererComponent
+class MockRenderComponent : public RenderComponent
 {
 public:
     MOCK_METHOD0(render, void());
@@ -44,14 +44,12 @@ TEST_F(RenderSystemTests, CanCreateMockRenderers)
     ASSERT_EQ(renderers.size(), 5);
 }
 
-TEST_F(RenderSystemTests, CanCallsRenderOnRenderersOnUpdate)
+TEST_F(RenderSystemTests, RendersRenderComponentsOnUpdate)
 {
     auto renderers = std::vector<std::shared_ptr<MockRenderComponent>>{
         createMockRenderer(), createMockRenderer(), createMockRenderer(),
         createMockRenderer(), createMockRenderer(),
     };
-
-    ASSERT_EQ(renderers.size(), 5);
 
     for (auto i = renderers.begin(); i != renderers.end(); ++i)
     {
@@ -67,18 +65,18 @@ TEST_F(RenderSystemTests, CanCallsRenderOnRenderersOnUpdate)
 TEST_F(RenderSystemTests, OnlyRendersEnabledRenderers)
 {
     auto mockRenderers = std::vector<std::shared_ptr<MockRenderComponent>>{
-        createMockRenderer(),
-        createMockRenderer(),
-        createMockRenderer(),
+        createMockRenderer(), createMockRenderer(), createMockRenderer(),
+        createMockRenderer(), createMockRenderer(), createMockRenderer(),
     };
 
-    ASSERT_EQ(mockRenderers.size(), 3);
-
     EXPECT_CALL(*mockRenderers[0], render()).Times(5);
-    EXPECT_CALL(*mockRenderers[1], render()).Times(5);
+    EXPECT_CALL(*mockRenderers[2], render()).Times(5);
+    EXPECT_CALL(*mockRenderers[3], render()).Times(5);
+    EXPECT_CALL(*mockRenderers[4], render()).Times(5);
+    EXPECT_CALL(*mockRenderers[5], render()).Times(5);
 
-    renderer->disableRenderer(mockRenderers[2]);
-    EXPECT_CALL(*mockRenderers[2], render()).Times(0);
+    renderer->disableRenderer(mockRenderers[1]);
+    EXPECT_CALL(*mockRenderers[1], render()).Times(0);
 
     for (int i = 0; i < 5; ++i)
     {

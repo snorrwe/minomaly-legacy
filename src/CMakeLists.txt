@@ -20,6 +20,7 @@ set(_COMMON_INCLUDES common
                      common/sdl
                      common/rect
                      common/font
+                     common/object_pool
                      common/vector2
                     )
 

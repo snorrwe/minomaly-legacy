@@ -52,7 +52,7 @@ std::shared_ptr<Texture> RenderSystem::loadTexture(std::string const& name, bool
 
 void RenderSystem::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(renderer, viewport); }
 
-void IRenderSystem::removeRenderer(std::shared_ptr<RendererComponent> renderer)
+void IRenderSystem::removeRenderer(std::shared_ptr<RenderComponent> renderer)
 {
     auto it = std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
@@ -61,29 +61,33 @@ void IRenderSystem::removeRenderer(std::shared_ptr<RendererComponent> renderer)
     }
 }
 
-void IRenderSystem::enableRenderer(std::shared_ptr<RendererComponent> renderer)
+void IRenderSystem::enableRenderer(std::shared_ptr<RenderComponent> renderer)
 {
     /* TODO abstract this container */
+    using std::iter_swap;
+
     auto first = renderComponentRefs.begin() + enabledRenderers;
     auto it = std::find(first, renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
     {
-        std::iter_swap(it, first);
+        iter_swap(it, first);
         ++enabledRenderers;
     }
 }
 
-void IRenderSystem::disableRenderer(std::shared_ptr<RendererComponent> renderer)
+void IRenderSystem::disableRenderer(std::shared_ptr<RenderComponent> renderer)
 {
     /* TODO abstract this */
+    using std::iter_swap;
+
     auto last = renderComponentRefs.begin() + enabledRenderers;
     auto it = std::find(renderComponentRefs.begin(), last, renderer);
     if (it != last)
     {
         if (renderComponentRefs.size() > enabledRenderers)
-            std::iter_swap(it, --last);
+            iter_swap(it, --last);
         else
-            std::iter_swap(it, renderComponentRefs.rbegin());
+            iter_swap(it, renderComponentRefs.rbegin());
         --enabledRenderers;
     }
 }

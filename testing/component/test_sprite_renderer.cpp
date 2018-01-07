@@ -26,7 +26,7 @@ TEST_F(SpriteRendererTests, CanBeCreatedByRenderSystem)
 {
     auto system = std::make_shared<MockRenderSystem>();
 
-    auto result = system->createRenderer<SpriteRendererComponent>();
+    auto result = system->createRenderer<SpriteRenderComponent>();
 
     ASSERT_TRUE(result);
 }

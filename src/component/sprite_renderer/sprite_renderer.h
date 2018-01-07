@@ -8,7 +8,7 @@
 namespace Mino
 {
 
-class SpriteRendererComponent : public RendererComponent
+class SpriteRenderComponent : public RenderComponent
 {
 public:
     virtual void start();

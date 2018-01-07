@@ -16,14 +16,14 @@ namespace Mino
 
 class Core;
 class Texture;
-class RendererComponent;
+class RenderComponent;
 
 class IRenderSystem
 {
 public:
     friend class Core;
 
-    using RenderComponentReferences = std::vector<std::shared_ptr<RendererComponent>>;
+    using RenderComponentReferences = std::vector<std::shared_ptr<RenderComponent>>;
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
@@ -42,9 +42,9 @@ public:
     virtual SDL_Renderer* getRaw() = 0;
 
     template <typename TRenderer> std::shared_ptr<TRenderer> createRenderer();
-    void removeRenderer(std::shared_ptr<RendererComponent>);
-    void enableRenderer(std::shared_ptr<RendererComponent>);
-    void disableRenderer(std::shared_ptr<RendererComponent>);
+    void removeRenderer(std::shared_ptr<RenderComponent>);
+    void enableRenderer(std::shared_ptr<RenderComponent>);
+    void disableRenderer(std::shared_ptr<RenderComponent>);
 
 protected:
     RenderComponentReferences renderComponentRefs;
@@ -85,7 +85,7 @@ private:
 
 template <typename TRenderer> std::shared_ptr<TRenderer> IRenderSystem::createRenderer()
 {
-    static_assert(std::is_convertible<TRenderer*, RendererComponent*>::value);
+    static_assert(std::is_convertible<TRenderer*, RenderComponent*>::value);
     auto result = std::make_shared<TRenderer>();
     renderComponentRefs.insert(renderComponentRefs.begin() + enabledRenderers, result);
     ++enabledRenderers;

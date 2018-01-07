@@ -8,12 +8,12 @@ namespace Mino
 
 class IRenderSystem;
 
-class RendererComponent : public Component
+class RenderComponent : public Component
 {
 public:
     template <typename TRender> static std::shared_ptr<TRender> create(GameObject* gameObject);
 
-    virtual ~RendererComponent() {}
+    virtual ~RenderComponent() {}
 
     virtual void render() = 0;
 
@@ -25,9 +25,9 @@ protected:
 };
 
 template <typename TRender>
-std::shared_ptr<TRender> RendererComponent::create(GameObject* gameObject)
+std::shared_ptr<TRender> RenderComponent::create(GameObject* gameObject)
 {
-    static_assert(std::is_convertible<TRender*, RendererComponent*>::value);
+    static_assert(std::is_convertible<TRender*, RenderComponent*>::value);
 
     auto renderSystem = gameObject->getScene()->getEngineCore()->getRenderer();
     auto result = renderSystem->createRenderer<TRender>();
