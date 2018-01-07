@@ -23,8 +23,16 @@ void Program::start()
     })};
 
     mouse = createGameObject();
-    auto mousePic = renderer->loadTexture("assets/mouse/mouse.png");
-    mouse->addComponent<SpriteRenderComponent>()->setTexture(mousePic);
+    images = {renderer->loadTexture("assets/mouse/mouse.png")};
+    mouse->addComponent<SpriteRenderComponent>()->setTexture(images[0]);
 }
 
-void Program::update() {}
+void Program::update()
+{
+    auto mousePos = input->mouseScreenPosition();
+    auto width = 0.5 * images[0]->getWidth();
+    auto height = 0.5 * images[0]->getHeight();
+    auto x = (double)mousePos.x() - width;
+    auto y = (double)mousePos.y() - height;
+    mouse->getTransform()->setPosition(x, y);
+}

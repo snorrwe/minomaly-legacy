@@ -28,6 +28,7 @@ public:
     MOCK_METHOD1(onQuit, ISubscription(std::function<void(uint8_t)>));
     MOCK_METHOD1(onKeyDown, ISubscription(std::function<void(SDL_Event)>));
     MOCK_METHOD1(onKeyUp, ISubscription(std::function<void(SDL_Event)>));
+    MOCK_METHOD0(mouseScreenPosition, Vector2<int>());
 };
 
 class MockRenderer : public IRenderSystem

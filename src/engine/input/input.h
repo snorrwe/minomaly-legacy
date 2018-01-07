@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "observer.h"
+#include "vector2.h"
 #include <functional>
 #include <iostream>
 #include <map>
@@ -23,6 +24,8 @@ public:
     virtual ISubscription onQuit(std::function<void(uint8_t)> cb) = 0;
     virtual ISubscription onKeyDown(std::function<void(SDL_Event)>) = 0;
     virtual ISubscription onKeyUp(std::function<void(SDL_Event)>) = 0;
+
+    virtual Vector2<int> mouseScreenPosition() = 0;
 };
 
 class Input : public IInputSystem
@@ -48,12 +51,15 @@ public:
     virtual ISubscription onKeyDown(std::function<void(SDL_Event)>);
     virtual ISubscription onKeyUp(std::function<void(SDL_Event)>);
 
+    virtual Vector2<int> mouseScreenPosition();
+
 private:
     Subject<uint8_t> onQuitSubject;
     Subject<SDL_Event> onKeyDownSubject;
     Subject<SDL_Event> onKeyUpSubject;
     std::vector<SDL_Event> events;
     std::map<size_t, bool> keysDown;
+    Vector2<int> currentMousePosition;
 };
 
 } // namespace Mino

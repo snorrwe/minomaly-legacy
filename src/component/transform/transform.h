@@ -38,8 +38,11 @@ public:
 
     Transform* getParent() { return parent; }
 
+    void setPosition(Vector const& value) { position = value; }
+    void setPosition(double const x, double const y) { position = Vector{x, y}; }
     Vector& getPosition() { return position; }
     Vector const& getPosition() const { return position; }
+    void setRotation(RotationData const& value) { rotation = value; }
     RotationData& getRotation() { return rotation; }
     RotationData const& getRotation() const { return rotation; }
 

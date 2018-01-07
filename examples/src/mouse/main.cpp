@@ -1,5 +1,5 @@
-#include "mouse.h"
 #include "mino.h"
+#include "mouse.h"
 #include <iostream>
 #include <stdexcept>
 

@@ -10,11 +10,12 @@ std::shared_ptr<Input> Input::create()
 
 void Input::update()
 {
-    events.resize(0);
+    events.clear();
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
         events.push_back(e);
+
         switch (e.type)
         {
         case SDL_QUIT:
@@ -28,6 +29,13 @@ void Input::update()
             keysDown[static_cast<size_t>(e.key.keysym.sym)] = false;
             onKeyUpSubject.next(e);
             break;
+        case SDL_MOUSEMOTION:
+        {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            currentMousePosition = Vector2<int>(x, y);
+            break;
+        }
         }
     }
 }
@@ -47,3 +55,5 @@ ISubscription Input::onKeyUp(std::function<void(SDL_Event)> cb)
 {
     return onKeyUpSubject.subscribe(cb);
 }
+
+Vector2<int> Input::mouseScreenPosition() { return currentMousePosition; }
