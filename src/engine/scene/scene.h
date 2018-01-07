@@ -17,17 +17,19 @@ public:
     Scene(std::shared_ptr<Core> engine) : engine(engine.get()) {}
     virtual ~Scene() {}
 
+    void updateGameObjects();
     virtual void update() = 0;
     virtual void start() {}
 
-    GameObject& createGameObject();
-    void destroyGameObject(GameObject&);
+    std::shared_ptr<GameObject> createGameObject();
+    void destroyGameObject(std::shared_ptr<GameObject>);
 
     Core* getEngineCore() { return engine; }
+    std::shared_ptr<Transform> getRootTransform() { return rootTransform; }
 
 protected:
     std::shared_ptr<Transform> rootTransform = Transform::create();
-    std::vector<GameObject> gameObjects;
+    std::vector<std::shared_ptr<GameObject>> gameObjects;
     Core* engine;
 };
 

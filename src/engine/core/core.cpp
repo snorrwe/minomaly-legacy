@@ -21,6 +21,7 @@ void Core::run()
 
         input->update();
         logic->update();
+        logic->updateGameObjects();
         renderer->update();
     }
 }

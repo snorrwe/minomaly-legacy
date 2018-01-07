@@ -43,7 +43,7 @@ template <typename TComponent> std::shared_ptr<TComponent> Component::create(Gam
     return result;
 }
 
-template <typename TComponent> static std::shared_ptr<TComponent> Component::create()
+template <typename TComponent> std::shared_ptr<TComponent> Component::create()
 {
     return std::make_shared<TComponent>();
 }

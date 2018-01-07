@@ -63,7 +63,7 @@ Transform::Transform(Transform&& t)
 Transform& Transform::operator=(Transform const& t)
 {
     parent = t.parent;
-    position = Vector2<>(t.position);
+    position = Vector(t.position);
     rotation = t.rotation;
     children = t.children;
     id = t.id;
@@ -73,7 +73,7 @@ Transform& Transform::operator=(Transform const& t)
 Transform& Transform::operator=(Transform&& t)
 {
     parent = t.parent;
-    position = Vector2<>(t.position);
+    position = Vector(t.position);
     rotation = t.rotation;
     children = t.children;
     id = t.id;

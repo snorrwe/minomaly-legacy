@@ -1,4 +1,4 @@
-#include "sprite_renderer.h"
+#include "sprite_render.h"
 
 using namespace Mino;
 
@@ -9,10 +9,11 @@ Component::create<SpriteRenderComponent>(GameObject* gameObject)
     return RenderComponent::create<SpriteRenderComponent>(gameObject);
 }
 
-void SpriteRenderComponent::start()
+void SpriteRenderComponent::start() { transform = gameObject->getTransform().get(); }
+
+void SpriteRenderComponent::update()
 {
-    gameObject->getTransform();
-    if (!texture) disable();
+    if (!texture && isEnabled()) disable();
 }
 
 void SpriteRenderComponent::render()

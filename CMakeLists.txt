@@ -102,13 +102,13 @@ if(examples)
 
     #[[ Includes ]]
 
-    FOREACH(subdir ${COMMON_INCLUDES} ${ENGINE_INCLUDES} ${COMPONENT_INCLUDES})
+    FOREACH(subdir ${MINO_INCLUDES})
       include_directories("${MINO_PATH}/${subdir}")
     ENDFOREACH()
 
     #[[ Link ]]
 
-    target_link_libraries(${name} ${MINO_ENGINE} ${MINO_COMPONENT})
+    target_link_libraries(${name} ${MINO_ENGINE})
 
     #[[ Copy DLLs ]]
 

@@ -2,6 +2,7 @@
 #include "renderdata.h"
 #include "vector2.h"
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <tuple>

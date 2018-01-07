@@ -24,8 +24,7 @@ protected:
     std::weak_ptr<IRenderSystem> renderSystem;
 };
 
-template <typename TRender>
-std::shared_ptr<TRender> RenderComponent::create(GameObject* gameObject)
+template <typename TRender> std::shared_ptr<TRender> RenderComponent::create(GameObject* gameObject)
 {
     static_assert(std::is_convertible<TRender*, RenderComponent*>::value);
 

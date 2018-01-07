@@ -1,5 +1,5 @@
 #include "render_system.h"
-#include "sprite_renderer.h"
+#include "sprite_render.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
