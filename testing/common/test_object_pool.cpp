@@ -30,7 +30,8 @@ size_t FakeType::calls = 0;
 class ObjectPoolTests : public ::testing::Test
 {
 public:
-    using Pool = IterablePool<FakeType, 50>;
+    static constexpr size_t poolSize = 50;
+    using Pool = IterablePool<FakeType, poolSize>;
 
     void SetUp() { FakeType::calls = 0; }
 
@@ -61,12 +62,10 @@ TEST_F(ObjectPoolTests, CanIterate)
 
 TEST_F(ObjectPoolTests, CanAccessReferencedItems)
 {
-
     std::vector<Pool::Reference*> myItems{
         pool.create(), pool.create(), pool.create(), pool.create(), pool.create(),
     };
 
-    // pool.remove(*myItems[2]);
     pool.iterateActive([](auto& i) { i.update(); });
     ASSERT_EQ(FakeType::calls, 5);
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
@@ -87,4 +86,24 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInavtive)
 
     ASSERT_EQ(FakeType::calls, 4);
     ASSERT_EQ((*myItems[2])->thisCalls, 0);
+}
+
+TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
+{
+    std::vector<Pool::Reference*> myItems{
+        pool.create(), pool.create(), pool.create(), pool.create(), pool.create(),
+    };
+
+    for (auto i = myItems.begin(); i != myItems.end(); ++i)
+    {
+        pool.remove(**i);
+    }
+
+    pool.iterateAll([](auto& i) { i.update(); });
+
+    ASSERT_EQ(FakeType::calls, poolSize);
+    for (auto i = myItems.begin(); i != myItems.end(); ++i)
+    {
+        ASSERT_EQ((**i)->thisCalls, 1);
+    }
 }

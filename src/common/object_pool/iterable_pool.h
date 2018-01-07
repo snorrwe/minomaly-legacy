@@ -91,7 +91,7 @@ void IterablePool<T, size>::iterateAll(std::function<void(T&)> callback)
 {
     for (auto& i = pool.begin(); i != pool.end(); ++i)
     {
-        callback(i->getItem());
+        callback(*i);
     }
 }
 
