@@ -5,6 +5,7 @@
 #include "renderdata.h"
 #include "renderer.h"
 #include "texture.h"
+#include "window.h"
 #include <algorithm>
 #include <iostream>
 #include <memory>
@@ -17,6 +18,7 @@ namespace Mino
 class Core;
 class Texture;
 class RenderComponent;
+class Window;
 
 class IRenderSystem
 {
@@ -57,7 +59,7 @@ public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<IRenderSystem> create(SDL_Window* window);
+    static std::shared_ptr<IRenderSystem> create(Window& window);
 
     RenderSystem(SDL_Renderer* renderer);
     RenderSystem(RenderSystem const&) = default;

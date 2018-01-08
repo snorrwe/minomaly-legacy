@@ -43,12 +43,25 @@ public:
     MOCK_METHOD0(update, void());
 };
 
+class MockAudioSystem : public IAudioSystem
+{
+public:
+    MOCK_METHOD3(playChannel, void(Audio const&, int channel, int loops));
+    MOCK_METHOD0(musicPlaying, bool());
+    MOCK_METHOD0(musicPaused, bool());
+    MOCK_METHOD2(playMusic, void(Music const&, int loops));
+    MOCK_METHOD0(resumeMusic, void());
+    MOCK_METHOD0(pauseMusic, void());
+    MOCK_METHOD0(stopMusic, void());
+};
+
 class EngineCoreMock : public Core
 {
 public:
     EngineCoreMock()
         : Core(std::make_shared<MockSubsystems>(), std::make_shared<MockInput>(),
-               std::move(std::make_unique<MockWindow>()), std::make_shared<MockRenderer>())
+               std::move(std::make_unique<MockWindow>()), std::make_shared<MockRenderer>(),
+               std::make_shared<MockAudioSystem>())
     {
     }
 };
@@ -96,8 +109,8 @@ TEST_F(SceneTests, CanCreateGameObjectCorrectly)
 
 TEST_F(SceneTests, CanCreateGameObjectWithComponents)
 {
-    auto gameObject = scene.createGameObject<FakeComponent1, FakeComponent2,
-                                                           FakeComponent3, FakeComponent4>();
+    auto gameObject =
+        scene.createGameObject<FakeComponent1, FakeComponent2, FakeComponent3, FakeComponent4>();
 
     ASSERT_TRUE(gameObject->getComponent<FakeComponent1>());
     ASSERT_TRUE(gameObject->getComponent<FakeComponent2>());

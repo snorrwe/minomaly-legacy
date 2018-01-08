@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "audio_system.h"
 #include "input.h"
 #include "observer.h"
 #include "render_system.h"
@@ -37,7 +38,8 @@ public:
                                         size_t screenHeight);
 
     Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer);
+         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer,
+         std::shared_ptr<IAudioSystem> audioSystem);
     Core(Core const&) = delete;
     Core(Core&&) = delete;
     virtual ~Core();
@@ -51,6 +53,7 @@ public:
     IWindow* getWindow() { return window.get(); }
     std::shared_ptr<IInputSystem> getInput() { return input; }
     std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
+    std::shared_ptr<IAudioSystem> getAudioSystem() { return audioSystem; }
     std::shared_ptr<Scene> getLogic() { return logic; }
     void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
 
@@ -63,6 +66,7 @@ private:
     std::unique_ptr<IWindow> window;
     std::shared_ptr<Scene> logic;
     std::shared_ptr<IRenderSystem> renderer;
+    std::shared_ptr<IAudioSystem> audioSystem;
     ISubscription sub;
 };
 
@@ -74,9 +78,11 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
     auto window = Window::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                  screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
-    auto core = std::make_shared<Core>(subsystems, inp, std::move(window), renderer);
+    auto audio = AudioSystem::create();
+    auto core = std::make_shared<Core>(subsystems, inp, std::move(window), renderer, audio);
     auto logic = std::make_shared<TLogic>(core);
     core->setLogic(logic);
     return core;
 }
+
 } // namespace Mino

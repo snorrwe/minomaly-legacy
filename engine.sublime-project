@@ -25,68 +25,36 @@
 					"shell_cmd": "cmake --build . --target ZERO_CHECK"
 				},
 				{
-					"name": "examples/src/alpha/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/src/alpha/ALL_BUILD"
+					"name": "examples/src/audio_play/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/audio_play/ALL_BUILD"
 				},
 				{
-					"name": "examples/src/alpha/alpha",
-					"shell_cmd": "cmake --build . --target examples/src/alpha/alpha"
+					"name": "examples/src/audio_play/audio_play",
+					"shell_cmd": "cmake --build . --target examples/src/audio_play/audio_play"
 				},
 				{
-					"name": "examples/src/alpha/INSTALL",
-					"shell_cmd": "cmake --build . --target examples/src/alpha/INSTALL"
+					"name": "examples/src/audio_play/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/audio_play/INSTALL"
 				},
 				{
-					"name": "examples/src/alpha/RUN_TESTS",
-					"shell_cmd": "cmake --build . --target examples/src/alpha/RUN_TESTS"
+					"name": "examples/src/audio_play/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/audio_play/RUN_TESTS"
 				},
 				{
-					"name": "examples/src/bloke/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/src/bloke/ALL_BUILD"
+					"name": "examples/src/mouse/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/mouse/ALL_BUILD"
 				},
 				{
-					"name": "examples/src/bloke/bloke",
-					"shell_cmd": "cmake --build . --target examples/src/bloke/bloke"
+					"name": "examples/src/mouse/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/mouse/INSTALL"
 				},
 				{
-					"name": "examples/src/bloke/INSTALL",
-					"shell_cmd": "cmake --build . --target examples/src/bloke/INSTALL"
+					"name": "examples/src/mouse/mouse",
+					"shell_cmd": "cmake --build . --target examples/src/mouse/mouse"
 				},
 				{
-					"name": "examples/src/bloke/RUN_TESTS",
-					"shell_cmd": "cmake --build . --target examples/src/bloke/RUN_TESTS"
-				},
-				{
-					"name": "examples/src/rotation/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/src/rotation/ALL_BUILD"
-				},
-				{
-					"name": "examples/src/rotation/INSTALL",
-					"shell_cmd": "cmake --build . --target examples/src/rotation/INSTALL"
-				},
-				{
-					"name": "examples/src/rotation/rotation",
-					"shell_cmd": "cmake --build . --target examples/src/rotation/rotation"
-				},
-				{
-					"name": "examples/src/rotation/RUN_TESTS",
-					"shell_cmd": "cmake --build . --target examples/src/rotation/RUN_TESTS"
-				},
-				{
-					"name": "examples/src/walk/ALL_BUILD",
-					"shell_cmd": "cmake --build . --target examples/src/walk/ALL_BUILD"
-				},
-				{
-					"name": "examples/src/walk/INSTALL",
-					"shell_cmd": "cmake --build . --target examples/src/walk/INSTALL"
-				},
-				{
-					"name": "examples/src/walk/RUN_TESTS",
-					"shell_cmd": "cmake --build . --target examples/src/walk/RUN_TESTS"
-				},
-				{
-					"name": "examples/src/walk/walk",
-					"shell_cmd": "cmake --build . --target examples/src/walk/walk"
+					"name": "examples/src/mouse/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/mouse/RUN_TESTS"
 				},
 				{
 					"name": "examples/src/__template/ALL_BUILD",
@@ -161,12 +129,16 @@
 					"shell_cmd": "cmake --build . --target src/ALL_BUILD"
 				},
 				{
-					"name": "src/Common",
-					"shell_cmd": "cmake --build . --target src/Common"
-				},
-				{
 					"name": "src/INSTALL",
 					"shell_cmd": "cmake --build . --target src/INSTALL"
+				},
+				{
+					"name": "src/MinoCommon",
+					"shell_cmd": "cmake --build . --target src/MinoCommon"
+				},
+				{
+					"name": "src/MinoComponents",
+					"shell_cmd": "cmake --build . --target src/MinoComponents"
 				},
 				{
 					"name": "src/MinomalyEngine",

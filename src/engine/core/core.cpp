@@ -3,8 +3,13 @@
 using namespace Mino;
 
 Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-           std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer)
-    : subsystems(subsystems), input(input), window(std::move(window)), renderer(renderer)
+           std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer,
+           std::shared_ptr<IAudioSystem> audioSystem)
+    : subsystems(subsystems),
+      input(input),
+      window(std::move(window)),
+      renderer(renderer),
+      audioSystem(audioSystem)
 {
     sub = input->onQuit([&](auto const&) { active = false; });
 }

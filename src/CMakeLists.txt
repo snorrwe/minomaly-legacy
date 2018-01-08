@@ -21,6 +21,7 @@ set(_ENGINE_INCLUDES engine
                      engine/camera
                      engine/game_object
                      engine/scene
+                     engine/audio_system
                      )
 
 set(_COMMON_INCLUDES common
@@ -29,6 +30,7 @@ set(_COMMON_INCLUDES common
                      common/observer 
                      common/color 
                      common/sdl
+                     common/audio
                      common/rect
                      common/font
                      common/object_pool
@@ -51,12 +53,14 @@ add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp
                             ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
                             ${PROJECT_SOURCE_DIR}/engine/game_object/game_object.cpp
                             ${PROJECT_SOURCE_DIR}/engine/scene/scene.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/audio_system/audio_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/core/core.cpp)
 
 add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
                             ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
                             ${PROJECT_SOURCE_DIR}/common/sdl/sdl_subsystems.cpp
-                            ${PROJECT_SOURCE_DIR}/common/font/font.cpp)
+                            ${PROJECT_SOURCE_DIR}/common/sdl/sdl_subsystems.cpp
+                            ${PROJECT_SOURCE_DIR}/common/audio/audio.cpp)
 
 add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_render/sprite_render.cpp

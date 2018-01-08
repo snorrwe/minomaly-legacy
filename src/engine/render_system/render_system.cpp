@@ -2,7 +2,7 @@
 
 using namespace Mino;
 
-std::shared_ptr<IRenderSystem> RenderSystem::create(SDL_Window* window)
+std::shared_ptr<IRenderSystem> RenderSystem::create(Window& window)
 {
     auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == NULL)

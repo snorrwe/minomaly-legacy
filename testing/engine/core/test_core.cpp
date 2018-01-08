@@ -43,6 +43,18 @@ public:
     MOCK_METHOD0(update, void());
 };
 
+class MockAudioSystem : public IAudioSystem
+{
+public:
+    MOCK_METHOD3(playChannel, void(Audio const&, int channel, int loops));
+    MOCK_METHOD0(musicPlaying, bool());
+    MOCK_METHOD0(musicPaused, bool());
+    MOCK_METHOD2(playMusic, void(Music const&, int loops));
+    MOCK_METHOD0(resumeMusic, void());
+    MOCK_METHOD0(pauseMusic, void());
+    MOCK_METHOD0(stopMusic, void());
+};
+
 class FakeProgram : public Scene
 {
 public:
@@ -82,7 +94,8 @@ protected:
         mockInput = std::make_shared<MockInput>();
         mockRenderer = std::make_shared<MockRenderer>();
         engine = std::make_shared<Core>(mockSubsystems, mockInput,
-                                        std::move(std::make_unique<MockWindow>()), mockRenderer);
+                                        std::move(std::make_unique<MockWindow>()), mockRenderer,
+                                        std::make_shared<MockAudioSystem>());
         fakeProgram = std::make_shared<FakeProgram>(engine);
         engine->setLogic(fakeProgram);
     }
