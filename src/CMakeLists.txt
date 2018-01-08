@@ -9,9 +9,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_IMAGE_DIR}/include)
 include_directories(${SDL2_TTF_DIR}/include)
+include_directories(${SDL2_MIXER_DIR}/include)
 
 #[[ Engine ]]
-
 
 set(_ENGINE_INCLUDES engine
                      engine/window 
@@ -69,7 +69,8 @@ target_link_libraries(${_MINO_ENGINE}
                             ${_MINO_COMMON} 
                             ${_MINO_COMPONENT} 
                             ${SDL2_LIBRARIES} 
-                            "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib"
+                            "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
+                            "${SDL2_MIXER_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_mixer.lib"
                             "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
 
 #[[ Set exported variables ]]

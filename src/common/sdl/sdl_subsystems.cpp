@@ -8,6 +8,7 @@ SdlSubsystems* SdlSubsystems::instance = nullptr;
 SdlSubsystems::~SdlSubsystems()
 {
     std::cout << "Quitting subsystems\n" << std::endl;
+    Mix_Quit();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
@@ -18,7 +19,7 @@ std::shared_ptr<SdlSubsystems> SdlSubsystems::initialize()
 {
     if (isInitialized) return std::shared_ptr<SdlSubsystems>(instance);
     std::cout << "Initializing SDL subsystems\n" << std::endl;
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
         std::cout << "SDL could not initialize! SDL_Error:\n" << SDL_GetError() << std::endl;
         throw std::runtime_error("SDL could not initialize!");
@@ -32,8 +33,15 @@ std::shared_ptr<SdlSubsystems> SdlSubsystems::initialize()
     }
     if (TTF_Init() < 0)
     {
-        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        std::cout << "SDL_ttf could not initialize! SDL_ttf Error: \n"
+                  << TTF_GetError() << std::endl;
         throw std::runtime_error("SDL_ttf could not initialize!");
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        std::cout << "SDL_mixer could not initialize! SDL_mixer Error: \n"
+                  << Mix_GetError() << std::endl;
+        throw std::runtime_error("SDL_mixer could not initialize!");
     }
     std::cout << "Successfully initialised SDL subsystems\n-------------------------------------\n";
     auto result = std::make_shared<SdlSubsystems>();
