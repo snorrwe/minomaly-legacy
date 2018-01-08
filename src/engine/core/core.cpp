@@ -13,6 +13,23 @@ Core::~Core() {}
 
 void Core::run()
 {
+    try
+    {
+        _run();
+    }
+    catch (std::runtime_error& exc)
+    {
+        std::cout << "Unexpected error happened while running the Game! " << exc.what()
+                  << std::endl;
+    }
+    catch (...)
+    {
+        std::cout << "Unknown error happened while running the Game! " << std::endl;
+    }
+}
+
+void Core::_run()
+{
     active = true;
     logic->start();
     while (active)

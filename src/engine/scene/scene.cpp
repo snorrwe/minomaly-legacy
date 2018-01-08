@@ -3,7 +3,7 @@
 
 using namespace Mino;
 
-std::shared_ptr<GameObject> Scene::createGameObject()
+std::shared_ptr<GameObject> Scene::createEmptyGameObject()
 {
     gameObjects.emplace_back(std::make_shared<GameObject>(rootTransform, this));
     return gameObjects.back();
@@ -26,3 +26,5 @@ void Scene::updateGameObjects()
         (**i).update();
     }
 }
+
+template <> void Scene::addComponents<>(GameObject& go) {}

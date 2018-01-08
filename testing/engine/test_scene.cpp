@@ -64,13 +64,43 @@ public:
 class SceneTests : public ::testing::Test
 {
 public:
+    SceneTests() : scene((std::static_pointer_cast<Core>(std::make_shared<EngineCoreMock>()))) {}
+
     void SetUp() {}
-    FakeScene scene = FakeScene(std::static_pointer_cast<Core>(std::make_shared<EngineCoreMock>()));
+
+    FakeScene scene;
+};
+
+class FakeComponent1 : public Component
+{
+};
+
+class FakeComponent2 : public Component
+{
+};
+
+class FakeComponent3 : public Component
+{
+};
+
+class FakeComponent4 : public Component
+{
 };
 
 TEST_F(SceneTests, CanCreateGameObjectCorrectly)
 {
-    auto go = scene.createGameObject();
+    auto go = scene.createGameObject<>();
     ASSERT_EQ(go->getScene(), &scene);
     ASSERT_EQ(go->getTransform()->getParent(), scene.getRootTransform().get());
+}
+
+TEST_F(SceneTests, CanCreateGameObjectWithComponents)
+{
+    auto gameObject = scene.createGameObject<FakeComponent1, FakeComponent2,
+                                                           FakeComponent3, FakeComponent4>();
+
+    ASSERT_TRUE(gameObject->getComponent<FakeComponent1>());
+    ASSERT_TRUE(gameObject->getComponent<FakeComponent2>());
+    ASSERT_TRUE(gameObject->getComponent<FakeComponent3>());
+    ASSERT_TRUE(gameObject->getComponent<FakeComponent4>());
 }

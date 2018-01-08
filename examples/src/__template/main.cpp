@@ -11,15 +11,10 @@ int main(int argc, char const* argv[])
         engine->run();
         return 0;
     }
-    catch (std::exception const& e)
-    {
-        std::cout << "Unexpected error happened!\n" << e.what() << std::endl;
-        return 1;
-    }
     catch (...)
     {
 
         std::cout << "Unexpected and Unknown error happened!" << std::endl;
-        return 2;
+        return 1;
     }
 }

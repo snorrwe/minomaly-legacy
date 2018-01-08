@@ -22,9 +22,9 @@ void Program::start()
         if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();
     })};
 
-    mouse = createGameObject();
+    mouse = createGameObject<SpriteRenderComponent>();
     images = {renderer->loadTexture("assets/mouse/mouse.png")};
-    mouse->addComponent<SpriteRenderComponent>()->setTexture(images[0]);
+    mouse->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
 }
 
 void Program::update()

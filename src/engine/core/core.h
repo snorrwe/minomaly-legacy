@@ -10,6 +10,7 @@
 #include "window.h"
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 namespace Mino
@@ -54,6 +55,8 @@ public:
     void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
 
 private:
+    void _run();
+
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
