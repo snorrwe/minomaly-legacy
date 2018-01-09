@@ -7,7 +7,7 @@ int main(int argc, char const* argv[])
 {
     try
     {
-        auto engine = Mino::Core::create<Program>("mouse", SCREEN_WIDTH, SCREEN_HEIGHT);
+        auto engine = Mino::EngineCore::create<Program>("mouse", SCREEN_WIDTH, SCREEN_HEIGHT);
         engine->run();
         return 0;
     }

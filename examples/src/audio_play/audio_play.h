@@ -20,7 +20,7 @@ public:
     typedef std::vector<std::shared_ptr<Mino::Audio>> AudioContainer;
     typedef std::vector<std::shared_ptr<Mino::Music>> MusicContainer;
 
-    Program(std::shared_ptr<Mino::Core> core);
+    Program(std::shared_ptr<Mino::EngineCore> core);
     Program(Program const&) = delete;
     Program(Program&&) = delete;
     ~Program();

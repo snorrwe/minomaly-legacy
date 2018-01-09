@@ -8,7 +8,7 @@
 namespace Mino
 {
 
-class Core;
+class EngineCore;
 
 class IWindowSystem
 {
@@ -23,7 +23,7 @@ public:
 class WindowSystem : public IWindowSystem
 {
 public:
-    friend class Core;
+    friend class EngineCore;
 
     static std::shared_ptr<WindowSystem> create(const char* title, int x, int y, int w, int h,
                                                 Uint32 flags);

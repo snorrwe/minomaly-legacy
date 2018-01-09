@@ -2,7 +2,7 @@
 
 using namespace Mino;
 
-Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
+EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
 	std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
            std::shared_ptr<IAudioSystem> audioSystem)
     : subsystems(subsystems),
@@ -14,9 +14,9 @@ Core::Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSyst
     sub = input->onQuit([&](auto const&) { active = false; });
 }
 
-Core::~Core() {}
+EngineCore::~EngineCore() {}
 
-void Core::run()
+void EngineCore::run()
 {
     try
     {
@@ -33,7 +33,7 @@ void Core::run()
     }
 }
 
-void Core::_run()
+void EngineCore::_run()
 {
     active = true;
     logic->start();
@@ -49,4 +49,4 @@ void Core::_run()
     }
 }
 
-void Core::stop() { active = false; }
+void EngineCore::stop() { active = false; }

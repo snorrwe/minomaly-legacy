@@ -58,7 +58,7 @@ public:
 class FakeProgram : public Scene
 {
 public:
-    FakeProgram(std::shared_ptr<Core> engine) : Scene(engine) {}
+    FakeProgram(std::shared_ptr<EngineCore> engine) : Scene(engine) {}
     virtual ~FakeProgram() {}
 
     virtual void start() { starts++; }
@@ -93,7 +93,7 @@ protected:
         mockSubsystems = std::make_shared<MockSubsystems>();
         mockInput = std::make_shared<MockInput>();
         mockRenderer = std::make_shared<MockRenderer>();
-        engine = std::make_shared<Core>(mockSubsystems, mockInput,
+        engine = std::make_shared<EngineCore>(mockSubsystems, mockInput,
                                         std::move(std::make_unique<MockWindow>()), mockRenderer,
                                         std::make_shared<MockAudioSystem>());
         fakeProgram = std::make_shared<FakeProgram>(engine);
@@ -101,7 +101,7 @@ protected:
     }
 
     /*Acutal*/
-    std::shared_ptr<Core> engine;
+    std::shared_ptr<EngineCore> engine;
 
     /*Mocks*/
     std::shared_ptr<MockSubsystems> mockSubsystems;
@@ -110,7 +110,7 @@ protected:
     std::shared_ptr<FakeProgram> fakeProgram;
 };
 
-TEST(TestCreate, CanCreateActual) { Core::create<FakeProgram>("...", 0, 0); }
+TEST(TestCreate, CanCreateActual) { EngineCore::create<FakeProgram>("...", 0, 0); }
 
 TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }
 

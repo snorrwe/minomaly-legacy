@@ -37,22 +37,22 @@ public:
     virtual void setLogic(std::shared_ptr<Scene> logic) = 0;
 };
 
-class Core : public IEngineCore
+class EngineCore : public IEngineCore
 {
 public:
     template <typename TLogic>
-    static std::shared_ptr<Core> create(std::string const& name, size_t screenWidth,
+    static std::shared_ptr<EngineCore> create(std::string const& name, size_t screenWidth,
                                         size_t screenHeight);
 
-    Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
+    EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
          std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
          std::shared_ptr<IAudioSystem> audioSystem);
-    Core(Core const&) = delete;
-    Core(Core&&) = delete;
-    virtual ~Core();
+    EngineCore(EngineCore const&) = delete;
+    EngineCore(EngineCore&&) = delete;
+    virtual ~EngineCore();
 
-    Core& operator=(Core const&) = delete;
-    Core& operator=(Core&&) = delete;
+    EngineCore& operator=(EngineCore const&) = delete;
+    EngineCore& operator=(EngineCore&&) = delete;
 
     virtual void run();
     virtual void stop();
@@ -78,7 +78,7 @@ private:
 };
 
 template <typename TLogic>
-std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, size_t screenHeight)
+std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth, size_t screenHeight)
 {
     auto subsystems = SdlSubsystems::initialize();
     auto inp = Input::create();
@@ -87,7 +87,7 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
                              screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
     auto audio = AudioSystem::create();
-    auto core = std::make_shared<Core>(subsystems, inp, window, renderer, audio);
+    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio);
     auto logic = std::make_shared<TLogic>(core);
     core->setLogic(logic);
     return core;

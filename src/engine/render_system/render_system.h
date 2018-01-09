@@ -15,7 +15,7 @@
 namespace Mino
 {
 
-class Core;
+class EngineCore;
 class Texture;
 class RenderComponent;
 class WindowSystem;
@@ -23,7 +23,7 @@ class WindowSystem;
 class IRenderSystem
 {
 public:
-    friend class Core;
+    friend class EngineCore;
 
     using RenderComponentReferences = std::vector<std::shared_ptr<RenderComponent>>;
     using RotationData = RenderData::RotationData;

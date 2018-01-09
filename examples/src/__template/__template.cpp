@@ -2,7 +2,7 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<Core> core) : Scene(core)
+Program::Program(std::shared_ptr<EngineCore> core) : Scene(core)
 {
     renderer = engine->getRenderer();
     input = engine->getInput();

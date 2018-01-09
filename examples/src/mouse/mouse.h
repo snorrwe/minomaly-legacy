@@ -18,7 +18,7 @@ public:
     typedef std::array<Mino::ISubscription, 1> Subscriptions;
     typedef std::vector<std::shared_ptr<Mino::Texture>> MediaContainer;
 
-    Program(std::shared_ptr<Mino::Core> core);
+    Program(std::shared_ptr<Mino::EngineCore> core);
     Program(Program const&) = delete;
     Program(Program&&) = delete;
     ~Program();
