@@ -3,17 +3,16 @@
 using namespace Mino;
 
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
-                       std::shared_ptr<IInputSystem> input,
-                       std::shared_ptr<IWindowSystem> windowSytem,
-                       std::shared_ptr<IRenderSystem> renderer,
-                       std::shared_ptr<IAudioSystem> audioSystem,
-                       std::shared_ptr<ILogService> logService)
+                       std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
+                       std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audio,
+                       std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeSystem> time)
     : subsystems(subsystems),
       input(input),
-      window(windowSytem),
+      window(window),
       renderer(renderer),
-      audioSystem(audioSystem),
-      logService(logService)
+      audioSystem(audio),
+      logService(logService),
+      time(time)
 {
     sub = input->onQuit([&](auto const&) { active = false; });
 }
@@ -24,7 +23,7 @@ void EngineCore::run()
 {
     try
     {
-        _run();
+        run(true);
     }
     catch (std::runtime_error& exc)
     {
@@ -37,21 +36,31 @@ void EngineCore::run()
     }
 }
 
-void EngineCore::_run()
+void EngineCore::run(bool)
 {
     active = true;
     scene->start();
+    auto lastUpdate = std::chrono::system_clock::now();
+    Milli lag{0.0};
     while (active)
     {
-        renderer->clear();
-        update();
+        auto now = std::chrono::system_clock::now();
+        auto elaped = now - lastUpdate;
+        lastUpdate = now;
+        lag += elaped;
+        input->update();
+        while (lag >= targetMsPerUpdate)
+        {
+            update();
+            lag -= Milli{targetMsPerUpdate};
+        }
         renderer->update();
     }
 }
 
 void EngineCore::update()
 {
-    input->update();
+    time->update(lastUpdate);
     scene->update();
     scene->updateGameObjects();
 }

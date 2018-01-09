@@ -99,7 +99,7 @@ void IterablePool<T, size>::iterateActive(std::function<void(T&)> callback)
 template <class T, size_t size>
 void IterablePool<T, size>::iterateAll(std::function<void(T&)> callback)
 {
-    for (auto& i = pool.begin(); i != pool.end(); ++i)
+    for (auto i = pool.begin(); i != pool.end(); ++i)
     {
         callback(*i);
     }

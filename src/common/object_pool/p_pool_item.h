@@ -3,7 +3,7 @@
 
 namespace Mino
 {
-template <class T, size_t size> class IterablePool;
+	template <class T, size_t size> class IterablePool;
 
 namespace Pool::Private
 {
@@ -11,9 +11,6 @@ namespace Pool::Private
 template <class T> class PoolItem : public T
 {
 public:
-    template <typename U, size_t size> friend class IterablePool;
-
-private:
     size_t refIndex;
 };
 
@@ -29,7 +26,7 @@ public:
     PoolItemRef& operator=(PoolItemRef const& r) = default;
     PoolItemRef& operator=(PoolItemRef&& r) = default;
 
-    template <typename U, size_t size> friend class IterablePool;
+	template <typename U, size_t size> friend class IterablePool;
 
     T& operator*() const { return *item; }
     T* operator->() const { return item; }

@@ -9,7 +9,9 @@
 #include "scene.h"
 #include "sdl_subsystems.h"
 #include "surface.h"
+#include "time_system.h"
 #include "window.h"
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -25,16 +27,20 @@ class Scene;
 class IEngineCore
 {
 public:
+    typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
+    typedef std::chrono::duration<double, std::milli> Milli;
+
     virtual ~IEngineCore() {}
 
     virtual void run() = 0;
     virtual void stop() = 0;
 
-    virtual std::shared_ptr<IWindowSystem> getWindow() = 0;
-    virtual std::shared_ptr<IInputSystem> getInput() = 0;
-    virtual std::shared_ptr<IRenderSystem> getRenderer() = 0;
-    virtual std::shared_ptr<IAudioSystem> getAudio() = 0;
-    virtual std::shared_ptr<Scene> getScene() = 0;
+    virtual std::shared_ptr<IWindowSystem> getWindow() const = 0;
+    virtual std::shared_ptr<IInputSystem> getInput() const = 0;
+    virtual std::shared_ptr<IRenderSystem> getRenderer() const = 0;
+    virtual std::shared_ptr<IAudioSystem> getAudio() const = 0;
+    virtual std::shared_ptr<Scene> getScene() const = 0;
+    virtual std::shared_ptr<ITimeSystem> getTime() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
@@ -50,7 +56,8 @@ public:
 
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
                std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
-               std::shared_ptr<IAudioSystem> audioSystem, std::shared_ptr<ILogService> logService);
+               std::shared_ptr<IAudioSystem> audioSystem, std::shared_ptr<ILogService> logService,
+               std::shared_ptr<ITimeSystem> time);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
     virtual ~EngineCore();
@@ -61,11 +68,12 @@ public:
     virtual void run();
     virtual void stop();
 
-    virtual std::shared_ptr<IWindowSystem> getWindow() { return window; }
-    virtual std::shared_ptr<IInputSystem> getInput() { return input; }
-    virtual std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
-    virtual std::shared_ptr<IAudioSystem> getAudio() { return audioSystem; }
-    virtual std::shared_ptr<Scene> getScene() { return scene; }
+    virtual std::shared_ptr<IWindowSystem> getWindow() const { return window; }
+    virtual std::shared_ptr<IInputSystem> getInput() const { return input; }
+    virtual std::shared_ptr<IRenderSystem> getRenderer() const { return renderer; }
+    virtual std::shared_ptr<IAudioSystem> getAudio() const { return audioSystem; }
+    virtual std::shared_ptr<ITimeSystem> getTime() const { return time; };
+    virtual std::shared_ptr<Scene> getScene() const { return scene; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
@@ -73,10 +81,13 @@ public:
     subsystemStatus(std::vector<SdlSubSystemType> const& types) const;
 
 private:
-    void _run();
+    void run(bool);
     void update();
 
     bool active = false;
+    TimePoint lastUpdate;
+    Milli targetMsPerUpdate = Milli{1.0 / 60.0};
+
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
     std::shared_ptr<IWindowSystem> window;
@@ -84,6 +95,7 @@ private:
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
     std::shared_ptr<ILogService> logService;
+    std::shared_ptr<ITimeSystem> time;
     ISubscription sub;
 };
 
@@ -101,7 +113,9 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
         WindowSystem::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                              screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
-    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService);
+    auto time = TimeSystem::create();
+    auto core =
+        std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService, time);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
     return core;

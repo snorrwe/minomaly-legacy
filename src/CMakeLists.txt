@@ -23,6 +23,7 @@ set(_ENGINE_INCLUDES engine
                      engine/camera
                      engine/sdl_subsystems
                      engine/scene
+                     engine/time_system
                      engine/audio_system)
 
 set(_COMMON_INCLUDES common

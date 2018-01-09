@@ -36,6 +36,7 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
 
 void RenderSystem::update()
 {
+    clear();
     for (auto i = renderComponentRefs.begin(); i != renderComponentRefs.begin() + enabledRenderers;
          ++i)
     {

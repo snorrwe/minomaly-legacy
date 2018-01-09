@@ -38,7 +38,6 @@ public:
     virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
                                                  Color const* color = nullptr) = 0;
     virtual void setViewport(SDL_Rect* viewport) = 0;
-    virtual void clear() = 0;
     virtual void update() = 0;
 
     virtual SDL_Renderer* getRaw() = 0;
@@ -76,12 +75,13 @@ public:
     virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
                                                  Color const* color = nullptr);
     virtual void setViewport(SDL_Rect* viewport);
-    virtual void clear();
     virtual void update();
 
     virtual SDL_Renderer* getRaw() { return renderer; }
 
 private:
+    void clear();
+
     SDL_Renderer* renderer;
 };
 

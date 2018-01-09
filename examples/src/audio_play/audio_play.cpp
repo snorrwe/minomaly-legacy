@@ -45,7 +45,7 @@ void Program::start()
             {
                 if (!audioSystem->musicPlaying())
                 {
-                    audioSystem->playMusic(*music[0], AudioSystem::LoopForever);
+                    audioSystem->playMusic(*music[0], audioSystem->LoopForever);
                 }
                 else
                 {

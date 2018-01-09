@@ -4,6 +4,7 @@
 #include <memory>
 
 using ::testing::AtLeast;
+using ::testing::NiceMock;
 using namespace Mino;
 
 class MockSubsystems : public SdlSubsystems
@@ -40,7 +41,6 @@ public:
     MOCK_METHOD3(loadTexture, std::shared_ptr<Texture>(std::string const&, bool, Color const*));
     MOCK_METHOD1(setViewport, void(SDL_Rect* viewport));
     MOCK_METHOD0(getRaw, SDL_Renderer*());
-    MOCK_METHOD0(clear, void());
     MOCK_METHOD0(update, void());
 };
 
@@ -65,6 +65,16 @@ public:
     MOCK_METHOD1(info, void(std::string const& message));
     MOCK_METHOD1(setFname, void(std::string const& fname));
     MOCK_METHOD0(getFname, std::string());
+};
+
+class MockTimeSystem : public ITimeSystem
+{
+public:
+    MOCK_CONST_METHOD0(now, TimePoint());
+    MOCK_CONST_METHOD0(deltaTime, Milli());
+
+protected:
+    MOCK_METHOD1(update, void(TimePoint const&));
 };
 
 class FakeProgram : public Scene
@@ -101,13 +111,15 @@ class CoreTest : public ::testing::Test
 protected:
     virtual void SetUp()
     {
-        auto mockLogService = std::make_shared<MockLogService>();
-        mockSubsystems = std::make_shared<MockSubsystems>(mockLogService);
-        mockInput = std::make_shared<MockInput>();
-        mockRenderer = std::make_shared<MockRenderer>();
-        engine = std::make_shared<EngineCore>(mockSubsystems, mockInput,
-                                              std::make_shared<MockWindow>(), mockRenderer,
-                                              std::make_shared<MockAudioSystem>(), mockLogService);
+        auto mockLogService = std::make_shared<NiceMock<MockLogService>>();
+        mockSubsystems = std::make_shared<NiceMock<MockSubsystems>>(mockLogService);
+        mockInput = std::make_shared<NiceMock<MockInput>>();
+        mockRenderer = std::make_shared<NiceMock<MockRenderer>>();
+        mockWindow = std::make_shared<NiceMock<MockWindow>>();
+        mockAudioSystem = std::make_shared<NiceMock<MockAudioSystem>>();
+        mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
+        engine = std::make_shared<EngineCore>(mockSubsystems, mockInput, mockWindow, mockRenderer,
+                                              mockAudioSystem, mockLogService, mockTimeSystem);
         fakeProgram = std::make_shared<FakeProgram>(engine);
         engine->setScene(fakeProgram);
     }
@@ -120,6 +132,9 @@ protected:
     std::shared_ptr<MockInput> mockInput;
     std::shared_ptr<MockRenderer> mockRenderer;
     std::shared_ptr<FakeProgram> fakeProgram;
+    std::shared_ptr<MockWindow> mockWindow;
+    std::shared_ptr<MockAudioSystem> mockAudioSystem;
+    std::shared_ptr<MockTimeSystem> mockTimeSystem;
 };
 
 TEST(TestCreate, CanCreateActual)
@@ -145,14 +160,13 @@ TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }
 TEST_F(CoreTest, CanStopEngineFromLogic)
 {
     fakeProgram->quitAfter = 1;
-    EXPECT_CALL(*mockInput, update()).Times(1);
-    EXPECT_CALL(*mockRenderer, clear()).Times(1);
-    EXPECT_CALL(*mockRenderer, update()).Times(1);
+    EXPECT_CALL(*mockInput, update()).Times(AtLeast(1));
+    EXPECT_CALL(*mockRenderer, update()).Times(2); // will render once before any updates
 
     engine->run();
 
     ASSERT_EQ(fakeProgram->starts, 1);
-    ASSERT_EQ(fakeProgram->updates, 1);
+    ASSERT_GE(fakeProgram->updates, 1);
 }
 
 TEST_F(CoreTest, CallsLogicStartOnce)
@@ -160,5 +174,5 @@ TEST_F(CoreTest, CallsLogicStartOnce)
     fakeProgram->quitAfter = 10;
     engine->run();
     ASSERT_EQ(fakeProgram->starts, 1);
-    ASSERT_EQ(fakeProgram->updates, 10);
+    ASSERT_GE(fakeProgram->updates, 10);
 }
