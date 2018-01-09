@@ -97,7 +97,7 @@ protected:
                                         std::move(std::make_unique<MockWindow>()), mockRenderer,
                                         std::make_shared<MockAudioSystem>());
         fakeProgram = std::make_shared<FakeProgram>(engine);
-        engine->setLogic(fakeProgram);
+        engine->setScene(fakeProgram);
     }
 
     /*Acutal*/

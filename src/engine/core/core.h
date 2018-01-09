@@ -33,8 +33,8 @@ public:
     virtual std::shared_ptr<IInputSystem> getInput() = 0;
     virtual std::shared_ptr<IRenderSystem> getRenderer() = 0;
     virtual std::shared_ptr<IAudioSystem> getAudio() = 0;
-    virtual std::shared_ptr<Scene> getLogic() = 0;
-    virtual void setLogic(std::shared_ptr<Scene> logic) = 0;
+    virtual std::shared_ptr<Scene> getScene() = 0;
+    virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 };
 
 class EngineCore : public IEngineCore
@@ -42,11 +42,11 @@ class EngineCore : public IEngineCore
 public:
     template <typename TLogic>
     static std::shared_ptr<EngineCore> create(std::string const& name, size_t screenWidth,
-                                        size_t screenHeight);
+                                              size_t screenHeight);
 
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-         std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
-         std::shared_ptr<IAudioSystem> audioSystem);
+               std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
+               std::shared_ptr<IAudioSystem> audioSystem);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
     virtual ~EngineCore();
@@ -61,24 +61,26 @@ public:
     virtual std::shared_ptr<IInputSystem> getInput() { return input; }
     virtual std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
     virtual std::shared_ptr<IAudioSystem> getAudio() { return audioSystem; }
-    virtual std::shared_ptr<Scene> getLogic() { return logic; }
-    virtual void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
+    virtual std::shared_ptr<Scene> getScene() { return scene; }
+    virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
 private:
     void _run();
+    void update();
 
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
     std::shared_ptr<IWindowSystem> window;
-    std::shared_ptr<Scene> logic;
+    std::shared_ptr<Scene> scene;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
     ISubscription sub;
 };
 
 template <typename TLogic>
-std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth, size_t screenHeight)
+std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
+                                               size_t screenHeight)
 {
     auto subsystems = SdlSubsystems::initialize();
     auto inp = Input::create();
@@ -88,8 +90,8 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
     auto renderer = RenderSystem::create(*window);
     auto audio = AudioSystem::create();
     auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio);
-    auto logic = std::make_shared<TLogic>(core);
-    core->setLogic(logic);
+    auto scene = std::make_shared<TLogic>(core);
+    core->setScene(scene);
     return core;
 }
 

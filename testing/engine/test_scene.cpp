@@ -15,8 +15,8 @@ public:
     MOCK_METHOD0(getInput, std::shared_ptr<IInputSystem>());
     MOCK_METHOD0(getRenderer, std::shared_ptr<IRenderSystem>());
     MOCK_METHOD0(getAudio, std::shared_ptr<IAudioSystem>());
-    MOCK_METHOD0(getLogic, std::shared_ptr<Scene>());
-    MOCK_METHOD1(setLogic, void(std::shared_ptr<Scene> logic));
+    MOCK_METHOD0(getScene, std::shared_ptr<Scene>());
+    MOCK_METHOD1(setScene, void(std::shared_ptr<Scene> scene));
 };
 
 class FakeScene : public Scene

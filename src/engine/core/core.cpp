@@ -2,9 +2,10 @@
 
 using namespace Mino;
 
-EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-	std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
-           std::shared_ptr<IAudioSystem> audioSystem)
+EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
+                       std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
+                       std::shared_ptr<IRenderSystem> renderer,
+                       std::shared_ptr<IAudioSystem> audioSystem)
     : subsystems(subsystems),
       input(input),
       window(std::move(window)),
@@ -36,17 +37,20 @@ void EngineCore::run()
 void EngineCore::_run()
 {
     active = true;
-    logic->start();
+    scene->start();
     while (active)
     {
         renderer->clear();
-
-        input->update();
-        logic->update();
-        logic->updateGameObjects();
-
+        update();
         renderer->update();
     }
+}
+
+void EngineCore::update()
+{
+    input->update();
+    scene->update();
+    scene->updateGameObjects();
 }
 
 void EngineCore::stop() { active = false; }
