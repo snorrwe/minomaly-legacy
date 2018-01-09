@@ -93,12 +93,14 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
 {
     auto logService = LogService::create("mino_debug.log");
     auto subsystems = SdlSubsystems::initialize(logService);
+    auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
+                     ? AudioSystem::create()
+                     : std::make_shared<MuteAudioSystem>();
     auto inp = Input::create();
     auto window =
         WindowSystem::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                              screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
-    auto audio = AudioSystem::create();
     auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);

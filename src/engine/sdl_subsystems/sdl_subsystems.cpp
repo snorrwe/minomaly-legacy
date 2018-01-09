@@ -82,7 +82,7 @@ void SdlSubsystems::Init_SDL_mixer(std::shared_ptr<ILogService> logService)
 
 SdlStatus SdlSubsystems::subsystemStatus(SdlSubSystemType type) const
 {
-    return status[static_cast<int>(type)];
+    return isInitialized ? status[static_cast<int>(type)] : SdlStatus::Initialized;
 }
 
 std::vector<SdlStatus>

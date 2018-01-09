@@ -25,7 +25,8 @@ enum class SdlSubSystemType
 enum class SdlStatus
 {
     Error = 0,
-    Initialized = 1
+    Initialized = 1,
+    UnInitialized = 2,
 };
 
 class SdlSubsystems
