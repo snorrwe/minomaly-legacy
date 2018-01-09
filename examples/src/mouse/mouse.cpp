@@ -22,9 +22,12 @@ void Program::start()
         if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();
     })};
 
-    mouse = createGameObject<SpriteRenderComponent>();
     images = {renderer->loadTexture("assets/mouse/mouse.png")};
-    mouse->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
+    for (int i = 0; i < 500; ++i)
+    {
+        mice.push_back(createGameObject<SpriteRenderComponent>());
+        mice.back()->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
+    }
 }
 
 void Program::update()
@@ -34,5 +37,8 @@ void Program::update()
     auto height = 0.5 * images[0]->getHeight();
     auto x = (double)mousePos.x() - width;
     auto y = (double)mousePos.y() - height;
-    mouse->getTransform()->setPosition(x, y);
+    for (auto i = mice.begin(); i != mice.end(); ++i)
+    {
+        (*i)->getTransform()->setPosition(x, y);
+    }
 }

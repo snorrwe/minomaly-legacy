@@ -30,7 +30,8 @@ public:
     virtual void start();
 
 private:
-    std::shared_ptr<Mino::GameObject> mouse;
+    std::vector<std::shared_ptr<Mino::GameObject>> mice;
+    std::vector<Mino::Vector2<int>> micePositions;
     std::shared_ptr<Mino::IInputSystem> input;
     std::shared_ptr<Mino::IRenderSystem> renderer;
     Subscriptions subs;

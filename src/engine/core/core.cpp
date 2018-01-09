@@ -40,12 +40,14 @@ void EngineCore::run(bool)
 {
     active = true;
     scene->start();
-    auto lastUpdate = std::chrono::system_clock::now();
+    lastUpdate = std::chrono::system_clock::now();
+    lastFixedUpdate = std::chrono::system_clock::now();
     Milli lag{0.0};
     while (active)
     {
         auto now = std::chrono::system_clock::now();
-        auto elapsed = now - lastUpdate;
+        Milli elapsed = now - lastFixedUpdate;
+        lastFixedUpdate = now;
         lastUpdate = now;
         lag += elapsed;
         input->update();
@@ -53,6 +55,7 @@ void EngineCore::run(bool)
         {
             update();
             lag -= targetMsPerUpdate;
+            lastUpdate = std::chrono::system_clock::now();
         }
         renderer->update();
     }
@@ -77,4 +80,4 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
     return subsystems->subsystemStatus(types);
 }
 
-void EngineCore::setTargetFps(double f) { targetMsPerUpdate = Milli{1.0 / f}; }
+void EngineCore::setTargetFps(double f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }

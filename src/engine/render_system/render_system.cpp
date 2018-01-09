@@ -4,7 +4,8 @@ using namespace Mino;
 
 std::shared_ptr<IRenderSystem> RenderSystem::create(WindowSystem& window)
 {
-    auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    auto renderer =
+        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL)
     {
         std::cout << "RenderSystem could not be created! SDL Error:\n"

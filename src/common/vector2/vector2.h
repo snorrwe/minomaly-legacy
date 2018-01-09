@@ -18,6 +18,8 @@ public:
 
     Vector2<TValue> operator+(Vector2<TValue> const& other);
     Vector2<TValue> operator-(Vector2<TValue> const& other);
+    Vector2<TValue> operator*(double);
+    bool operator==(Vector2<TValue> const& other);
 
     TValue x() { return _x; }
     TValue y() { return _y; }
@@ -37,6 +39,16 @@ template <typename TValue> Vector2<TValue> Vector2<TValue>::operator+(Vector2<TV
 template <typename TValue> Vector2<TValue> Vector2<TValue>::operator-(Vector2<TValue> const& other)
 {
     return Vector2<TValue>(_x - other._x, _y - other._y);
+}
+
+template <typename TValue> bool Vector2<TValue>::operator==(Vector2<TValue> const& other)
+{
+    return _x == other._x && _y == other._y;
+}
+
+template <typename TValue> Vector2<TValue> Vector2<TValue>::operator*(double x)
+{
+    return return Vector2<TValue>(_x * x, _y * x);
 }
 
 template <typename T> std::ostream& operator<<(std::ostream& os, Vector2<T> const& v)

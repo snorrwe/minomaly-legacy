@@ -29,6 +29,7 @@ class IEngineCore
 public:
     typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
     typedef std::chrono::duration<double, std::milli> Milli;
+    const double OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
 
@@ -90,7 +91,8 @@ private:
 
     bool active = false;
     TimePoint lastUpdate;
-    Milli targetMsPerUpdate = Milli{1.0 / 60.0};
+    TimePoint lastFixedUpdate;
+    Milli targetMsPerUpdate = Milli{OneSecInMs / 60.0};
 
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
@@ -113,9 +115,9 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
                      ? AudioSystem::create()
                      : std::make_shared<MuteAudioSystem>();
     auto inp = Input::create();
-    auto window =
-        WindowSystem::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                             screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+    auto window = WindowSystem::create(
+        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MOUSE_CAPTURE);
     auto renderer = RenderSystem::create(*window);
     auto time = TimeSystem::create();
     auto core =
