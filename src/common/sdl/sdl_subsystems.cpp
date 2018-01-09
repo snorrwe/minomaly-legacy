@@ -67,7 +67,7 @@ void SdlSubsystems::Init_SDL_ttf()
 
 void SdlSubsystems::Init_SDL_mixer()
 {
-    status[static_cast<int>(SdlSubSystemType::SDL_mix)] =
+    status[static_cast<int>(SdlSubSystemType::SDL_mixer)] =
         Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 ? SdlStatus::Error
                                                               : SdlStatus::Initialized;
     if (status[static_cast<int>(SdlSubSystemType::SDL_mixer)] == SdlStatus::Error)
