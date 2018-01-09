@@ -10,31 +10,31 @@ namespace Mino
 
 class Core;
 
-class IWindow
+class IWindowSystem
 {
 public:
-    virtual ~IWindow() {}
+    virtual ~IWindowSystem() {}
 
     virtual void fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue) = 0;
     virtual void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect) = 0;
     virtual void blitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect) = 0;
 };
 
-class Window : public IWindow
+class WindowSystem : public IWindowSystem
 {
 public:
     friend class Core;
 
-    static std::unique_ptr<Window> create(const char* title, int x, int y, int w, int h,
-                                          Uint32 flags);
+    static std::shared_ptr<WindowSystem> create(const char* title, int x, int y, int w, int h,
+                                                Uint32 flags);
 
-    Window(SDL_Window* window) : window(window), surface(SDL_GetWindowSurface(window)) {}
-    Window(Window const&) = delete;
-    Window(Window&& w) = delete;
-    virtual ~Window() { SDL_DestroyWindow(window); }
+    WindowSystem(SDL_Window* window) : window(window), surface(SDL_GetWindowSurface(window)) {}
+    WindowSystem(WindowSystem const&) = delete;
+    WindowSystem(WindowSystem&& w) = delete;
+    virtual ~WindowSystem() { SDL_DestroyWindow(window); }
 
-    Window& operator=(Window&& w) = delete;
-    Window& operator=(Window const&) = delete;
+    WindowSystem& operator=(WindowSystem&& w) = delete;
+    WindowSystem& operator=(WindowSystem const&) = delete;
 
     virtual void fillRect(const SDL_Rect* rect, uint8_t red, uint8_t green, uint8_t blue);
     virtual void blitSurface(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);

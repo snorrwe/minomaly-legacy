@@ -6,7 +6,7 @@ Program::Program(std::shared_ptr<Core> core) : Scene(core)
 {
     renderer = engine->getRenderer();
     input = engine->getInput();
-    audioSystem = engine->getAudioSystem();
+    audioSystem = engine->getAudio();
 }
 
 Program::~Program()

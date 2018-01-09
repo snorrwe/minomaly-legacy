@@ -11,7 +11,7 @@ class MockSubsystems : public SdlSubsystems
 public:
 };
 
-class MockWindow : public IWindow
+class MockWindow : public IWindowSystem
 {
 public:
     MOCK_METHOD4(fillRect, void(const SDL_Rect*, uint8_t, uint8_t, uint8_t));

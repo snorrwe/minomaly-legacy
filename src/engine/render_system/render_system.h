@@ -18,7 +18,7 @@ namespace Mino
 class Core;
 class Texture;
 class RenderComponent;
-class Window;
+class WindowSystem;
 
 class IRenderSystem
 {
@@ -59,7 +59,7 @@ public:
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
-    static std::shared_ptr<IRenderSystem> create(Window& window);
+    static std::shared_ptr<IRenderSystem> create(WindowSystem& window);
 
     RenderSystem(SDL_Renderer* renderer);
     RenderSystem(RenderSystem const&) = default;

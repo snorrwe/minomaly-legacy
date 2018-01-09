@@ -17,7 +17,7 @@
 namespace Mino
 {
 
-class IWindow;
+class IWindowSystem;
 class IRenderSystem;
 class Scene;
 
@@ -29,10 +29,10 @@ public:
     virtual void run() = 0;
     virtual void stop() = 0;
 
-    virtual IWindow* getWindow() = 0;
+    virtual std::shared_ptr<IWindowSystem> getWindow() = 0;
     virtual std::shared_ptr<IInputSystem> getInput() = 0;
     virtual std::shared_ptr<IRenderSystem> getRenderer() = 0;
-    virtual std::shared_ptr<IAudioSystem> getAudioSystem() = 0;
+    virtual std::shared_ptr<IAudioSystem> getAudio() = 0;
     virtual std::shared_ptr<Scene> getLogic() = 0;
     virtual void setLogic(std::shared_ptr<Scene> logic) = 0;
 };
@@ -45,7 +45,7 @@ public:
                                         size_t screenHeight);
 
     Core(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-         std::unique_ptr<IWindow>&& window, std::shared_ptr<IRenderSystem> renderer,
+         std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
          std::shared_ptr<IAudioSystem> audioSystem);
     Core(Core const&) = delete;
     Core(Core&&) = delete;
@@ -57,10 +57,10 @@ public:
     virtual void run();
     virtual void stop();
 
-    virtual IWindow* getWindow() { return window.get(); }
+    virtual std::shared_ptr<IWindowSystem> getWindow() { return window; }
     virtual std::shared_ptr<IInputSystem> getInput() { return input; }
     virtual std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
-    virtual std::shared_ptr<IAudioSystem> getAudioSystem() { return audioSystem; }
+    virtual std::shared_ptr<IAudioSystem> getAudio() { return audioSystem; }
     virtual std::shared_ptr<Scene> getLogic() { return logic; }
     virtual void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
 
@@ -70,7 +70,7 @@ private:
     bool active = false;
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
-    std::unique_ptr<IWindow> window;
+    std::shared_ptr<IWindowSystem> window;
     std::shared_ptr<Scene> logic;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
@@ -82,11 +82,12 @@ std::shared_ptr<Core> Core::create(std::string const& name, size_t screenWidth, 
 {
     auto subsystems = SdlSubsystems::initialize();
     auto inp = Input::create();
-    auto window = Window::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                 screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+    auto window =
+        WindowSystem::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                             screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
     auto audio = AudioSystem::create();
-    auto core = std::make_shared<Core>(subsystems, inp, std::move(window), renderer, audio);
+    auto core = std::make_shared<Core>(subsystems, inp, window, renderer, audio);
     auto logic = std::make_shared<TLogic>(core);
     core->setLogic(logic);
     return core;
