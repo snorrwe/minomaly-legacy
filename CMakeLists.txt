@@ -48,10 +48,12 @@ else()
 endif()
 
 if(WIN32)
-  set(SDL2_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2-2.0.7)
-  set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_image-2.0.2)
-  set(SDL2_TTF_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_ttf-2.0.14)
-  set(SDL2_MIXER_DIR ${PROJECT_SOURCE_DIR}/lib/SDL2_mixer-2.0.2)
+  set(SDL2_ROOT ${PROJECT_SOURCE_DIR}/lib/sdl/windows-vs)
+  set(SDL2_DIR ${SDL2_ROOT}/SDL2-2.0.7)
+  set(SDL2_IMAGE_DIR ${SDL2_ROOT}/SDL2_image-2.0.2)
+  set(SDL2_TTF_DIR ${SDL2_ROOT}/SDL2_ttf-2.0.14)
+  set(SDL2_MIXER_DIR ${SDL2_ROOT}/SDL2_mixer-2.0.2)
+
 endif(WIN32)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
