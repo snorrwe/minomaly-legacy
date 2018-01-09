@@ -94,8 +94,8 @@ protected:
         mockInput = std::make_shared<MockInput>();
         mockRenderer = std::make_shared<MockRenderer>();
         engine = std::make_shared<EngineCore>(mockSubsystems, mockInput,
-                                        std::move(std::make_unique<MockWindow>()), mockRenderer,
-                                        std::make_shared<MockAudioSystem>());
+                                              std::move(std::make_unique<MockWindow>()),
+                                              mockRenderer, std::make_shared<MockAudioSystem>());
         fakeProgram = std::make_shared<FakeProgram>(engine);
         engine->setScene(fakeProgram);
     }
@@ -110,7 +110,23 @@ protected:
     std::shared_ptr<FakeProgram> fakeProgram;
 };
 
-TEST(TestCreate, CanCreateActual) { EngineCore::create<FakeProgram>("...", 0, 0); }
+TEST(TestCreate, CanCreateActual)
+{
+    /*
+        Does not test Mixer status, as AppVoyer does not support audio endpoints
+        TODO: find a way to test the audio system on the CI
+    */
+    auto engine = EngineCore::create<FakeProgram>("...", 0, 0);
+    auto status = engine->subsystemStatus({
+        SdlSubSystemType::SDL,
+        SdlSubSystemType::SDL_image,
+        SdlSubSystemType::SDL_ttf,
+    });
+    for (auto i = status.begin(); i != status.end(); ++i)
+    {
+        ASSERT_EQ(*i, SdlStatus::Initialized);
+    }
+}
 
 TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }
 

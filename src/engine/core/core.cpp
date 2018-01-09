@@ -54,3 +54,13 @@ void EngineCore::update()
 }
 
 void EngineCore::stop() { active = false; }
+
+SdlStatus EngineCore::subsystemStatus(SdlSubSystemType type) const
+{
+    return subsystems->subsystemStatus(type);
+}
+
+std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType> const& types) const
+{
+    return subsystems->subsystemStatus(types);
+}

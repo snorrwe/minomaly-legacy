@@ -1,8 +1,10 @@
 #include "component.h"
 #include "scene.h"
+#include "sdl_subsystems.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <memory>
+#include <vector>
 
 using namespace Mino;
 
@@ -17,6 +19,9 @@ public:
     MOCK_METHOD0(getAudio, std::shared_ptr<IAudioSystem>());
     MOCK_METHOD0(getScene, std::shared_ptr<Scene>());
     MOCK_METHOD1(setScene, void(std::shared_ptr<Scene> scene));
+    MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));
+    MOCK_CONST_METHOD1(subsystemStatus,
+                       std::vector<SdlStatus>(std::vector<SdlSubSystemType> const&));
 };
 
 class FakeScene : public Scene

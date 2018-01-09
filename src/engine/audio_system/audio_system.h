@@ -25,6 +25,20 @@ public:
     virtual void stopMusic() = 0;
 };
 
+class MuteAudioSystem : public IAudioSystem
+{
+public:
+    virtual ~MuteAudioSystem() {}
+
+    virtual void playChannel(Audio const&, int channel = -1, int loops = 0) {}
+    virtual bool musicPlaying() { return false; }
+    virtual bool musicPaused() { return false; }
+    virtual void playMusic(Music const&, int loops = 1) {}
+    virtual void resumeMusic() {}
+    virtual void pauseMusic() {}
+    virtual void stopMusic() {}
+};
+
 class AudioSystem : public IAudioSystem
 {
 public:

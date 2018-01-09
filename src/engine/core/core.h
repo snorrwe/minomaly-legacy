@@ -35,6 +35,9 @@ public:
     virtual std::shared_ptr<IAudioSystem> getAudio() = 0;
     virtual std::shared_ptr<Scene> getScene() = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
+
+    virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
+    virtual std::vector<SdlStatus> subsystemStatus(std::vector<SdlSubSystemType> const&) const = 0;
 };
 
 class EngineCore : public IEngineCore
@@ -63,6 +66,10 @@ public:
     virtual std::shared_ptr<IAudioSystem> getAudio() { return audioSystem; }
     virtual std::shared_ptr<Scene> getScene() { return scene; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
+
+    virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
+    virtual std::vector<SdlStatus>
+    subsystemStatus(std::vector<SdlSubSystemType> const& types) const;
 
 private:
     void _run();
