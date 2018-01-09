@@ -20,7 +20,6 @@ set(_ENGINE_INCLUDES engine
                      engine/render_system 
                      engine/core 
                      engine/camera
-                     engine/game_object
                      engine/scene
                      engine/audio_system
                      )
@@ -41,6 +40,7 @@ set(_COMMON_INCLUDES common
 set(_COMPONENT_INCLUDES component
                         component/transform
                         component/renderer
+                        component/game_object
                         component/sprite_render
                         )
 
@@ -52,7 +52,6 @@ add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp
                             ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
                             ${PROJECT_SOURCE_DIR}/engine/render_system/render_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
-                            ${PROJECT_SOURCE_DIR}/engine/game_object/game_object.cpp
                             ${PROJECT_SOURCE_DIR}/engine/scene/scene.cpp
                             ${PROJECT_SOURCE_DIR}/engine/audio_system/audio_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/core/core.cpp)
@@ -66,6 +65,7 @@ add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
 add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_render/sprite_render.cpp
                                ${PROJECT_SOURCE_DIR}/component/renderer/renderer.cpp
+                               ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
 # [[ Link ]]
