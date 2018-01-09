@@ -44,6 +44,7 @@ void SdlSubsystems::Init_SDL()
 void SdlSubsystems::Init_SDL_image()
 {
     auto imgFlags = IMG_INIT_PNG;
+
     status[static_cast<int>(SdlSubSystemType::SDL_image)] =
         (!IMG_Init(imgFlags)) & imgFlags ? SdlStatus::Error : SdlStatus::Initialized;
     if (status[static_cast<int>(SdlSubSystemType::SDL_image)] == SdlStatus::Error)
@@ -66,7 +67,7 @@ void SdlSubsystems::Init_SDL_ttf()
 
 void SdlSubsystems::Init_SDL_mixer()
 {
-    status[static_cast<int>(SdlSubSystemType::SDL_ttf)] =
+    status[static_cast<int>(SdlSubSystemType::SDL_mix)] =
         Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 ? SdlStatus::Error
                                                               : SdlStatus::Initialized;
     if (status[static_cast<int>(SdlSubSystemType::SDL_mixer)] == SdlStatus::Error)
