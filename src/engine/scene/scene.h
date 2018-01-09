@@ -9,12 +9,12 @@
 namespace Mino
 {
 
-class Core;
+class IEngineCore;
 
 class Scene
 {
 public:
-    Scene(std::shared_ptr<Core> engine) : engine(engine.get()) {}
+    Scene(std::shared_ptr<IEngineCore> engine) : engine(engine.get()) {}
     Scene(Scene const&) = delete;
     Scene(Scene&&) = delete;
     virtual ~Scene() {}
@@ -29,7 +29,7 @@ public:
     template <typename... TComponents> std::shared_ptr<GameObject> createGameObject();
     void destroyGameObject(std::shared_ptr<GameObject>);
 
-    Core* getEngineCore() { return engine; }
+    IEngineCore* getEngineCore() { return engine; }
     std::shared_ptr<Transform> getRootTransform() { return rootTransform; }
 
 protected:
@@ -40,7 +40,7 @@ protected:
 
     std::shared_ptr<Transform> rootTransform = Transform::create();
     std::vector<std::shared_ptr<GameObject>> gameObjects;
-    Core* engine;
+    IEngineCore* engine;
 };
 
 template <typename TComponent> void Scene::addComponent(GameObject& go)
@@ -61,8 +61,7 @@ template <typename T, typename... Ts> void Scene::addComponentHelper(GameObject&
     addComponents<Ts...>(go);
 }
 
-template <typename... TComponents>
-std::shared_ptr<GameObject> Scene::createGameObject()
+template <typename... TComponents> std::shared_ptr<GameObject> Scene::createGameObject()
 {
     auto go = createEmptyGameObject();
     addComponents<TComponents...>(*go);

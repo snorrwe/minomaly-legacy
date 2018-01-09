@@ -28,6 +28,13 @@ public:
 
     virtual void run() = 0;
     virtual void stop() = 0;
+
+    virtual IWindow* getWindow() = 0;
+    virtual std::shared_ptr<IInputSystem> getInput() = 0;
+    virtual std::shared_ptr<IRenderSystem> getRenderer() = 0;
+    virtual std::shared_ptr<IAudioSystem> getAudioSystem() = 0;
+    virtual std::shared_ptr<Scene> getLogic() = 0;
+    virtual void setLogic(std::shared_ptr<Scene> logic) = 0;
 };
 
 class Core : public IEngineCore
@@ -50,12 +57,12 @@ public:
     virtual void run();
     virtual void stop();
 
-    IWindow* getWindow() { return window.get(); }
-    std::shared_ptr<IInputSystem> getInput() { return input; }
-    std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
-    std::shared_ptr<IAudioSystem> getAudioSystem() { return audioSystem; }
-    std::shared_ptr<Scene> getLogic() { return logic; }
-    void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
+    virtual IWindow* getWindow() { return window.get(); }
+    virtual std::shared_ptr<IInputSystem> getInput() { return input; }
+    virtual std::shared_ptr<IRenderSystem> getRenderer() { return renderer; }
+    virtual std::shared_ptr<IAudioSystem> getAudioSystem() { return audioSystem; }
+    virtual std::shared_ptr<Scene> getLogic() { return logic; }
+    virtual void setLogic(std::shared_ptr<Scene> logic) { this->logic = logic; }
 
 private:
     void _run();
