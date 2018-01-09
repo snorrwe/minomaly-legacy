@@ -65,7 +65,7 @@ src/
 testing/-----   # test code goes here
 ```
 
-## Adding example new project
+## Adding new example project
 
 Example projects can be added by the `generate_example.py` script.
 
