@@ -61,6 +61,8 @@ lib/----------  # external dependencies
 src/
     common/     # common, not directly engine related stuff
     engine/     # engine code goes here
+
+testing/-----   # test code goes here
 ```
 
 ## Adding example new project
