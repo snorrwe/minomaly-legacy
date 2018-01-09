@@ -43,6 +43,8 @@ public:
     virtual std::shared_ptr<ITimeSystem> getTime() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
+    virtual void setTargetFps(double f) = 0;
+
     virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
     virtual std::vector<SdlStatus> subsystemStatus(std::vector<SdlSubSystemType> const&) const = 0;
 };
@@ -75,6 +77,8 @@ public:
     virtual std::shared_ptr<ITimeSystem> getTime() const { return time; };
     virtual std::shared_ptr<Scene> getScene() const { return scene; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
+
+    virtual void setTargetFps(double f);
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
     virtual std::vector<SdlStatus>

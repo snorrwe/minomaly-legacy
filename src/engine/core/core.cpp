@@ -45,14 +45,14 @@ void EngineCore::run(bool)
     while (active)
     {
         auto now = std::chrono::system_clock::now();
-        auto elaped = now - lastUpdate;
+        auto elapsed = now - lastUpdate;
         lastUpdate = now;
-        lag += elaped;
+        lag += elapsed;
         input->update();
         while (lag >= targetMsPerUpdate)
         {
             update();
-            lag -= Milli{targetMsPerUpdate};
+            lag -= targetMsPerUpdate;
         }
         renderer->update();
     }
@@ -76,3 +76,5 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
 {
     return subsystems->subsystemStatus(types);
 }
+
+void EngineCore::setTargetFps(double f) { targetMsPerUpdate = Milli{1.0 / f}; }
