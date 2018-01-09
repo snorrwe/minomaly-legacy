@@ -3,14 +3,17 @@
 using namespace Mino;
 
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
-                       std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
+                       std::shared_ptr<IInputSystem> input,
+                       std::shared_ptr<IWindowSystem> windowSytem,
                        std::shared_ptr<IRenderSystem> renderer,
-                       std::shared_ptr<IAudioSystem> audioSystem)
+                       std::shared_ptr<IAudioSystem> audioSystem,
+                       std::shared_ptr<ILogService> logService)
     : subsystems(subsystems),
       input(input),
-      window(std::move(window)),
+      window(windowSytem),
       renderer(renderer),
-      audioSystem(audioSystem)
+      audioSystem(audioSystem),
+      logService(logService)
 {
     sub = input->onQuit([&](auto const&) { active = false; });
 }

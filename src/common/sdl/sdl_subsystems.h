@@ -3,6 +3,7 @@
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
+#include "log_service.h"
 #undef main
 #include <array>
 #include <iostream>
@@ -30,9 +31,9 @@ enum class SdlStatus
 class SdlSubsystems
 {
 public:
-    static std::shared_ptr<SdlSubsystems> initialize();
+    static std::shared_ptr<SdlSubsystems> initialize(std::shared_ptr<ILogService>);
 
-    SdlSubsystems() = default;
+    SdlSubsystems(std::shared_ptr<ILogService>);
     SdlSubsystems(SdlSubsystems const&) = delete;
     SdlSubsystems(SdlSubsystems&&) = delete;
     virtual ~SdlSubsystems();
@@ -48,10 +49,12 @@ private:
     static SdlSubsystems* instance;
     static std::array<SdlStatus, static_cast<int>(SdlSubSystemType::COUNT)> status;
 
-    static void Init_SDL();
-    static void Init_SDL_image();
-    static void Init_SDL_ttf();
-    static void Init_SDL_mixer();
+    static void Init_SDL(std::shared_ptr<ILogService> logService);
+    static void Init_SDL_image(std::shared_ptr<ILogService> logService);
+    static void Init_SDL_ttf(std::shared_ptr<ILogService> logService);
+    static void Init_SDL_mixer(std::shared_ptr<ILogService> logService);
+
+    std::shared_ptr<ILogService> logService;
 };
 
 } // namespace Mino

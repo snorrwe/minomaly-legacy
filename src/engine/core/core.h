@@ -3,6 +3,7 @@
 #include "SDL_image.h"
 #include "audio_system.h"
 #include "input.h"
+#include "log_service.h"
 #include "observer.h"
 #include "render_system.h"
 #include "scene.h"
@@ -49,7 +50,7 @@ public:
 
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
                std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
-               std::shared_ptr<IAudioSystem> audioSystem);
+               std::shared_ptr<IAudioSystem> audioSystem, std::shared_ptr<ILogService> logService);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
     virtual ~EngineCore();
@@ -82,6 +83,7 @@ private:
     std::shared_ptr<Scene> scene;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
+    std::shared_ptr<ILogService> logService;
     ISubscription sub;
 };
 
@@ -89,14 +91,15 @@ template <typename TLogic>
 std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
                                                size_t screenHeight)
 {
-    auto subsystems = SdlSubsystems::initialize();
+    auto logService = LogService::create("mino_debug.log");
+    auto subsystems = SdlSubsystems::initialize(logService);
     auto inp = Input::create();
     auto window =
         WindowSystem::create(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                              screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     auto renderer = RenderSystem::create(*window);
     auto audio = AudioSystem::create();
-    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio);
+    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
     return core;

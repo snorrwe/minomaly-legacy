@@ -2,6 +2,7 @@
 set(_MINO_ENGINE MinomalyEngine)
 set(_MINO_COMMON MinoCommon)
 set(_MINO_COMPONENT MinoComponents)
+set(_MINO_SERVICES MinoServices)
 project(${_MINO_ENGINE})
 
 #[[ Dependencies ]]
@@ -21,8 +22,7 @@ set(_ENGINE_INCLUDES engine
                      engine/core 
                      engine/camera
                      engine/scene
-                     engine/audio_system
-                     )
+                     engine/audio_system)
 
 set(_COMMON_INCLUDES common
                      common/surface 
@@ -34,19 +34,21 @@ set(_COMMON_INCLUDES common
                      common/rect
                      common/font
                      common/object_pool
-                     common/vector2
-                     )
+                     common/vector2)
 
 set(_COMPONENT_INCLUDES component
                         component/transform
                         component/renderer
                         component/game_object
-                        component/sprite_render
-                        )
+                        component/sprite_render)
+
+set(_SERVICE_INCLUDES services
+                      services/log_service)
 
 include_directories(${_COMMON_INCLUDES})
 include_directories(${_ENGINE_INCLUDES})
 include_directories(${_COMPONENT_INCLUDES})
+include_directories(${_SERVICE_INCLUDES})
 
 add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp 
                             ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
@@ -68,11 +70,14 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
+add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/log_service/log_service.cpp)
+
 # [[ Link ]]
 
 target_link_libraries(${_MINO_ENGINE}
                             ${_MINO_COMMON} 
                             ${_MINO_COMPONENT} 
+                            ${_MINO_SERVICES} 
                             ${SDL2_LIBRARIES} 
                             "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
                             "${SDL2_MIXER_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_mixer.lib"
@@ -82,4 +87,4 @@ target_link_libraries(${_MINO_ENGINE}
 
 set(MINO_PATH ${PROJECT_SOURCE_DIR} PARENT_SCOPE)
 set(MINO_ENGINE ${_MINO_ENGINE} PARENT_SCOPE)
-set(MINO_INCLUDES ${_COMMON_INCLUDES} ${_ENGINE_INCLUDES} ${_COMPONENT_INCLUDES} PARENT_SCOPE)
+set(MINO_INCLUDES ${_COMMON_INCLUDES} ${_ENGINE_INCLUDES} ${_COMPONENT_INCLUDES} ${_SERVICE_INCLUDES} PARENT_SCOPE)

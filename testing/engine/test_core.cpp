@@ -9,6 +9,7 @@ using namespace Mino;
 class MockSubsystems : public SdlSubsystems
 {
 public:
+    MockSubsystems(std::shared_ptr<ILogService> l) : SdlSubsystems(l) {}
 };
 
 class MockWindow : public IWindowSystem
@@ -55,6 +56,17 @@ public:
     MOCK_METHOD0(stopMusic, void());
 };
 
+class MockLogService : public ILogService
+{
+public:
+    MOCK_METHOD1(error, void(std::string const& message));
+    MOCK_METHOD1(warning, void(std::string const& message));
+    MOCK_METHOD1(debug, void(std::string const& message));
+    MOCK_METHOD1(info, void(std::string const& message));
+    MOCK_METHOD1(setFname, void(std::string const& fname));
+    MOCK_METHOD0(getFname, std::string());
+};
+
 class FakeProgram : public Scene
 {
 public:
@@ -89,13 +101,13 @@ class CoreTest : public ::testing::Test
 protected:
     virtual void SetUp()
     {
-
-        mockSubsystems = std::make_shared<MockSubsystems>();
+        auto mockLogService = std::make_shared<MockLogService>();
+        mockSubsystems = std::make_shared<MockSubsystems>(mockLogService);
         mockInput = std::make_shared<MockInput>();
         mockRenderer = std::make_shared<MockRenderer>();
         engine = std::make_shared<EngineCore>(mockSubsystems, mockInput,
-                                              std::move(std::make_unique<MockWindow>()),
-                                              mockRenderer, std::make_shared<MockAudioSystem>());
+                                              std::make_shared<MockWindow>(), mockRenderer,
+                                              std::make_shared<MockAudioSystem>(), mockLogService);
         fakeProgram = std::make_shared<FakeProgram>(engine);
         engine->setScene(fakeProgram);
     }
