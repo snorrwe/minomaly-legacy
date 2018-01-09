@@ -77,7 +77,7 @@ TEST_F(ObjectPoolTests, CanAccessReferencedItems)
     }
 }
 
-TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInavtive)
+TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 {
 
     std::vector<Pool::Reference*> myItems{
