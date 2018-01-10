@@ -145,6 +145,10 @@
 					"shell_cmd": "cmake --build . --target src/MinomalyEngine"
 				},
 				{
+					"name": "src/MinoServices",
+					"shell_cmd": "cmake --build . --target src/MinoServices"
+				},
+				{
 					"name": "src/RUN_TESTS",
 					"shell_cmd": "cmake --build . --target src/RUN_TESTS"
 				},

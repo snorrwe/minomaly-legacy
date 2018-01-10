@@ -23,7 +23,7 @@ void Program::start()
     })};
 
     images = {renderer->loadTexture("assets/mouse/mouse.png")};
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 50; ++i)
     {
         mice.push_back(createGameObject<SpriteRenderComponent>());
         mice.back()->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
@@ -37,8 +37,12 @@ void Program::update()
     auto height = 0.5 * images[0]->getHeight();
     auto x = (double)mousePos.x() - width;
     auto y = (double)mousePos.y() - height;
-    for (auto i = mice.begin(); i != mice.end(); ++i)
+    (*mice.begin())->getTransform()->setPosition(x, y);
+
+    auto next = mice.rbegin() + 1;
+    auto current = mice.rbegin();
+    for (; current != mice.rend() - 1; ++current, ++next)
     {
-        (*i)->getTransform()->setPosition(x, y);
+        (*current)->getTransform()->setPosition((*next)->getTransform()->getPosition());
     }
 }

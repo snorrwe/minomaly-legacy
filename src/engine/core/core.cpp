@@ -46,7 +46,7 @@ void EngineCore::run(bool)
     while (active)
     {
         auto now = std::chrono::system_clock::now();
-        Milli elapsed = now - lastFixedUpdate;
+        auto elapsed = now - lastFixedUpdate;
         lastFixedUpdate = now;
         lastUpdate = now;
         lag += elapsed;
