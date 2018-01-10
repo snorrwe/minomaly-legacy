@@ -44,7 +44,7 @@ TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
 {
     auto lastPosition = gameObject->getTransform()->getPosition();
     physics->setVelocity({1, 1});
-    for (int i = 0; i < 50; ++i)
+    for (int i = 1; i < 50; ++i)
     {
         auto milliseconds = FakeTime::Milli{10 * i};
         fakeTime->setDtime(milliseconds);
@@ -53,7 +53,7 @@ TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
         auto delta = currentPosition - lastPosition;
         lastPosition = currentPosition;
 
-        ASSERT_EQ(delta.x(), milliseconds.count());
-        ASSERT_EQ(delta.y(), milliseconds.count());
+        ASSERT_NEAR(delta.x(), 1.0 / milliseconds.count(), 0.001);
+        ASSERT_NEAR(delta.y(), 1.0 / milliseconds.count(), 0.001);
     }
 }
