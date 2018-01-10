@@ -161,7 +161,7 @@ TEST_F(CoreTest, CanStopEngineFromLogic)
 {
     fakeProgram->quitAfter = 1;
     EXPECT_CALL(*mockInput, update()).Times(AtLeast(1));
-    EXPECT_CALL(*mockRenderer, update()).Times(2); // will render once before any updates
+    EXPECT_CALL(*mockRenderer, update()).Times(AtLeast(1));
 
     engine->run();
 
