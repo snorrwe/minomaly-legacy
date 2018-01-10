@@ -23,11 +23,10 @@ void Program::start()
     })};
 
     images = {renderer->loadTexture("assets/mouse/mouse.png")};
-    for (int i = 0; i < 50; ++i)
-    {
-        mice.push_back(createGameObject<SpriteRenderComponent>());
-        mice.back()->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
-    }
+    mouse = createGameObject<SpriteRenderComponent, PhysicsComponent>();
+    physics = mouse->getComponent<PhysicsComponent>();
+    mouse->getComponent<SpriteRenderComponent>()->setTexture(images[0]);
+    mouse->getTransform()->setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 }
 
 void Program::update()
@@ -37,12 +36,8 @@ void Program::update()
     auto height = 0.5 * images[0]->getHeight();
     auto x = (double)mousePos.x() - width;
     auto y = (double)mousePos.y() - height;
-    (*mice.begin())->getTransform()->setPosition(x, y);
 
-    auto next = mice.rbegin() + 1;
-    auto current = mice.rbegin();
-    for (; current != mice.rend() - 1; ++current, ++next)
-    {
-        (*current)->getTransform()->setPosition((*next)->getTransform()->getPosition());
-    }
+    auto target = Vector2<double>(x, y);
+
+    physics->setVelocity(target - mouse->getTransform()->getPosition());
 }

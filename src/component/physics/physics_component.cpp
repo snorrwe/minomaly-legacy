@@ -10,7 +10,7 @@ void PhysicsComponent::start()
 
 void PhysicsComponent::update()
 {
-    auto x = transform->getPosition().x() + velocity.x() * time->deltaTime();
-    auto y = transform->getPosition().y() + velocity.y() * time->deltaTime();
+    auto x = transform->getPosition().x() + velocity.x() / time->deltaTime();
+    auto y = transform->getPosition().y() + velocity.y() / time->deltaTime();
     transform->setPosition(x, y);
 }

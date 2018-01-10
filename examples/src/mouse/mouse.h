@@ -32,7 +32,8 @@ public:
 private:
     const float speed = 10.0f;
 
-    std::vector<std::shared_ptr<Mino::GameObject>> mice;
+    std::shared_ptr<Mino::GameObject> mouse;
+    std::shared_ptr<Mino::PhysicsComponent> physics;
     std::vector<Mino::Vector2<int>> micePositions;
     std::shared_ptr<Mino::IInputSystem> input;
     std::shared_ptr<Mino::IRenderSystem> renderer;

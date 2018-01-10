@@ -27,7 +27,7 @@ public:
 class LogService : public ILogService
 {
 public:
-    static std::shared_ptr<LogService> create(std::string const& fname = "");
+    static std::shared_ptr<LogService> create(std::string const& fname = "Debug.log");
 
     LogService() = default;
     LogService(std::string const& fname);

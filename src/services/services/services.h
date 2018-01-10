@@ -16,7 +16,7 @@ public:
     template <typename TService> static std::shared_ptr<TService> get();
     template <typename TService> static void overrideService(std::shared_ptr<TService>);
 
-    virtual ~Services() {}
+    ~Services() {}
 
 private:
     Services() {}
