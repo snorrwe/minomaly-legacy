@@ -1,4 +1,5 @@
 #pragma once
+#include "p_service.h"
 #include <chrono>
 #include <memory>
 
@@ -7,32 +8,32 @@ namespace Mino
 
 class EngineCore;
 
-class ITimeSystem
+class ITimeService : public IService
 {
 public:
     friend class EngineCore;
 
-    typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
     typedef std::chrono::duration<double, std::milli> Milli;
+    typedef std::chrono::time_point<std::chrono::system_clock, Milli> TimePoint;
 
-    virtual ~ITimeSystem() {}
+    virtual ~ITimeService() {}
 
     virtual TimePoint now() const = 0;
-    virtual Milli deltaTime() const = 0;
+    virtual double deltaTime() const = 0;
 
 protected:
     virtual void update(TimePoint const& now) = 0;
 };
 
-class TimeSystem : public ITimeSystem
+class TimeService : public ITimeService
 {
 public:
-    static std::shared_ptr<TimeSystem> create() { return std::make_shared<TimeSystem>(); }
+    static std::shared_ptr<TimeService> create() { return std::make_shared<TimeService>(); }
 
-    virtual ~TimeSystem() {}
+    virtual ~TimeService() {}
 
     virtual TimePoint now() const { return currentTime; }
-    virtual Milli deltaTime() const { return dtime; }
+    virtual double deltaTime() const { return dtime.count(); }
 
 protected:
     virtual void update(TimePoint const& now)

@@ -5,7 +5,7 @@ using namespace Mino;
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
                        std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audio,
-                       std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeSystem> time)
+                       std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
     : subsystems(subsystems),
       input(input),
       window(window),
@@ -27,12 +27,12 @@ void EngineCore::run()
     }
     catch (std::runtime_error& exc)
     {
-        std::cout << "Unexpected error happened while running the Game! " << exc.what()
+        std::cout << "Unexpected error happened while running Minomaly! " << exc.what()
                   << std::endl;
     }
     catch (...)
     {
-        std::cout << "Unknown error happened while running the Game! " << std::endl;
+        std::cout << "Unknown error happened while running Minomaly! " << std::endl;
     }
 }
 

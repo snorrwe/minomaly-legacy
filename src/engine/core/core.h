@@ -8,8 +8,9 @@
 #include "render_system.h"
 #include "scene.h"
 #include "sdl_subsystems.h"
+#include "services.h"
 #include "surface.h"
-#include "time_system.h"
+#include "time_service.h"
 #include "window.h"
 #include <chrono>
 #include <iostream>
@@ -41,7 +42,7 @@ public:
     virtual std::shared_ptr<IRenderSystem> getRenderer() const = 0;
     virtual std::shared_ptr<IAudioSystem> getAudio() const = 0;
     virtual std::shared_ptr<Scene> getScene() const = 0;
-    virtual std::shared_ptr<ITimeSystem> getTime() const = 0;
+    virtual std::shared_ptr<ITimeService> getTime() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
     virtual void setTargetFps(double f) = 0;
@@ -60,7 +61,7 @@ public:
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
                std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
                std::shared_ptr<IAudioSystem> audioSystem, std::shared_ptr<ILogService> logService,
-               std::shared_ptr<ITimeSystem> time);
+               std::shared_ptr<ITimeService> time);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
     virtual ~EngineCore();
@@ -75,7 +76,7 @@ public:
     virtual std::shared_ptr<IInputSystem> getInput() const { return input; }
     virtual std::shared_ptr<IRenderSystem> getRenderer() const { return renderer; }
     virtual std::shared_ptr<IAudioSystem> getAudio() const { return audioSystem; }
-    virtual std::shared_ptr<ITimeSystem> getTime() const { return time; };
+    virtual std::shared_ptr<ITimeService> getTime() const { return time; };
     virtual std::shared_ptr<Scene> getScene() const { return scene; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
@@ -101,7 +102,7 @@ private:
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
     std::shared_ptr<ILogService> logService;
-    std::shared_ptr<ITimeSystem> time;
+    std::shared_ptr<ITimeService> time;
     ISubscription sub;
 };
 
@@ -109,7 +110,8 @@ template <typename TLogic>
 std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
                                                size_t screenHeight)
 {
-    auto logService = LogService::create("mino_debug.log");
+    auto logService = Services::get<ILogService>();
+    auto time = Services::get<ITimeService>();
     auto subsystems = SdlSubsystems::initialize(logService);
     auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
                      ? AudioSystem::create()
@@ -117,9 +119,8 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
     auto inp = Input::create();
     auto window = WindowSystem::create(
         name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MOUSE_CAPTURE);
+        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
-    auto time = TimeSystem::create();
     auto core =
         std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService, time);
     auto scene = std::make_shared<TLogic>(core);

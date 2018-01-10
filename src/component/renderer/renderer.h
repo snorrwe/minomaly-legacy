@@ -7,6 +7,7 @@ namespace Mino
 {
 
 class IRenderSystem;
+class Component;
 
 class RenderComponent : public Component
 {

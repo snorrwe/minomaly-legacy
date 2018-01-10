@@ -46,7 +46,7 @@ public:
 protected:
     ComponentContainer components = ComponentContainer{};
     size_t enabled = 0;
-    std::shared_ptr<Transform> transform = nullptr;
+    std::shared_ptr<Transform> transform = Transform::create(nullptr);
     Scene* scene = nullptr;
 };
 

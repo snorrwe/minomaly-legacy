@@ -1,4 +1,5 @@
 #pragma once
+#include "p_service.h"
 #include <chrono>
 #include <ctime>
 #include <fstream>
@@ -8,7 +9,8 @@
 
 namespace Mino
 {
-class ILogService
+
+class ILogService : public IService
 {
 public:
     virtual ~ILogService() {}

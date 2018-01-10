@@ -1,0 +1,59 @@
+#include "game_object.h"
+#include "physics_component.h"
+#include "services.h"
+#include "time_service.h"
+#include "gtest/gtest.h"
+#include <chrono>
+#include <memory>
+
+using namespace Mino;
+
+class FakeTime : public TimeService
+{
+public:
+    void setDtime(Milli dtime)
+    {
+        TimePoint now{};
+        update(now);
+        auto then = now + dtime;
+        update(then);
+    }
+};
+
+class PhysicsComponentTests : public ::testing::Test
+{
+public:
+    void SetUp()
+    {
+        fakeTime = std::make_shared<FakeTime>();
+        Services::overrideService<ITimeService>(fakeTime);
+        gameObject = std::make_shared<GameObject>();
+        physics = gameObject->addComponent<PhysicsComponent>();
+        physics->start();
+    }
+
+protected:
+    std::shared_ptr<GameObject> gameObject;
+    std::shared_ptr<PhysicsComponent> physics;
+    std::shared_ptr<FakeTime> fakeTime;
+};
+
+TEST_F(PhysicsComponentTests, CanCreate) {}
+
+TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
+{
+    auto lastPosition = gameObject->getTransform()->getPosition();
+    physics->setVelocity({1, 1});
+    for (int i = 0; i < 50; ++i)
+    {
+        auto milliseconds = FakeTime::Milli{10 * i};
+        fakeTime->setDtime(milliseconds);
+        physics->update();
+        auto currentPosition = gameObject->getTransform()->getPosition();
+        auto delta = currentPosition - lastPosition;
+        lastPosition = currentPosition;
+
+        ASSERT_EQ(delta.x(), milliseconds.count());
+        ASSERT_EQ(delta.y(), milliseconds.count());
+    }
+}

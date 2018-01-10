@@ -24,7 +24,7 @@ public:
 
 bool GameObjectTests::called = false;
 
-template <>  std::shared_ptr<FakeComponent> Component::create<FakeComponent>()
+template <> std::shared_ptr<FakeComponent> Component::create<FakeComponent>()
 {
     GameObjectTests::called = true;
     return std::make_shared<FakeComponent>();

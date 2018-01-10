@@ -67,11 +67,11 @@ public:
     MOCK_METHOD0(getFname, std::string());
 };
 
-class MockTimeSystem : public ITimeSystem
+class MockTimeSystem : public ITimeService
 {
 public:
     MOCK_CONST_METHOD0(now, TimePoint());
-    MOCK_CONST_METHOD0(deltaTime, Milli());
+    MOCK_CONST_METHOD0(deltaTime, double());
 
 protected:
     MOCK_METHOD1(update, void(TimePoint const&));

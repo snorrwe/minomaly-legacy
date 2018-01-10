@@ -23,7 +23,6 @@ set(_ENGINE_INCLUDES engine
                      engine/camera
                      engine/sdl_subsystems
                      engine/scene
-                     engine/time_system
                      engine/audio_system)
 
 set(_COMMON_INCLUDES common
@@ -41,9 +40,12 @@ set(_COMPONENT_INCLUDES component
                         component/transform
                         component/renderer
                         component/game_object
+                        component/physics
                         component/sprite_render)
 
 set(_SERVICE_INCLUDES services
+                      services/time_service
+                      services/services
                       services/log_service)
 
 include_directories(${_COMMON_INCLUDES})
@@ -68,9 +70,11 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_render/sprite_render.cpp
                                ${PROJECT_SOURCE_DIR}/component/renderer/renderer.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
+                               ${PROJECT_SOURCE_DIR}/component/physics/physics_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
-add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/log_service/log_service.cpp)
+add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/services/services.cpp
+                              ${PROJECT_SOURCE_DIR}/services/log_service/log_service.cpp)
 
 # [[ Link ]]
 

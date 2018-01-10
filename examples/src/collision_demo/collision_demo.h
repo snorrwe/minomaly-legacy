@@ -30,12 +30,7 @@ public:
     virtual void start();
 
 private:
-    const float speed = 10.0f;
-
-    std::vector<std::shared_ptr<Mino::GameObject>> mice;
-    std::vector<Mino::Vector2<int>> micePositions;
     std::shared_ptr<Mino::IInputSystem> input;
-    std::shared_ptr<Mino::IRenderSystem> renderer;
     Subscriptions subs;
     MediaContainer images;
 };
