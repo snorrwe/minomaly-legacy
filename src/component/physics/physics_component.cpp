@@ -10,7 +10,28 @@ void PhysicsComponent::start()
 
 void PhysicsComponent::update()
 {
-    auto x = transform->getPosition().x() + velocity.x() / time->deltaTime();
-    auto y = transform->getPosition().y() + velocity.y() / time->deltaTime();
+    auto deltaTime = time->deltaTime();
+    auto position = transform->getPosition();
+    auto x = position.x() + velocity.x() / deltaTime;
+    auto y = position.y() + velocity.y() / deltaTime;
     transform->setPosition(x, y);
+}
+
+void PhysicsComponent::handleCollision(Vector2<double> const& point)
+{
+    auto deltaTime = time->deltaTime();
+    auto position = transform->getPosition();
+    auto x = position.x() - velocity.x() / deltaTime;
+    auto y = position.y() - velocity.y() / deltaTime;
+    auto originalPos = Vector2<double>(x, y);
+
+    auto traveled = point - originalPos;
+
+    Vector2<double> bounceVector{velocity.x(), velocity.y()};
+    bounceVector.rotateDeg(180.0);
+    bounceVector = bounceVector * (velocity.length() / traveled.length());
+
+    auto result = point + bounceVector;
+
+    transform->setPosition(result);
 }

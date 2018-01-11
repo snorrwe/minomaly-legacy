@@ -2,6 +2,7 @@
 #include "renderdata.h"
 #include "vector2.h"
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -14,11 +15,13 @@ namespace Mino
 class Transform
 {
 public:
+    friend class PhysicsSystem;
+
     using ChildrenContainer = std::vector<Transform>;
     using RotationData = Mino::RenderData::RotationData;
     using Vector = Vector2<double>;
 
-    static std::shared_ptr<Transform> create(std::shared_ptr<Transform> parent = nullptr);
+    static std::shared_ptr<Transform> create(Transform* parent = nullptr);
 
     Transform() = delete;
     Transform(Transform const&);
@@ -38,17 +41,20 @@ public:
 
     Transform* getParent() { return parent; }
 
-    void setPosition(Vector const& value) { position = value; }
-    void setPosition(double const x, double const y) { position = Vector{x, y}; }
-    Vector& getPosition() { return position; }
-    Vector const& getPosition() const { return position; }
+    void setPosition(Vector const& value) { positions[1 - position] = value; }
+    void setPosition(double const x, double const y) { positions[1 - position] = Vector{x, y}; }
+    Vector& getPosition() { return positions[position]; }
+    Vector const& getPosition() const { return positions[position]; }
     void setRotation(RotationData const& value) { rotation = value; }
     RotationData& getRotation() { return rotation; }
     RotationData const& getRotation() const { return rotation; }
 
 protected:
+    void flip() { position = 1 - position; }
+
     Transform* parent = nullptr;
-    Vector position = Vector{};
+    uint8_t position = 0;
+    std::array<Vector, 2> positions{};
     RotationData rotation = RotationData{};
     ChildrenContainer children = ChildrenContainer{};
 

@@ -2,9 +2,9 @@
 
 using namespace Mino;
 
-std::shared_ptr<Transform> Transform::create(std::shared_ptr<Transform> parent)
+std::shared_ptr<Transform> Transform::create(Transform* parent)
 {
-    auto result = std::make_shared<Transform>(parent.get());
+    auto result = std::make_shared<Transform>(parent);
     if (parent) result->id = ++(parent->childId);
     return result;
 }
@@ -63,7 +63,8 @@ Transform::Transform(Transform&& t)
 Transform& Transform::operator=(Transform const& t)
 {
     parent = t.parent;
-    position = Vector(t.position);
+    position = t.position;
+    positions = t.positions;
     rotation = t.rotation;
     children = t.children;
     id = t.id;
@@ -73,7 +74,8 @@ Transform& Transform::operator=(Transform const& t)
 Transform& Transform::operator=(Transform&& t)
 {
     parent = t.parent;
-    position = Vector(t.position);
+    position = t.position;
+    positions = t.positions;
     rotation = t.rotation;
     children = t.children;
     id = t.id;

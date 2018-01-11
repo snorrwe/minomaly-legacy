@@ -16,6 +16,8 @@ public:
     virtual void start();
     virtual void update();
 
+    virtual void handleCollision(Vector2<double> const& point);
+
     void setVelocity(Vector2<double> const& v) { velocity = v; }
     Vector2<double> const& getVelocity() { return velocity; }
 
@@ -24,4 +26,5 @@ private:
     ITimeService* time = nullptr;
     Vector2<double> velocity = Vector2<double>{0, 0};
 };
+
 } // namespace Mino

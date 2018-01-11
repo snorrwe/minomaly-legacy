@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <memory>
 
 namespace Mino
 {
@@ -52,13 +51,8 @@ private:
 template <class T> class ManagedRef
 {
 public:
-    static std::shared_ptr<ManagedRef<T>> create(size_t ref, IterablePool<T>& pool)
-    {
-        return std::make_shared<ManagedRef<T>>(ref, pool);
-    }
-
     ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(pool) {}
-    ~ManagedRef() { disable(); }
+    ~ManagedRef() {}
 
     void enable() { pool.enable(refIndex); }
     void disable() { pool.disable(refIndex); }
@@ -67,6 +61,8 @@ public:
 
     T& operator*() const { return pool.get(refIndex); }
     T* operator->() const { return &(pool.get(refIndex)); }
+
+    bool operator==(ManagedRef const& r) { return r.refIndex == refIndex && &r.pool == &pool; }
 
 private:
     size_t refIndex;

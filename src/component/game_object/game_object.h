@@ -20,9 +20,11 @@ public:
     typedef std::vector<std::shared_ptr<Component>> ComponentContainer;
 
     GameObject() = default;
-    GameObject(std::shared_ptr<Transform> transform) : transform(Transform::create(transform)) {}
+    GameObject(std::shared_ptr<Transform> transform) : transform(Transform::create(transform.get()))
+    {
+    }
     GameObject(std::shared_ptr<Transform> transform, Scene* scene)
-        : transform(Transform::create(transform)), scene(scene)
+        : transform(Transform::create(transform.get())), scene(scene)
     {
     }
     GameObject(GameObject const& go) = delete;

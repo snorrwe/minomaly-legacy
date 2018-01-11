@@ -2,6 +2,7 @@
 #include "p_pool_item.h"
 #include <cassert>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -18,8 +19,8 @@ public:
     IterablePool();
     virtual ~IterablePool();
 
-    std::shared_ptr<Reference> enable();
-    std::shared_ptr<Reference> enable(size_t id);
+    Reference enable();
+    Reference enable(size_t id);
     void disable(size_t id);
     void disable(InternalRef& item);
 
@@ -41,26 +42,27 @@ template <class T> IterablePool<T>::IterablePool() {}
 
 template <class T> IterablePool<T>::~IterablePool() {}
 
-template <class T> std::shared_ptr<typename IterablePool<T>::Reference> IterablePool<T>::enable()
+template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable()
 {
-    if (++next < pool.size()) return IterablePool<T>::Reference::create(pool[next].refIndex, *this);
+    if (++next < pool.size()) return IterablePool<T>::Reference(pool[next].refIndex, *this);
     pool.emplace_back();
     refs.emplace_back();
     auto index = pool.size() - 1;
     refs.back().set(index, &pool[index]);
     pool.back().refIndex = index;
-    return IterablePool<T>::Reference::create(index, *this);
+    return IterablePool<T>::Reference(index, *this);
 }
 
-template <class T>
-std::shared_ptr<typename IterablePool<T>::Reference> IterablePool<T>::enable(size_t id)
+template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable(size_t id)
 {
+    assert(id < refs.size());
     auto& ref = refs[id];
-    if (ref.poolIndex >= next)
+    if (ref.poolIndex > next)
     {
-        swapItems(++next, ref.poolIndex);
+        swapItems(next, ref.poolIndex);
     }
-    return IterablePool<T>::Reference::create(id, *this);
+    ++next;
+    return IterablePool<T>::Reference(id, *this);
 }
 
 template <class T> void IterablePool<T>::disable(size_t index)
