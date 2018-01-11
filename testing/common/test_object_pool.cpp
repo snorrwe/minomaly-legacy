@@ -35,7 +35,6 @@ public:
     void SetUp() { FakeType::calls = 0; }
 
     void someCallbackExpectingFake(FakeType const& f) {}
-    void someCallbackExpectingFakePtr(FakeType const* f) {}
 
     Pool pool = Pool{};
 };
@@ -64,7 +63,7 @@ TEST_F(ObjectPoolTests, CanIterate)
 
 TEST_F(ObjectPoolTests, CanAccessReferencedItems)
 {
-    std::vector<Pool::Reference*> myItems{
+    std::vector<std::shared_ptr<Pool::Reference>> myItems{
         pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
     };
 
@@ -79,7 +78,7 @@ TEST_F(ObjectPoolTests, CanAccessReferencedItems)
 TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 {
 
-    std::vector<Pool::Reference*> myItems{
+    std::vector<std::shared_ptr<Pool::Reference>> myItems{
         pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
     };
 
@@ -93,7 +92,7 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 {
     size_t poolSize = 50;
-    std::vector<Pool::Reference*> myItems{};
+    std::vector<std::shared_ptr<Pool::Reference>> myItems{};
     for (int i = 0; i < poolSize; ++i)
     {
         myItems.push_back(pool.enable());
@@ -101,7 +100,7 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
     {
-        pool.disable(**i);
+        (*i)->disable();
     }
 
     pool.iterateAll([](auto& i) { i.update(); });
@@ -115,10 +114,8 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 
 TEST_F(ObjectPoolTests, ReferencesShouldConvertToUnderlyingTypeImplicitly)
 {
-
     auto ref = pool.enable();
-    someCallbackExpectingFake(*ref);
-    someCallbackExpectingFakePtr(*ref);
+    someCallbackExpectingFake(**ref);
 }
 
 TEST_F(ObjectPoolTests, CanReenableAlreadyUsedItem)

@@ -12,15 +12,18 @@ template <class T> class IterablePool
 {
 public:
     using PoolItem = Pool::Private::PoolItem<T>;
-    using Reference = PoolItemRef<T>;
+    using InternalRef = Pool::Private::PoolItemRef<T>;
+    using Reference = ManagedRef<T>;
 
     IterablePool();
     virtual ~IterablePool();
 
-    Reference* enable();
-    Reference* enable(Reference& item);
-    void disable(Reference& item);
-    bool canCreate();
+    std::shared_ptr<Reference> enable();
+    std::shared_ptr<Reference> enable(size_t id);
+    void disable(size_t id);
+    void disable(InternalRef& item);
+
+    T& get(size_t id) { return pool[refs[id].poolIndex]; }
 
     void iterateActive(std::function<void(T&)> callback);
     void iterateAll(std::function<void(T&)> callback);
@@ -28,7 +31,7 @@ public:
 protected:
     size_t next = 0;
     std::vector<PoolItem> pool;
-    std::vector<Reference> refs;
+    std::vector<InternalRef> refs;
 
 private:
     void swapItems(size_t index1, size_t index2);
@@ -38,34 +41,44 @@ template <class T> IterablePool<T>::IterablePool() {}
 
 template <class T> IterablePool<T>::~IterablePool() {}
 
-template <class T> typename IterablePool<T>::Reference* IterablePool<T>::enable()
+template <class T> std::shared_ptr<typename IterablePool<T>::Reference> IterablePool<T>::enable()
 {
-    if (++next < pool.size()) return &refs[pool[next].refIndex];
+    if (++next < pool.size()) return IterablePool<T>::Reference::create(pool[next].refIndex, *this);
     pool.emplace_back();
     refs.emplace_back();
     auto index = pool.size() - 1;
     refs.back().set(index, &pool[index]);
     pool.back().refIndex = index;
-    return &refs.back();
+    return IterablePool<T>::Reference::create(index, *this);
 }
 
-template <class T> typename IterablePool<T>::Reference* IterablePool<T>::enable(Reference& ref)
+template <class T>
+std::shared_ptr<typename IterablePool<T>::Reference> IterablePool<T>::enable(size_t id)
 {
-    auto result = &refs[pool[ref.poolIndex].refIndex];
-    if (ref.poolIndex < next) return result;
-    swapItems(++next, result->poolIndex);
-    return result;
+    auto& ref = refs[id];
+    if (ref.poolIndex >= next)
+    {
+        swapItems(++next, ref.poolIndex);
+    }
+    return IterablePool<T>::Reference::create(id, *this);
 }
 
-template <class T> void IterablePool<T>::disable(typename IterablePool<T>::Reference& item)
+template <class T> void IterablePool<T>::disable(size_t index)
+{
+    auto poolIndex = refs[index].poolIndex;
+    if (poolIndex < --next)
+    {
+        swapItems(poolIndex, next);
+    }
+}
+
+template <class T> void IterablePool<T>::disable(typename IterablePool<T>::InternalRef& item)
 {
     if (item.poolIndex < --next)
     {
         swapItems(item.poolIndex, next);
     }
 }
-
-template <class T> bool IterablePool<T>::canCreate() { return next < size; }
 
 template <class T> void IterablePool<T>::swapItems(size_t index1, size_t index2)
 {
