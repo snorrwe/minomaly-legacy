@@ -1,5 +1,7 @@
 #include "quadtree.h"
 #include "gtest/gtest.h"
+#include <algorithm>
+#include <vector>
 
 using namespace Mino;
 
@@ -87,5 +89,32 @@ TEST_F(QuadtreeTests, CanEraseElement)
     for (auto i = nodes.begin(); i != nodes.end(); ++i)
     {
         ASSERT_FALSE(tree.contains(*i));
+    }
+}
+
+TEST_F(QuadtreeTests, CanFindNodesInRange)
+{
+    Quadtree::Vector rangeCenter{5, 5};
+    std::vector<Quadtree::Vector> nodesInRange{{4, 5}, {5, 4}, {6, 5}, {5.7, 4.8}};
+    std::vector<Quadtree::Vector> nodesOutRange{{0, 0}, {10, 11}};
+
+    for (auto i = nodesInRange.begin(); i != nodesInRange.end(); ++i)
+    {
+        tree.insert(*i);
+    }
+    for (auto i = nodesOutRange.begin(); i != nodesOutRange.end(); ++i)
+    {
+        tree.insert(*i);
+    }
+
+    auto result = tree.queryRange(BoundingBox{rangeCenter, 2});
+
+    for (auto i = nodesInRange.begin(); i != nodesInRange.end(); ++i)
+    {
+        ASSERT_TRUE(std::find(result.begin(), result.end(), *i) != result.end());
+    }
+    for (auto i = nodesOutRange.begin(); i != nodesOutRange.end(); ++i)
+    {
+        ASSERT_TRUE(std::find(result.begin(), result.end(), *i) == result.end());
     }
 }

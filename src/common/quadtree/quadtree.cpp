@@ -102,3 +102,25 @@ bool Quadtree::query(Vector const& v, std::function<bool(Quadtree&)> callback)
     return (northWest->query(v, callback) || northEast->query(v, callback) ||
             southWest->query(v, callback) || southEast->query(v, callback));
 }
+
+std::vector<typename Quadtree::Vector> Quadtree::queryRange(BoundingBox const& range)
+{
+    std::vector<Vector> result{};
+    if (!boundary.intersects(range)) return result;
+
+    std::copy_if(points.begin(), points.end(), std::back_inserter(result),
+                 [&](auto const& i) { return range.containsPoint(i); });
+
+    if (northWest)
+    {
+        auto northWestResult = northWest->queryRange(range);
+        auto northEastResult = northEast->queryRange(range);
+        auto southWestResult = southWest->queryRange(range);
+        auto southEastResult = southEast->queryRange(range);
+        std::copy(northWestResult.begin(), northWestResult.end(), std::back_inserter(result));
+        std::copy(northEastResult.begin(), northEastResult.end(), std::back_inserter(result));
+        std::copy(southWestResult.begin(), southWestResult.end(), std::back_inserter(result));
+        std::copy(southEastResult.begin(), southEastResult.end(), std::back_inserter(result));
+    }
+    return result;
+}

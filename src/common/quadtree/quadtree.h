@@ -3,6 +3,7 @@
 #include "vector2.h"
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -32,6 +33,8 @@ public:
     bool contains(Vector const& v);
     bool move(Vector const& from, Vector const& to);
     bool erase(Vector const& v);
+
+    std::vector<Vector> queryRange(BoundingBox const& range);
 
 protected:
     bool query(Vector const& v, std::function<bool(Quadtree&)> callback);
