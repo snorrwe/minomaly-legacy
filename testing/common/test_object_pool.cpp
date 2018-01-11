@@ -30,8 +30,7 @@ size_t FakeType::calls = 0;
 class ObjectPoolTests : public ::testing::Test
 {
 public:
-    static constexpr size_t poolSize = 50;
-    using Pool = IterablePool<FakeType, poolSize>;
+    using Pool = IterablePool<FakeType>;
 
     void SetUp() { FakeType::calls = 0; }
 
@@ -93,9 +92,12 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 
 TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 {
-    std::vector<Pool::Reference*> myItems{
-        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
-    };
+    size_t poolSize = 50;
+    std::vector<Pool::Reference*> myItems{};
+    for (int i = 0; i < poolSize; ++i)
+    {
+        myItems.push_back(pool.enable());
+    }
 
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
     {
