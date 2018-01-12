@@ -1,4 +1,5 @@
 #pragma once
+#include "quadtree.h"
 #include "transform.h"
 #include <memory>
 
