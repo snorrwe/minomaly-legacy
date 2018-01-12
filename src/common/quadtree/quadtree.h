@@ -14,9 +14,10 @@ namespace Mino
 class Quadtree
 {
 public:
-    static const size_t capacity = 4;
     using Vector = Vector2<double>;
     using Points = std::vector<Vector>;
+
+    static const size_t capacity = 64;
 
     Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr)
         : boundary(boundary), parent(parent)
