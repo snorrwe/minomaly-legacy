@@ -47,3 +47,27 @@ TEST_F(TestBoundingBox, TestRecognisesNotIntersecing)
     ASSERT_FALSE(box4.intersects(box3));
     ASSERT_FALSE(box4.intersects(box2));
 }
+
+TEST_F(TestBoundingBox, TestRecognisesIntersecing)
+{
+    BoundingBox box1{{5, 5}, 6};
+    BoundingBox box2{{5, -5}, 6};
+    BoundingBox box3{{-5, 5}, 6};
+    BoundingBox box4{{-5, -5}, 6};
+
+    ASSERT_TRUE(box1.intersects(box2));
+    ASSERT_TRUE(box1.intersects(box3));
+    ASSERT_TRUE(box1.intersects(box4));
+
+    ASSERT_TRUE(box2.intersects(box1));
+    ASSERT_TRUE(box2.intersects(box3));
+    ASSERT_TRUE(box2.intersects(box4));
+
+    ASSERT_TRUE(box3.intersects(box1));
+    ASSERT_TRUE(box3.intersects(box2));
+    ASSERT_TRUE(box3.intersects(box4));
+
+    ASSERT_TRUE(box4.intersects(box1));
+    ASSERT_TRUE(box4.intersects(box3));
+    ASSERT_TRUE(box4.intersects(box2));
+}

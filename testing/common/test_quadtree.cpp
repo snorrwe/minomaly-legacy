@@ -61,6 +61,10 @@ TEST_F(QuadtreeTests, CanMoveElement)
     Quadtree::Vector from{10, 0};
     Quadtree::Vector to{20, 25};
     tree.insert(from);
+
+    ASSERT_TRUE(tree.contains(from));
+    ASSERT_FALSE(tree.contains(to));
+
     tree.move(from, to);
 
     ASSERT_FALSE(tree.contains(from));

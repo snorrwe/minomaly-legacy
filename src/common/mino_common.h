@@ -3,6 +3,7 @@
 #include "color.h"
 #include "font.h"
 #include "observer.h"
+#include "quadtree.h"
 #include "rect.h"
 #include "texture.h"
 #include "vector2.h"
