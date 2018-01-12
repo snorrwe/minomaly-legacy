@@ -24,13 +24,12 @@ private:
     static ServiceMap services;
 };
 
-template <typename TService> static std::shared_ptr<TService> Services::get()
+template <typename TService> std::shared_ptr<TService> Services::get()
 {
     return std::static_pointer_cast<TService>(services[typeid(TService).hash_code()]);
 }
 
-template <typename TService>
-static void Services::overrideService(std::shared_ptr<TService> service)
+template <typename TService> void Services::overrideService(std::shared_ptr<TService> service)
 {
     services[typeid(TService).hash_code()] = service;
 }
