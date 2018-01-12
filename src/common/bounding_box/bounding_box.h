@@ -1,5 +1,6 @@
 #pragma once
 #include "vector2.h"
+#include <cmath>
 
 namespace Mino
 {

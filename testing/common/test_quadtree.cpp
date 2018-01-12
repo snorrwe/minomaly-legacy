@@ -70,7 +70,7 @@ TEST_F(QuadtreeTests, CanMoveElement)
 TEST_F(QuadtreeTests, CanEraseElement)
 {
     std::vector<Quadtree::Vector> nodes{{1, 2}, {123, 54}, {12, 34}, {54, 56}};
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 2000; ++i)
     {
         nodes.push_back({(double)i, (double)i});
     }
