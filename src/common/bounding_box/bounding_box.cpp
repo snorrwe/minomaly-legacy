@@ -4,13 +4,12 @@ using namespace Mino;
 
 bool BoundingBox::containsPoint(Vector2<double> const& point) const
 {
-    return center.x() - halfDimension <= point.x() && point.x() <= center.x() + halfDimension &&
-           center.y() - halfDimension <= point.y() && point.y() <= center.y() + halfDimension;
+    return center.x() - halfWidth <= point.x() && point.x() <= center.x() + halfWidth &&
+           center.y() - halfHeight <= point.y() && point.y() <= center.y() + halfHeight;
 }
 
 bool BoundingBox::intersects(BoundingBox const& other) const
 {
-    auto len = halfDimension + other.halfDimension;
-    return (fabs(center.x() - other.center.x()) < len) &&
-           (fabs(center.y() - other.center.y()) < len);
+    return (fabs(center.x() - other.center.x()) < halfWidth + other.halfWidth) &&
+           (fabs(center.y() - other.center.y()) < halfHeight + other.halfHeight);
 }

@@ -44,6 +44,7 @@ set(_COMPONENT_INCLUDES component
                         component/renderer
                         component/game_object
                         component/physics
+                        component/collider
                         component/sprite_render)
 
 set(_SERVICE_INCLUDES services
@@ -76,6 +77,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_render/sprite_render.cpp
                                ${PROJECT_SOURCE_DIR}/component/renderer/renderer.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
+                               ${PROJECT_SOURCE_DIR}/component/collider/collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/physics/physics_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 

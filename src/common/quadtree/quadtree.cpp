@@ -24,7 +24,7 @@ bool Quadtree::insert(typename Quadtree::Vector const& v)
 
 void Quadtree::subdivide()
 {
-    auto subDimension = boundary.getHalfDimension() * 0.5;
+    auto subDimension = boundary.getWidth() * 0.5;
     auto center = boundary.getCenter();
     northWest = std::make_unique<Quadtree>(
         BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), this);

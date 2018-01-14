@@ -9,7 +9,11 @@ class BoundingBox
 {
 public:
     BoundingBox(Vector2<double> center, double halfDimension)
-        : center(center), halfDimension(halfDimension)
+        : center(center), halfWidth(halfDimension), halfHeight(halfDimension)
+    {
+    }
+    BoundingBox(Vector2<double> center, double width, double height)
+        : center(center), halfWidth(width * 0.5), halfHeight(height * 0.5)
     {
     }
     BoundingBox(BoundingBox const&) = default;
@@ -23,13 +27,17 @@ public:
     bool intersects(BoundingBox const& other) const;
 
     Vector2<double> getCenter() const { return center; }
-    double getHalfDimension() const { return halfDimension; }
+    double getWidth() { return halfWidth * 2; }
+    double getHeight() { return halfHeight * 2; }
+
     void setCenter(Vector2<double> const& value) { center = value; }
-    void setHalfDimension(double value) { halfDimension = value; }
+    void setWidth(double value) { halfWidth = value * 0.5; }
+    void setHeight(double value) { halfHeight = value * 0.5; }
 
 private:
     Vector2<double> center;
-    double halfDimension;
+    double halfWidth;
+    double halfHeight;
 };
 
 } // namespace Mino
