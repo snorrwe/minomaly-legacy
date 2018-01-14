@@ -2,6 +2,7 @@
 #include "physics_component.h"
 #include "services.h"
 #include "time_service.h"
+#include "transform.h"
 #include "gtest/gtest.h"
 #include <chrono>
 #include <memory>
@@ -27,7 +28,7 @@ public:
     {
         fakeTime = std::make_shared<FakeTime>();
         Services::overrideService<ITimeService>(fakeTime);
-        gameObject = std::make_shared<GameObject>();
+        gameObject = std::make_shared<GameObject>(transforms.enable());
         physics = gameObject->addComponent<PhysicsComponent>();
         physics->start();
     }
@@ -36,6 +37,7 @@ protected:
     std::shared_ptr<GameObject> gameObject;
     std::shared_ptr<PhysicsComponent> physics;
     std::shared_ptr<FakeTime> fakeTime;
+    Transform::ChildrenContainer transforms;
 };
 
 TEST_F(PhysicsComponentTests, CanCreate) {}

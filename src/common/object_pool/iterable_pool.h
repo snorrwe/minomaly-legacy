@@ -25,6 +25,7 @@ public:
     void disable(InternalRef& item);
 
     size_t size() { return pool.size(); }
+    size_t enabled() { return next; }
 
     T& get(size_t id) { return pool[refs[id].poolIndex]; }
 

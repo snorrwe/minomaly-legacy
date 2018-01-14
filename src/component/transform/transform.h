@@ -34,7 +34,7 @@ public:
 
     virtual TransformRef addChild();
     virtual void removeChild(TransformRef const& child);
-    size_t childCount() { return children.size(); }
+    size_t childCount() { return children.enabled(); }
 
     TransformRef getParent() { return parent; }
 

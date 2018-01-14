@@ -56,21 +56,9 @@ public:
     ManagedRef() {}
     ManagedRef(std::nullptr_t) {}
     ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(&pool) {}
-    ManagedRef(ManagedRef const& mrf)
-        : refIndex(mrf.refIndex), pool(mrf.pool), referenceCount(mrf.referenceCount)
-    {
-        ++*referenceCount;
-    }
-    ManagedRef(ManagedRef&& mrf)
-        : refIndex(mrf.refIndex), pool(mrf.pool), referenceCount(mrf.referenceCount)
-    {
-        ++*referenceCount;
-    }
-    ~ManagedRef()
-    {
-        --*referenceCount;
-        if (!*referenceCount && pool) pool->disable(refIndex);
-    }
+    ManagedRef(ManagedRef const& mrf) = default;
+    ManagedRef(ManagedRef&& mrf) = default;
+    ~ManagedRef() {}
 
     ManagedRef& operator=(ManagedRef const&) = default;
     ManagedRef& operator=(ManagedRef&&) = default;
@@ -89,7 +77,6 @@ public:
 private:
     size_t refIndex = 0;
     IterablePool<T>* pool = nullptr;
-    std::shared_ptr<size_t> referenceCount = std::make_shared<size_t>(1);
 };
 
 } // namespace Mino
