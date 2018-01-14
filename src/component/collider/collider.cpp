@@ -6,7 +6,4 @@ void Collider::start() { transform = gameObject->getTransform(); }
 
 void Collider::update() {}
 
-bool Collider::overlapping(Collider const& c) const
-{
-    return asBoundingBox().intersects(c.asBoundingBox());
-}
+bool Collider::overlapping(Collider const& c) const { return intersects(c) && c.intersects(*this); }
