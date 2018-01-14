@@ -24,6 +24,8 @@ public:
     void disable(size_t id);
     void disable(InternalRef& item);
 
+    size_t size() { return pool.size(); }
+
     T& get(size_t id) { return pool[refs[id].poolIndex]; }
 
     void iterateActive(std::function<void(T&)> callback);

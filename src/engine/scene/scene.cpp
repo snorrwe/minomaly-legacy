@@ -5,7 +5,7 @@ using namespace Mino;
 
 std::shared_ptr<GameObject> Scene::createEmptyGameObject()
 {
-    gameObjects.emplace_back(std::make_shared<GameObject>(rootTransform, this));
+    gameObjects.emplace_back(std::make_shared<GameObject>(rootTransforms.enable(), this));
     return gameObjects.back();
 }
 

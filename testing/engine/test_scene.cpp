@@ -64,7 +64,6 @@ TEST_F(SceneTests, CanCreateGameObjectCorrectly)
 {
     auto go = scene.createGameObject<>();
     ASSERT_EQ(go->getScene(), &scene);
-    ASSERT_EQ(go->getTransform()->getParent(), scene.getRootTransform().get());
 }
 
 TEST_F(SceneTests, CanCreateGameObjectWithComponents)

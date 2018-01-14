@@ -4,7 +4,7 @@ using namespace Mino;
 
 void PhysicsComponent::start()
 {
-    transform = gameObject->getTransform().get();
+    transform = gameObject->getTransform();
     time = Services::get<ITimeService>().get();
 }
 

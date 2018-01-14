@@ -20,28 +20,6 @@ public:
     }
 };
 
-class FakeTransform : public Transform
-{
-public:
-    FakeTransform() = default;
-    FakeTransform(FakeTransform const&) = default;
-    FakeTransform& operator=(FakeTransform const&) = default;
-    FakeTransform(Transform const& t) : Transform(t) {}
-
-    void flip() { Transform::flip(); }
-};
-
-class FakeGameObject : public GameObject
-{
-public:
-    FakeGameObject() : GameObject()
-    {
-        transform = std::make_shared<FakeTransform>(*Transform::create(nullptr));
-    }
-
-    void flipTransform() { std::static_pointer_cast<FakeTransform>(transform)->flip(); }
-};
-
 class PhysicsComponentTests : public ::testing::Test
 {
 public:
@@ -49,13 +27,13 @@ public:
     {
         fakeTime = std::make_shared<FakeTime>();
         Services::overrideService<ITimeService>(fakeTime);
-        gameObject = std::make_shared<FakeGameObject>();
+        gameObject = std::make_shared<GameObject>();
         physics = gameObject->addComponent<PhysicsComponent>();
         physics->start();
     }
 
 protected:
-    std::shared_ptr<FakeGameObject> gameObject;
+    std::shared_ptr<GameObject> gameObject;
     std::shared_ptr<PhysicsComponent> physics;
     std::shared_ptr<FakeTime> fakeTime;
 };
@@ -71,7 +49,7 @@ TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
         auto milliseconds = FakeTime::Milli{10 * i};
         fakeTime->setDtime(milliseconds);
         physics->update();
-        gameObject->flipTransform();
+        gameObject->getTransform()->flip();
         auto currentPosition = gameObject->getTransform()->getPosition();
         auto delta = currentPosition - lastPosition;
         lastPosition = currentPosition;

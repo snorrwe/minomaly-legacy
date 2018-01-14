@@ -22,7 +22,7 @@ public:
     Vector2<double> const& getVelocity() { return velocity; }
 
 private:
-    Transform* transform = nullptr;
+    Transform::TransformRef transform = nullptr;
     ITimeService* time = nullptr;
     Vector2<double> velocity = Vector2<double>{0, 0};
 };

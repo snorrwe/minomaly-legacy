@@ -1,5 +1,7 @@
 #pragma once
+#include <cstddef>
 #include <iostream>
+#include <memory>
 
 namespace Mino
 {
@@ -51,22 +53,43 @@ private:
 template <class T> class ManagedRef
 {
 public:
-    ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(pool) {}
-    ~ManagedRef() {}
+    ManagedRef() {}
+    ManagedRef(std::nullptr_t) {}
+    ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(&pool) {}
+    ManagedRef(ManagedRef const& mrf)
+        : refIndex(mrf.refIndex), pool(mrf.pool), referenceCount(mrf.referenceCount)
+    {
+        ++*referenceCount;
+    }
+    ManagedRef(ManagedRef&& mrf)
+        : refIndex(mrf.refIndex), pool(mrf.pool), referenceCount(mrf.referenceCount)
+    {
+        ++*referenceCount;
+    }
+    ~ManagedRef()
+    {
+        --*referenceCount;
+        if (!*referenceCount && pool) pool->disable(refIndex);
+    }
 
-    void enable() { pool.enable(refIndex); }
-    void disable() { pool.disable(refIndex); }
+    ManagedRef& operator=(ManagedRef const&) = default;
+    ManagedRef& operator=(ManagedRef&&) = default;
 
-    operator size_t() { return refIndex; }
+    void enable() const { pool->enable(refIndex); }
+    void disable() const { pool->disable(refIndex); }
 
-    T& operator*() const { return pool.get(refIndex); }
-    T* operator->() const { return &(pool.get(refIndex)); }
+    operator size_t() const { return refIndex; }
+    operator bool() const { return pool != nullptr; }
 
-    bool operator==(ManagedRef const& r) { return r.refIndex == refIndex && &r.pool == &pool; }
+    T& operator*() const { return pool->get(refIndex); }
+    T* operator->() const { return &(pool->get(refIndex)); }
+
+    bool operator==(ManagedRef const& r) const { return r.refIndex == refIndex && r.pool == pool; }
 
 private:
-    size_t refIndex;
-    IterablePool<T>& pool;
+    size_t refIndex = 0;
+    IterablePool<T>* pool = nullptr;
+    std::shared_ptr<size_t> referenceCount = std::make_shared<size_t>(1);
 };
 
 } // namespace Mino

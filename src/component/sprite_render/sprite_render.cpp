@@ -9,7 +9,7 @@ Component::create<SpriteRenderComponent>(GameObject* gameObject)
     return RenderComponent::create<SpriteRenderComponent>(gameObject);
 }
 
-void SpriteRenderComponent::start() { transform = gameObject->getTransform().get(); }
+void SpriteRenderComponent::start() { transform = gameObject->getTransform(); }
 
 void SpriteRenderComponent::update()
 {

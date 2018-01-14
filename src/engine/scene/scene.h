@@ -1,6 +1,7 @@
 #pragma once
 #include "core.h"
 #include "game_object.h"
+#include "iterable_pool.h"
 #include "transform.h"
 #include <algorithm>
 #include <memory>
@@ -30,7 +31,6 @@ public:
     void destroyGameObject(std::shared_ptr<GameObject>);
 
     IEngineCore* getEngineCore() { return engine; }
-    std::shared_ptr<Transform> getRootTransform() { return rootTransform; }
 
 protected:
     std::shared_ptr<GameObject> createEmptyGameObject();
@@ -38,7 +38,7 @@ protected:
     template <typename... Ts> void addComponents(GameObject& go);
     template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
 
-    std::shared_ptr<Transform> rootTransform = Transform::create();
+    Transform::ChildrenContainer rootTransforms = Transform::ChildrenContainer{};
     std::vector<std::shared_ptr<GameObject>> gameObjects;
     IEngineCore* engine;
 };

@@ -20,11 +20,9 @@ public:
     typedef std::vector<std::shared_ptr<Component>> ComponentContainer;
 
     GameObject() = default;
-    GameObject(std::shared_ptr<Transform> transform) : transform(Transform::create(transform.get()))
-    {
-    }
-    GameObject(std::shared_ptr<Transform> transform, Scene* scene)
-        : transform(Transform::create(transform.get())), scene(scene)
+    GameObject(Transform::TransformRef const& parentTransform) : transform(parentTransform) {}
+    GameObject(Transform::TransformRef const& parentTransform, Scene* scene)
+        : transform(parentTransform), scene(scene)
     {
     }
     GameObject(GameObject const& go) = delete;
@@ -34,7 +32,7 @@ public:
     GameObject& operator=(GameObject const& go) = delete;
     GameObject& operator=(GameObject&& go) = default;
 
-    std::shared_ptr<Transform> getTransform() const { return transform; }
+    Transform::TransformRef getTransform() const { return transform; }
 
     template <typename TComponent> std::shared_ptr<TComponent> addComponent();
     template <typename TComponent> std::shared_ptr<TComponent> getComponent() const;
@@ -47,8 +45,8 @@ public:
 
 protected:
     ComponentContainer components = ComponentContainer{};
+    Transform::TransformRef transform = nullptr;
     size_t enabled = 0;
-    std::shared_ptr<Transform> transform = Transform::create(nullptr);
     Scene* scene = nullptr;
 };
 
