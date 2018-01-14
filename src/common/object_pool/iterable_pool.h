@@ -16,7 +16,7 @@ public:
     using InternalRef = Pool::Private::PoolItemRef<T>;
     using Reference = ManagedRef<T>;
 
-    IterablePool();
+    IterablePool(size_t count = 0);
     virtual ~IterablePool();
 
     Reference enable();
@@ -30,6 +30,8 @@ public:
     void iterateAll(std::function<void(T&)> callback);
 
 protected:
+    void add();
+
     size_t next = 0;
     std::vector<PoolItem> pool;
     std::vector<InternalRef> refs;
@@ -38,40 +40,45 @@ private:
     void swapItems(size_t index1, size_t index2);
 };
 
-template <class T> IterablePool<T>::IterablePool() {}
+template <class T> IterablePool<T>::IterablePool(size_t count = 0)
+{
+
+    for (int i = 0; i < count; ++i)
+    {
+        add();
+    }
+}
 
 template <class T> IterablePool<T>::~IterablePool() {}
 
-template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable()
+template <class T> void IterablePool<T>::add()
 {
-    if (++next < pool.size()) return IterablePool<T>::Reference(pool[next].refIndex, *this);
     pool.emplace_back();
     refs.emplace_back();
     auto index = pool.size() - 1;
     refs.back().set(index, &pool[index]);
     pool.back().refIndex = index;
-    return IterablePool<T>::Reference(index, *this);
+}
+
+template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable()
+{
+    if (++next < pool.size()) return IterablePool<T>::Reference(pool[next].refIndex, *this);
+    add();
+    return IterablePool<T>::Reference(pool.size() - 1, *this);
 }
 
 template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable(size_t id)
 {
     assert(id < refs.size());
     auto& ref = refs[id];
-    if (ref.poolIndex > next)
-    {
-        swapItems(next, ref.poolIndex);
-    }
-    ++next;
+    swapItems(next++, ref.poolIndex);
     return IterablePool<T>::Reference(id, *this);
 }
 
 template <class T> void IterablePool<T>::disable(size_t index)
 {
     auto poolIndex = refs[index].poolIndex;
-    if (poolIndex < --next)
-    {
-        swapItems(poolIndex, next);
-    }
+    swapItems(poolIndex, --next);
 }
 
 template <class T> void IterablePool<T>::disable(typename IterablePool<T>::InternalRef& item)
