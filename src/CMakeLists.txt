@@ -82,6 +82,11 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
 add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/services/services.cpp
                               ${PROJECT_SOURCE_DIR}/services/log_service/log_service.cpp)
 
+set_property(TARGET ${_MINO_ENGINE} PROPERTY CMAKE_CXX_STANDARD 17)
+set_property(TARGET ${_MINO_COMMON} PROPERTY CMAKE_CXX_STANDARD 17)
+set_property(TARGET ${_MINO_COMPONENT} PROPERTY CMAKE_CXX_STANDARD 17)
+set_property(TARGET ${_MINO_SERVICES} PROPERTY CMAKE_CXX_STANDARD 17)
+
 # [[ Link ]]
 
 target_link_libraries(${_MINO_ENGINE}

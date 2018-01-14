@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.9.6)
 
 # Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
 option(test "Build tests." ON) # Makes boolean 'test' available.
@@ -10,10 +10,10 @@ project(${MASTER_NAME})
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
 
-set(CMAKE_C_FLAGS NULL)
-set(GCC_FLAGS "-std=c++1z -fcxx-exceptions")
-set(MSVC_FLAGS "/EHa /std:c++latest")
-if(WIN32)
+set(CMAKE_C_FLAGS "")
+set(GCC_FLAGS "-fcxx-exceptions")
+set(MSVC_FLAGS "/EHa /std:c++17")
+if(MSVC)
   set(CMAKE_CXX_FLAGS ${MSVC_FLAGS})
 else()
   set(CMAKE_CXX_FLAGS ${GCC_FLAGS})
