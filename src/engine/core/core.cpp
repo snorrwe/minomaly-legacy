@@ -59,6 +59,7 @@ void EngineCore::run(bool)
             lag -= targetMsPerUpdate;
             lastUpdate = std::chrono::system_clock::now();
         }
+        physicsSystem->update();
         renderer->update();
     }
 }
