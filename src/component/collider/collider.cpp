@@ -31,7 +31,9 @@ void ColliderComponent::disable()
 }
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
-{ /* TODO */
+{
+    transform->reset();
+    onCollisionSubject.next(coll);
 }
 
 void ColliderComponent::update()

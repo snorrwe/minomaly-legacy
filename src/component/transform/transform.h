@@ -39,6 +39,7 @@ public:
     TransformRef getParent() { return parent; }
 
     void flip();
+    void reset() { positions[1 - position] = positions[position]; }
 
     void setPosition(Vector const& value) { positions[1 - position] = value; }
     void setPosition(double const x, double const y) { positions[1 - position] = Vector{x, y}; }
