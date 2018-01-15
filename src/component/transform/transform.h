@@ -38,6 +38,8 @@ public:
 
     TransformRef getParent() { return parent; }
 
+    void flip();
+
     void setPosition(Vector const& value) { positions[1 - position] = value; }
     void setPosition(double const x, double const y) { positions[1 - position] = Vector{x, y}; }
     Vector& getPosition() { return positions[position]; }
@@ -45,8 +47,6 @@ public:
     void setRotation(RotationData const& value) { rotation = value; }
     RotationData& getRotation() { return rotation; }
     RotationData const& getRotation() const { return rotation; }
-
-    void flip() { position = 1 - position; }
 
 protected:
     TransformRef parent = nullptr;

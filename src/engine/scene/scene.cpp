@@ -3,6 +3,11 @@
 
 using namespace Mino;
 
+void Scene::flipTransforms()
+{
+    rootTransforms.iterateActive([](auto& t) { t.flip(); });
+}
+
 std::shared_ptr<GameObject> Scene::createEmptyGameObject()
 {
     gameObjects.emplace_back(std::make_shared<GameObject>(rootTransforms.enable(), this));

@@ -31,9 +31,6 @@ protected:
     GameObject* gameObject = nullptr;
     std::weak_ptr<Component> self = std::weak_ptr<Component>(std::shared_ptr<Component>(nullptr));
     bool enabled = true;
-
-private:
-    IEngineCore* engine = nullptr;
 };
 
 template <typename TComponent> std::shared_ptr<TComponent> Component::create(GameObject* gameObject)
@@ -53,4 +50,3 @@ template <typename TComponent> std::shared_ptr<TComponent> Component::create()
 }
 
 } // namespace Mino
-#include "core.h"

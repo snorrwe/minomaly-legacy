@@ -26,6 +26,7 @@ public:
     void updateGameObjects();
     virtual void update() = 0;
     virtual void start() {}
+    virtual void flipTransforms();
 
     template <typename... TComponents> std::shared_ptr<GameObject> createGameObject();
     void destroyGameObject(std::shared_ptr<GameObject>);

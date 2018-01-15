@@ -24,6 +24,7 @@ namespace Mino
 
 class IWindowSystem;
 class IRenderSystem;
+class IPhysicsSystem;
 class Scene;
 
 class IEngineCore

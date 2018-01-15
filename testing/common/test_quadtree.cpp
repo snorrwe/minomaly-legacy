@@ -8,6 +8,8 @@ using namespace Mino;
 class QuadtreeTests : public ::testing::Test
 {
 public:
+    using Quadtree = Quadtree<int>;
+
     void SetUp()
     {
         auto box = BoundingBox({0, 0}, 5000);
@@ -22,7 +24,7 @@ TEST_F(QuadtreeTests, CanCreate) {}
 
 TEST_F(QuadtreeTests, CanInsert)
 {
-    auto node = Quadtree::Vector(1, -1);
+    auto node = Quadtree::Node(1, -1);
     ASSERT_TRUE(tree.insert(node));
 }
 
@@ -30,36 +32,36 @@ TEST_F(QuadtreeTests, CanInsertMultipleElements)
 {
     for (int i = 0; i < 5000; ++i)
     {
-        auto node = Quadtree::Vector(i, i % 20);
+        auto node = Quadtree::Node(i, i % 20);
         ASSERT_TRUE(tree.insert(node));
     }
 }
 
 TEST_F(QuadtreeTests, CanFindNodes)
 {
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 500; ++i)
     {
-        auto node = Quadtree::Vector(i, i % 20);
+        auto node = Quadtree::Node(i, i % 20);
         ASSERT_TRUE(tree.insert(node));
     }
 
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 500; ++i)
     {
-        auto node = Quadtree::Vector(i, i % 20);
+        auto node = Quadtree::Node(i, i % 20);
         ASSERT_TRUE(tree.contains(node));
     }
 
-    for (int i = 1; i < 5000; ++i)
+    for (int i = 1; i < 500; ++i)
     {
-        auto node = Quadtree::Vector(-i, -i % 20);
+        auto node = Quadtree::Node(-i, -i % 20);
         ASSERT_FALSE(tree.contains(node));
     }
 }
 
 TEST_F(QuadtreeTests, CanMoveElement)
 {
-    Quadtree::Vector from{10, 0};
-    Quadtree::Vector to{20, 25};
+    Quadtree::Node from{10, 0};
+    Quadtree::Node to{20, 25};
     tree.insert(from);
 
     ASSERT_TRUE(tree.contains(from));
@@ -73,8 +75,8 @@ TEST_F(QuadtreeTests, CanMoveElement)
 
 TEST_F(QuadtreeTests, CanEraseElement)
 {
-    std::vector<Quadtree::Vector> nodes{{1, 2}, {123, 54}, {12, 34}, {54, 56}};
-    for (int i = 0; i < 2000; ++i)
+    std::vector<Quadtree::Node> nodes{{1, 2}, {123, 54}, {12, 34}, {54, 56}};
+    for (int i = 0; i < 200; ++i)
     {
         nodes.push_back({(double)i, (double)i});
     }
@@ -98,9 +100,9 @@ TEST_F(QuadtreeTests, CanEraseElement)
 
 TEST_F(QuadtreeTests, CanFindNodesInRange)
 {
-    Quadtree::Vector rangeCenter{5, 5};
-    std::vector<Quadtree::Vector> nodesInRange{{4, 5}, {5, 4}, {6, 5}, {5.7, 4.8}};
-    std::vector<Quadtree::Vector> nodesOutRange{{0, 0}, {10, 11}};
+    Quadtree::Node rangeCenter{5, 5};
+    std::vector<Quadtree::Node> nodesInRange{{4, 5}, {5, 4}, {6, 5}, {5.7, 4.8}};
+    std::vector<Quadtree::Node> nodesOutRange{{0, 0}, {10, 11}};
 
     for (auto i = nodesInRange.begin(); i != nodesInRange.end(); ++i)
     {
@@ -111,7 +113,7 @@ TEST_F(QuadtreeTests, CanFindNodesInRange)
         tree.insert(*i);
     }
 
-    auto result = tree.queryRange(BoundingBox{rangeCenter, 2});
+    auto result = tree.queryRange(BoundingBox{rangeCenter.pos, 2});
 
     for (auto i = nodesInRange.begin(); i != nodesInRange.end(); ++i)
     {

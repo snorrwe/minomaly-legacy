@@ -19,7 +19,7 @@ public:
     Observable<T>& operator=(Observable<T> const&) = delete;
     Observable<T>& operator=(Observable<T>&&) = delete;
 
-    ISubscription subscribe(std::function<void(T)> cb)
+    ISubscription subscribe(std::function<void(T const&)> cb)
     {
         subscriptions[nextSub] = cb;
         return Subscription(*this, nextSub++);
@@ -28,7 +28,7 @@ public:
     void unsubscribe(size_t key) { subscriptions.erase(key); }
 
 protected:
-    std::map<size_t, std::function<void(T)>> subscriptions;
+    std::map<size_t, std::function<void(T const&)>> subscriptions;
     size_t nextSub = 0;
 };
 

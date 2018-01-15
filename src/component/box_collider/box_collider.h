@@ -1,32 +1,24 @@
 #pragma once
 #include "collider.h"
+#include "vector2.h"
 
 namespace Mino
 {
 
-class BoxCollider : public Collider
+class BoxColliderComponent : public ColliderComponent
 {
 public:
-    virtual void update();
-    virtual bool intersects(Collider const&) const;
-    virtual BoundingBox asBoundingBox() const;
+    virtual void start();
 
     double getWidth(double value) const { return width; }
     double getHeight(double value) const { return height; }
+    void set(double w, double h);
 
-    void setWidth(double value) { width = value; }
-    void setHeight(double value) { height = value; }
-
-    void set(double w, double h)
-    {
-        width = w;
-        height = h;
-    }
+    virtual void checkCollisions();
 
 protected:
     double width = 0;
     double height = 0;
-    BoundingBox box = BoundingBox({0, 0}, 0, 0);
 };
 
 } // namespace Mino

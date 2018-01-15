@@ -81,6 +81,9 @@ class MockPhysics : public IPhysicsSystem
 {
 public:
     MOCK_METHOD0(update, void());
+    MOCK_METHOD0(getWorld, std::shared_ptr<Quadtree<Collider>>());
+    MOCK_METHOD1(add, void(std::weak_ptr<Collider> const&));
+    MOCK_METHOD1(remove, void(std::weak_ptr<Collider> const&));
 };
 
 class FakeProgram : public Scene

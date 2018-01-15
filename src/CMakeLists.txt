@@ -70,7 +70,6 @@ add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp
 
 add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
                             ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
-                            ${PROJECT_SOURCE_DIR}/common/quadtree/quadtree.cpp
                             ${PROJECT_SOURCE_DIR}/common/bounding_box/bounding_box.cpp
                             ${PROJECT_SOURCE_DIR}/common/audio/audio.cpp)
 

@@ -4,6 +4,12 @@ using namespace Mino;
 
 using TransformRef = Transform::TransformRef;
 
+void Transform::flip()
+{
+    position = 1 - position;
+    children.iterateActive([](auto& tr) { tr.flip(); });
+}
+
 TransformRef Transform::addChild()
 {
     auto result = children.enable();

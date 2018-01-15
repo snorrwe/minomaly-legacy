@@ -60,6 +60,7 @@ void EngineCore::run(bool)
             lastUpdate = std::chrono::system_clock::now();
         }
         physicsSystem->update();
+        scene->flipTransforms();
         renderer->update();
     }
 }
