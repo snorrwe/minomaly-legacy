@@ -15,7 +15,7 @@ public:
     virtual void update();
 
     virtual bool overlapping(Collider const&) const;
-    virtual bool intersects(Collider const&) = 0;
+    virtual bool intersects(Collider const&) const = 0;
     virtual BoundingBox asBoundingBox() const = 0;
 
 protected:
