@@ -27,7 +27,7 @@ public:
     Transform(Transform const&);
     Transform(Transform&&);
     Transform(TransformRef parent) : parent(parent) {}
-    virtual ~Transform() = default;
+    virtual ~Transform();
 
     Transform& operator=(Transform const&);
     Transform& operator=(Transform&&);

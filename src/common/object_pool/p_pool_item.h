@@ -14,35 +14,7 @@ template <class T> class PoolItem final : public T
 {
 public:
     template <typename U> friend class IterablePool;
-    size_t refIndex;
-};
-
-template <class T> class PoolItemRef
-{
-public:
-    PoolItemRef() {}
-    PoolItemRef(PoolItemRef const& r) = default;
-    PoolItemRef(PoolItemRef&& r) = default;
-
-    PoolItemRef& operator=(PoolItemRef const& r) = default;
-    PoolItemRef& operator=(PoolItemRef&& r) = default;
-
-    template <typename U> friend class IterablePool;
-
-    T& operator*() const { return *item; }
-    T* operator->() const { return item; }
-
-    operator T&() const { return *item; }
-    operator T*() const { return item; }
-
-    void set(size_t ind, T* i)
-    {
-        item = i;
-        poolIndex = ind;
-    }
-
-    T* item = nullptr;
-    size_t poolIndex = 0;
+    size_t poolId;
 };
 
 } // namespace Pool::Private
@@ -52,9 +24,7 @@ template <class T> class ManagedRef
 public:
     ManagedRef() {}
     ManagedRef(std::nullptr_t) {}
-    ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(&pool)
-    {
-    }
+    ManagedRef(size_t ref, IterablePool<T>* pool) : refIndex(ref), pool(pool) {}
     ManagedRef(ManagedRef const& mrf) : refIndex(mrf.refIndex), pool(mrf.pool), refs(mrf.refs)
     {
         if (refs) ++*refs;
@@ -66,7 +36,10 @@ public:
     }
     ~ManagedRef()
     {
-        if (refs && --*refs == 0 && pool) disable();
+        if (refs && --*refs == 0 && pool)
+        {
+            pool->disable(refIndex);
+        }
     }
 
     ManagedRef& operator=(ManagedRef const& mrf)
@@ -91,7 +64,7 @@ public:
     void disable() const { pool->disable(refIndex); }
 
     operator size_t() const { return refIndex; }
-    operator bool() const { return pool != nullptr; }
+    operator bool() const { return *refs > 0 && pool; }
 
     T& operator*() const { return pool->get(refIndex); }
     T* operator->() const { return &(pool->get(refIndex)); }

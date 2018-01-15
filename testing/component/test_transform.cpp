@@ -11,7 +11,10 @@ public:
 
 TEST_F(TransformTests, CanCreateWithoutParent) {}
 
-TEST_F(TransformTests, CanAddChild) { auto child = tr.addChild(); }
+TEST_F(TransformTests, CanAddChild)
+{
+	auto child = tr.addChild(); 
+}
 
 TEST_F(TransformTests, RemovingChildReducesTheChildcount)
 {

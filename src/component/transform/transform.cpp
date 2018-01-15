@@ -4,6 +4,8 @@ using namespace Mino;
 
 using TransformRef = Transform::TransformRef;
 
+Transform::~Transform() {}
+
 void Transform::flip()
 {
     position = 1 - position;
