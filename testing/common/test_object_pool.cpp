@@ -43,6 +43,7 @@ TEST_F(ObjectPoolTests, CanCreate) {}
 
 TEST_F(ObjectPoolTests, CanCreateItems)
 {
+
     for (int i = 0; i < 5; ++i)
     {
         pool.enable();
@@ -87,6 +88,7 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 
     ASSERT_EQ(FakeType::calls, 4);
     ASSERT_EQ((*myItems[2]).thisCalls, 0);
+
 }
 
 TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)

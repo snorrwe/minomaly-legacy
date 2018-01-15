@@ -81,13 +81,18 @@ template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable(s
 template <class T> void IterablePool<T>::disable(size_t index)
 {
     auto poolIndex = refs[index].poolIndex;
-    swapItems(poolIndex, --next);
+    if (next > 0)
+    {
+        --next;
+        swapItems(poolIndex, next);
+    }
 }
 
 template <class T> void IterablePool<T>::disable(typename IterablePool<T>::InternalRef& item)
 {
-    if (item.poolIndex < --next)
+    if (next > 0)
     {
+        --next;
         swapItems(item.poolIndex, next);
     }
 }

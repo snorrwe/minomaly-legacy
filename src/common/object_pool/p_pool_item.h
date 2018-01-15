@@ -14,8 +14,6 @@ template <class T> class PoolItem final : public T
 {
 public:
     template <typename U> friend class IterablePool;
-
-private:
     size_t refIndex;
 };
 
@@ -37,7 +35,6 @@ public:
     operator T&() const { return *item; }
     operator T*() const { return item; }
 
-private:
     void set(size_t ind, T* i)
     {
         item = i;
@@ -55,13 +52,40 @@ template <class T> class ManagedRef
 public:
     ManagedRef() {}
     ManagedRef(std::nullptr_t) {}
-    ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(&pool) {}
-    ManagedRef(ManagedRef const& mrf) = default;
-    ManagedRef(ManagedRef&& mrf) = default;
-    ~ManagedRef() {}
+    ManagedRef(size_t ref, IterablePool<T>& pool) : refIndex(ref), pool(&pool)
+    {
+    }
+    ManagedRef(ManagedRef const& mrf) : refIndex(mrf.refIndex), pool(mrf.pool), refs(mrf.refs)
+    {
+        if (refs) ++*refs;
+    }
+    ManagedRef(ManagedRef&& mrf)
+        : refIndex(std::move(mrf.refIndex)), pool(std::move(mrf.pool)), refs(std::move(mrf.refs))
+    {
+        if (refs) ++*refs;
+    }
+    ~ManagedRef()
+    {
+        if (refs && --*refs == 0 && pool) disable();
+    }
 
-    ManagedRef& operator=(ManagedRef const&) = default;
-    ManagedRef& operator=(ManagedRef&&) = default;
+    ManagedRef& operator=(ManagedRef const& mrf)
+    {
+        refIndex = mrf.refIndex;
+        pool = mrf.pool;
+        refs = mrf.refs;
+        if (refs) ++*refs;
+        return *this;
+    }
+
+    ManagedRef& operator=(ManagedRef&& mrf)
+    {
+        refIndex = std::move(mrf.refIndex);
+        pool = std::move(mrf.pool);
+        refs = std::move(mrf.refs);
+        if (refs) ++*refs;
+        return *this;
+    }
 
     void enable() const { pool->enable(refIndex); }
     void disable() const { pool->disable(refIndex); }
@@ -77,6 +101,7 @@ public:
 private:
     size_t refIndex = 0;
     IterablePool<T>* pool = nullptr;
+    std::shared_ptr<size_t> refs = std::make_shared<size_t>(1);
 };
 
 } // namespace Mino
