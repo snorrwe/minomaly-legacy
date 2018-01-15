@@ -12,7 +12,8 @@ public:
     virtual ~Collider() {}
 
     virtual void start();
-    virtual void update();
+    virtual void enable();
+    virtual void disable();
 
     virtual bool overlapping(Collider const&) const;
     virtual bool intersects(Collider const&) const = 0;
