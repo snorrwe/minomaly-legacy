@@ -17,7 +17,9 @@ public:
 class PhysicsSystem : public IPhysicsSystem
 {
 public:
-    PhysicsSystem();
+    static std::shared_ptr<PhysicsSystem> create() { return std::make_shared<PhysicsSystem>(); }
+
+    PhysicsSystem() {}
     virtual ~PhysicsSystem() {}
 
     virtual void update();

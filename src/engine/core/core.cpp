@@ -5,12 +5,14 @@ using namespace Mino;
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
                        std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audio,
+                       std::shared_ptr<IPhysicsSystem> physicsSystem,
                        std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
     : subsystems(subsystems),
       input(input),
       window(window),
       renderer(renderer),
       audioSystem(audio),
+      physicsSystem(physicsSystem),
       logService(logService),
       time(time)
 {

@@ -5,6 +5,7 @@
 #include "input.h"
 #include "log_service.h"
 #include "observer.h"
+#include "physics_system.h"
 #include "render_system.h"
 #include "scene.h"
 #include "sdl_subsystems.h"
@@ -43,6 +44,7 @@ public:
     virtual std::shared_ptr<IAudioSystem> getAudio() const = 0;
     virtual std::shared_ptr<Scene> getScene() const = 0;
     virtual std::shared_ptr<ITimeService> getTime() const = 0;
+    virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
     virtual void setTargetFps(double f) = 0;
@@ -60,8 +62,9 @@ public:
 
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
                std::shared_ptr<IWindowSystem> window, std::shared_ptr<IRenderSystem> renderer,
-               std::shared_ptr<IAudioSystem> audioSystem, std::shared_ptr<ILogService> logService,
-               std::shared_ptr<ITimeService> time);
+               std::shared_ptr<IAudioSystem> audioSystem,
+               std::shared_ptr<IPhysicsSystem> physicsSystem,
+               std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
     virtual ~EngineCore();
@@ -78,6 +81,7 @@ public:
     virtual std::shared_ptr<IAudioSystem> getAudio() const { return audioSystem; }
     virtual std::shared_ptr<ITimeService> getTime() const { return time; };
     virtual std::shared_ptr<Scene> getScene() const { return scene; }
+    virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const { return physicsSystem; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
     virtual void setTargetFps(double f);
@@ -101,6 +105,7 @@ private:
     std::shared_ptr<Scene> scene;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
+    std::shared_ptr<IPhysicsSystem> physicsSystem;
     std::shared_ptr<ILogService> logService;
     std::shared_ptr<ITimeService> time;
     ISubscription sub;
@@ -121,10 +126,13 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
         name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
-    auto core =
-        std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, logService, time);
+    auto physics = PhysicsSystem::create();
+
+    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, physics,
+                                             logService, time);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
+
     return core;
 }
 
