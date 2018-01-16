@@ -16,32 +16,49 @@ void Program::start()
 {
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
-    gameObjects = {
-        createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent>(),
-        createGameObject<SpriteRenderComponent, BoxColliderComponent>(
-            Vector2<double>{(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 150) * 0.5}),
-    };
-
-    const auto egg = "assets/collision_demo/egg.png";
-    gameObjects[0]->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(egg));
-    gameObjects[0]->getComponent<BoxColliderComponent>()->set(30, 30);
-    gameObjects[0]->getTransform()->setPosition(15, 30);
-    eggPhysics = gameObjects[0]->getComponent<PhysicsComponent>();
+    auto barGo = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
+        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 150) * 0.5});
 
     const auto bar = "assets/collision_demo/bar.png";
-    gameObjects[1]->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(bar));
-    gameObjects[1]->getComponent<BoxColliderComponent>()->set(30, 120);
+    barGo->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(bar));
+    barGo->getComponent<BoxColliderComponent>()->set(30, 120);
+
+    const auto egg = "assets/collision_demo/egg.png";
+    eggPic = renderer->loadTexture(egg);
+    for (int i = 0; i < 5; ++i)
+    {
+        addEgg();
+    }
+}
+
+void Program::addEgg()
+{
+    eggs.push_back(createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent>(
+        {(double)eggs.size(), 0.0}));
+    eggs.back()->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
+    auto eggCollider = eggs.back()->getComponent<BoxColliderComponent>();
+    eggCollider->set(30, 30);
+    auto eggPhysics = eggs.back()->getComponent<PhysicsComponent>();
+    eggPhysics->addCollider(eggCollider);
 }
 
 void Program::update()
 {
+    // TODO: Fix
+    // TODO: the bar's position is reset between start() and the first update()
+    gameObjects[0]->getTransform()->setPosition(
+        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 150) * 0.5});
+
     auto mousePos = input->mouseScreenPosition();
-    auto width = 25;
-    auto height = 25;
+    const auto width = 15.0;
+    const auto height = 15.0;
     auto x = (double)mousePos.x() - width;
     auto y = (double)mousePos.y() - height;
 
-    auto target = Vector2<double>(x, y);
-
-    eggPhysics->setVelocity(target - gameObjects[0]->getTransform()->getPosition());
+    for (auto i = eggs.begin(); i != eggs.end(); ++i)
+    {
+        auto& egg = *i;
+        auto velocity = Vector2<double>(x, y) - egg->getTransform()->getPosition();
+        egg->getComponent<PhysicsComponent>()->setVelocity(velocity * 2.0);
+    }
 }

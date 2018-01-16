@@ -36,18 +36,7 @@ void ColliderComponent::disable()
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
-    if (deltaPos)
-    {
-        auto delta = (coll.lastPos - lastPos);
-        if (delta)
-        {
-            delta = delta * 5e-2;
-        }
-        transform->setPosition(lastPos - delta);
-        transform->flip();
-        transform->reset();
-    }
-    onCollisionSubject->next(coll);
+    if (layers & coll.layers) onCollisionSubject->next({*this, coll});
 }
 
 void ColliderComponent::update()

@@ -30,8 +30,11 @@ public:
     virtual void start();
 
 private:
+    void addEgg();
+
     Subscriptions subs;
-    std::vector<std::shared_ptr<Mino::GameObject>> gameObjects;
+    std::shared_ptr<Mino::Texture> eggPic;
+    std::vector<std::shared_ptr<Mino::GameObject>> eggs;
     std::shared_ptr<Mino::PhysicsComponent> eggPhysics;
     std::shared_ptr<Mino::IInputSystem> input;
     MediaContainer images;

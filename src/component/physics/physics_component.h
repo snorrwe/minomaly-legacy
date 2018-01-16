@@ -1,33 +1,44 @@
 #pragma once
+#include "collider.h"
 #include "component.h"
+#include "observer.h"
 #include "services.h"
 #include "time_service.h"
 #include "transform.h"
 #include "vector2.h"
 #include <memory>
+#include <vector>
 
 namespace Mino
 {
 
+class ColliderComponent;
+
 class PhysicsComponent : public Component
 {
 public:
+    struct ColliderRef
+    {
+        std::weak_ptr<ColliderComponent> coll;
+        ISubscription sub;
+    };
+
     virtual ~PhysicsComponent() {}
 
     virtual void start();
     virtual void update();
 
-    void setVelocity(Vector2<double> const& v) { velocity = v; }
+    void setVelocity(Vector2<double> const& v);
     Vector2<double> const& getVelocity() const { return velocity; }
 
-    void setAcceleration(Vector2<double> const& v) { acceleration = v; }
-    Vector2<double> const& getAcceleration() const { return acceleration; }
+    void addCollider(std::shared_ptr<ColliderComponent> coll);
 
 private:
     Transform::TransformRef transform = nullptr;
     std::shared_ptr<ITimeService> time = nullptr;
-    Vector2<double> velocity = Vector2<double>{0, 0};
-    Vector2<double> acceleration = Vector2<double>{0, 0};
+    Vector2<double> normalDirection = {0, 0};
+    Vector2<double> velocity = {0, 0};
+    std::vector<ColliderRef> subs = {};
 };
 
 } // namespace Mino

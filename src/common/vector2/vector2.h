@@ -20,6 +20,7 @@ public:
     Vector2<TValue> operator+(Vector2<TValue> const& other) const;
     Vector2<TValue> operator-(Vector2<TValue> const& other) const;
     Vector2<TValue> operator*(double)const;
+
     bool operator==(Vector2<TValue> const& other) const;
     bool operator!=(Vector2<TValue> const& other) const { return !(*this == other); }
 
@@ -28,6 +29,9 @@ public:
     TValue x() const { return _x; }
     TValue y() const { return _y; }
     TValue length() const { return sqrt(_x * _x + _y * _y); }
+
+    Vector2<TValue> normalized() const { return *this ? *this * (1.0 / length()) : *this; }
+    TValue dot(Vector2<TValue> const& v) { return _x * v._x + _y * v._y; }
 
     void rotate(const double rads);
     void rotateDeg(const double degrees);

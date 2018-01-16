@@ -11,6 +11,14 @@ namespace Mino
 class BoxColliderComponent : public ColliderComponent
 {
 public:
+    enum Corner
+    {
+        TopLeft = 0,
+        TopRight = 1,
+        BottomLeft = 2,
+        BottomRight = 3
+    };
+
     virtual void start();
 
     double getWidth(double value) const { return width; }
@@ -18,6 +26,7 @@ public:
     void set(double w, double h);
 
     virtual void checkCollisions();
+    virtual BoundingBox asBoundingBox() const;
 
 protected:
     double width = 0;

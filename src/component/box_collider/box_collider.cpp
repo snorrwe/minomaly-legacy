@@ -11,23 +11,29 @@ void BoxColliderComponent::start()
     ColliderComponent::start();
 }
 
+BoundingBox BoxColliderComponent::asBoundingBox() const
+{
+    Vector2<double> center{corners[Corner::TopLeft].x() + width * 0.5,
+                           corners[Corner::TopLeft].y() + height * 0.5};
+    return {center, width, height};
+}
+
 void BoxColliderComponent::set(double w, double h)
 {
     removeFromWorld();
     width = w;
     height = h;
-    auto& topRight = transform->getPosition();
-    corners[0] = topRight;
-    corners[1] = {topRight.x() + width, topRight.y()};
-    corners[2] = {topRight.x(), topRight.y() + height};
-    corners[3] = {topRight.x() + width, topRight.y() + height};
+    auto& topLeft = transform->getPosition();
+    corners[Corner::TopLeft] = topLeft;
+    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y()};
+    corners[Corner::BottomLeft] = {topLeft.x(), topLeft.y() + height};
+    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y() + height};
     addToWorld();
 }
 
 void BoxColliderComponent::checkCollisions()
 {
-    Vector2<double> center{corners[0].x() + width * 0.5, corners[0].y() + height * 0.5};
-    auto points = world.lock()->queryRange({center, width, height});
+    auto points = world.lock()->queryRange(asBoundingBox());
     if (points.size() > 4)
     {
         std::sort(points.begin(), points.end(),
