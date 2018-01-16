@@ -37,7 +37,7 @@ public:
     virtual std::shared_ptr<World> getWorld() { return world; }
 
 protected:
-    std::shared_ptr<World> world = std::make_shared<World>();
+    std::shared_ptr<World> world = std::make_shared<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr);
     std::vector<std::weak_ptr<Collider>> colliders;
 };
 

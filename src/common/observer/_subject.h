@@ -9,8 +9,8 @@ template <typename T> class Subject : public Observable<T>
 {
 public:
     Subject() = default;
-    Subject(Subject<T>&&) = delete;
     Subject(Subject<T> const&) = delete;
+    Subject(Subject<T>&&) = delete;
     virtual ~Subject() {}
 
     Subject<T>& operator=(Subject<T> const&) = delete;

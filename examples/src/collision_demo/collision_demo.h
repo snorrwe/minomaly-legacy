@@ -15,7 +15,7 @@ class Program : public Mino::Scene
 public:
     using RotationData = Mino::RenderData::RotationData;
 
-    typedef std::array<Mino::ISubscription, 1> Subscriptions;
+    typedef std::vector<Mino::ISubscription> Subscriptions;
     typedef std::vector<std::shared_ptr<Mino::Texture>> MediaContainer;
 
     Program(std::shared_ptr<Mino::EngineCore> core);
@@ -30,7 +30,9 @@ public:
     virtual void start();
 
 private:
-    std::shared_ptr<Mino::IInputSystem> input;
     Subscriptions subs;
+    std::vector<std::shared_ptr<Mino::GameObject>> gameObjects;
+    std::shared_ptr<Mino::PhysicsComponent> eggPhysics;
+    std::shared_ptr<Mino::IInputSystem> input;
     MediaContainer images;
 };

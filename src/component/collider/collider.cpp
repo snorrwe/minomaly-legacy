@@ -2,16 +2,20 @@
 
 using namespace Mino;
 
+ColliderComponent::~ColliderComponent()
+{
+    for (auto i = corners.begin(); i != corners.end(); ++i)
+    {
+        world.lock()->erase({*i, this});
+    }
+}
+
 void ColliderComponent::start()
 {
     transform = gameObject->getTransform();
+    lastPos = transform->getPosition();
     physicsSystem = gameObject->getScene()->getEngineCore()->getPhysicsSystem();
     world = physicsSystem.lock()->getWorld();
-    physicsComponent = gameObject->getComponent<PhysicsComponent>();
-    if (!physicsComponent.lock())
-    {
-        physicsComponent = gameObject->addComponent<PhysicsComponent>();
-    }
     addToWorld();
     physicsSystem.lock()->add(std::static_pointer_cast<ColliderComponent>(self.lock()));
 }
@@ -32,33 +36,53 @@ void ColliderComponent::disable()
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
-    transform->reset();
-    onCollisionSubject.next(coll);
+    if (deltaPos)
+    {
+        auto delta = coll.lastPos - lastPos;
+        transform->setPosition(lastPos - (delta * 0.02));
+        transform->flip();
+        transform->reset();
+    }
+    onCollisionSubject->next(coll);
 }
 
 void ColliderComponent::update()
 {
+    auto currentPos = transform->getPosition();
+    deltaPos = currentPos - lastPos;
+    if (deltaPos)
+    {
+        updateCornersByDeltaPos();
+    }
+    lastPos = currentPos;
+}
+
+void ColliderComponent::updateCornersByDeltaPos()
+{
+    auto wrld = world.lock();
     for (auto i = corners.begin(); i != corners.end(); ++i)
     {
         IPhysicsSystem::World::Node from{*i, this};
-        IPhysicsSystem::World::Node to{*i + physicsComponent.lock()->getVelocity(), this};
-        world.lock()->move(from, to);
+        IPhysicsSystem::World::Node to{*i + deltaPos, this};
+        wrld->move(from, to);
         *i = to.pos;
     }
 }
 
 void ColliderComponent::addToWorld()
 {
+    auto wrld = world.lock();
     for (auto i = corners.begin(); i != corners.end(); ++i)
     {
-        world.lock()->insert({*i, this});
+        wrld->insert({*i, this});
     }
 }
 
 void ColliderComponent::removeFromWorld()
 {
+    auto wrld = world.lock();
     for (auto i = corners.begin(); i != corners.end(); ++i)
     {
-        world.lock()->erase({*i, this});
+        wrld->erase({*i, this});
     }
 }

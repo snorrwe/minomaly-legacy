@@ -5,7 +5,10 @@ using namespace Mino;
 
 void Scene::flipTransforms()
 {
-    rootTransforms.iterateActive([](auto& t) { t.flip(); });
+    rootTransforms.iterateActive([](auto& t) {
+        t.flip();
+        t.reset();
+    });
 }
 
 std::shared_ptr<GameObject> Scene::createEmptyGameObject()
