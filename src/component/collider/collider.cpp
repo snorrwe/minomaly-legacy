@@ -38,8 +38,12 @@ void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
     if (deltaPos)
     {
-        auto delta = coll.lastPos - lastPos;
-        transform->setPosition(lastPos - (delta * 0.02));
+        auto delta = (coll.lastPos - lastPos);
+        if (delta)
+        {
+            delta = delta * 5e-2;
+        }
+        transform->setPosition(lastPos - delta);
         transform->flip();
         transform->reset();
     }

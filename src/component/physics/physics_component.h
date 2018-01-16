@@ -17,8 +17,6 @@ public:
     virtual void start();
     virtual void update();
 
-    virtual void handleCollision(Vector2<double> const& point);
-
     void setVelocity(Vector2<double> const& v) { velocity = v; }
     Vector2<double> const& getVelocity() const { return velocity; }
 
