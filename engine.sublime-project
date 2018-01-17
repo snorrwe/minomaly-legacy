@@ -2,6 +2,13 @@
 	"build_systems":
 	[
 		{
+			"env":
+			{
+				"include": "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\INCLUDE;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\ATLMFC\\INCLUDE;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.14393.0\\ucrt;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\include\\um;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.14393.0\\shared;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.14393.0\\um;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.14393.0\\winrt",
+				"lib": "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\LIB;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\ATLMFC\\LIB;C:\\Program Files (x86)\\Windows Kits\\10\\lib\\10.0.14393.0\\ucrt\\x86;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\lib\\um\\x86;C:\\Program Files (x86)\\Windows Kits\\10\\lib\\10.0.14393.0\\um\\x86",
+				"libpath": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\LIB;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\ATLMFC\\LIB;C:\\Program Files (x86)\\Windows Kits\\10\\UnionMetadata;C:\\Program Files (x86)\\Windows Kits\\10\\References;C:\\Program Files (x86)\\Microsoft SDKs\\Windows Kits\\10\\ExtensionSDKs\\Microsoft.VCLibs\\14.0\\References\\CommonConfiguration\\neutral",
+				"path": "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\BIN\\amd64_x86;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\BIN\\amd64;C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\x86;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.6.1 Tools\\x64\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\ATI Technologies\\ATI.ACE\\Core-Static;C:\\Program Files (x86)\\GtkSharp\\2.12\\bin;C:\\Program Files (x86)\\PuTTY\\;C:\\Program Files\\nodejs\\;%AppData%\\npm;C:\\Program Files (x86)\\WinMerge;C:\\Program Files (x86)\\Java\\jre1.8.0_111\\bin;C:\\Program Files\\Git\\cmd;C:\\texlive\\2017\\bin\\win32;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\ProgramData\\chocolatey\\bin;C:\\Program Files\\gtest-runner\\bin;C:\\Program Files\\ninja;C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.11.25503\\bin\\Hostx86\\x86;C:\\MinGW64\\bin;C:\\Program Files\\CMake\\bin;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python36_64\\Scripts;C:\\Program Files\\LLVM\\bin;C:\\Program Files (x86)\\LLVM\\bin"
+			},
 			"file_regex": "^  (.+)\\((\\d+)\\)(): ((?:fatal )?(?:error|warning) \\w+\\d\\d\\d\\d: .*) \\[.*$",
 			"name": "engine (Windows)",
 			"shell_cmd": "cmake --build .",
@@ -41,6 +48,22 @@
 					"shell_cmd": "cmake --build . --target examples/src/audio_play/RUN_TESTS"
 				},
 				{
+					"name": "examples/src/collision_demo/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/collision_demo/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/collision_demo/collision_demo",
+					"shell_cmd": "cmake --build . --target examples/src/collision_demo/collision_demo"
+				},
+				{
+					"name": "examples/src/collision_demo/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/collision_demo/INSTALL"
+				},
+				{
+					"name": "examples/src/collision_demo/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/collision_demo/RUN_TESTS"
+				},
+				{
 					"name": "examples/src/mouse/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/mouse/ALL_BUILD"
 				},
@@ -71,6 +94,62 @@
 				{
 					"name": "examples/src/__template/__template",
 					"shell_cmd": "cmake --build . --target examples/src/__template/__template"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2010/gmock",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2010/gmock"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2010/gmock_main",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2010/gmock_main"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2010/gmock_test",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2010/gmock_test"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2015/gmock",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2015/gmock"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2015/gmock_main",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2015/gmock_main"
+				},
+				{
+					"name": "googletest-src/googlemock/msvc/2015/gmock_test",
+					"shell_cmd": "cmake --build . --target googletest-src/googlemock/msvc/2015/gmock_test"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest-md",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest-md"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_main-md",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_main-md"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_main",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_main"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_prod_test-md",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_prod_test-md"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_prod_test",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_prod_test"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_unittest-md",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_unittest-md"
+				},
+				{
+					"name": "googletest-src/googletest/msvc/2010/gtest_unittest",
+					"shell_cmd": "cmake --build . --target googletest-src/googletest/msvc/2010/gtest_unittest"
 				},
 				{
 					"name": "lib/googletest/ALL_BUILD",
@@ -157,6 +236,10 @@
 					"shell_cmd": "cmake --build . --target testing/ALL_BUILD"
 				},
 				{
+					"name": "testing/googletest",
+					"shell_cmd": "cmake --build . --target testing/googletest"
+				},
+				{
 					"name": "testing/INSTALL",
 					"shell_cmd": "cmake --build . --target testing/INSTALL"
 				},
@@ -167,6 +250,46 @@
 				{
 					"name": "testing/RUN_TESTS",
 					"shell_cmd": "cmake --build . --target testing/RUN_TESTS"
+				},
+				{
+					"name": "testing/lib/googletest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/googletest/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/INSTALL"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gmock",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gmock"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gmock_main",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gmock_main"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/INSTALL"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gtest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gtest/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gtest/gtest",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gtest/gtest"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gtest/gtest_main",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gtest/gtest_main"
+				},
+				{
+					"name": "testing/lib/googletest/googlemock/gtest/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gtest/INSTALL"
 				}
 			],
 			"working_dir": "${project_path}/build"

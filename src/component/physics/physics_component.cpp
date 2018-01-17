@@ -19,23 +19,51 @@ void PhysicsComponent::update()
 void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
 {
     subs.push_back(
-        {coll, coll->onCollision().subscribe([&](auto const& collistionData) {
-             auto box1 = collistionData.first.asBoundingBox();
-             auto box2 = collistionData.second.asBoundingBox();
+        {coll, coll->onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});
+}
 
-             auto correction = box2.getCenter() - box1.getCenter();
-             correction = correction * -0.25;
+void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
+{
+    auto box1 = collistionData.first.asBoundingBox();
+    auto box2 = collistionData.second.asBoundingBox();
 
-             while (box1.intersects(box2))
-             {
-                 correction = correction * -2.0;
-                 box1 = {box1.getCenter() + correction, box1.getWidth(), box2.getHeight()};
-             }
+    auto idealDeltaW = (box1.getWidth() + box2.getWidth()) * 0.5;
+    auto idealX = box1.getCenter().x() > box2.getCenter().x()
+                      ? box1.getCenter().x() - box2.getCenter().x()
+                      : box2.getCenter().x() - box1.getCenter().x();
+    auto deltaX = idealDeltaW - idealX;
 
-             transform->setPosition(transform->getPosition() + correction);
-             transform->flip();
-             transform->reset();
-         })});
+    auto idealDeltaH = (box1.getHeight() + box2.getHeight()) * 0.5;
+    auto idealY = box1.getCenter().y() > box2.getCenter().y()
+                      ? box1.getCenter().y() - box2.getCenter().y()
+                      : box2.getCenter().y() - box1.getCenter().y();
+    auto deltaY = idealDeltaH - idealY;
+
+    auto corrected = transform->getPosition();
+    if (deltaX < deltaY)
+    {
+        const auto c = box1.getCenter().x() > box2.getCenter().x() ? 1 : -1;
+        auto x = c * deltaX;
+        corrected = {corrected.x() + x, corrected.y()};
+    }
+    else if (deltaY < deltaX)
+    {
+        const auto c = box1.getCenter().y() > box2.getCenter().y() ? 1 : -1;
+        auto y = c * deltaY;
+        corrected = {corrected.x(), corrected.y() + y};
+    }
+    else
+    {
+        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? 1 : -1;
+        auto x = cx * deltaX;
+        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? 1 : -1;
+        auto y = cy * deltaY;
+        corrected = {corrected.x() + x, corrected.y() + y};
+    }
+
+    transform->setPosition(corrected);
+    transform->flip();
+    transform->reset();
 }
 
 void PhysicsComponent::setVelocity(Vector2<double> const& v)
