@@ -5,12 +5,14 @@ using namespace Mino;
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
                        std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audio,
+                       std::shared_ptr<IPhysicsSystem> physicsSystem,
                        std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
     : subsystems(subsystems),
       input(input),
       window(window),
       renderer(renderer),
       audioSystem(audio),
+      physicsSystem(physicsSystem),
       logService(logService),
       time(time)
 {
@@ -25,24 +27,26 @@ void EngineCore::run()
     {
         run(true);
     }
-    catch (std::runtime_error& exc)
+    catch (std::exception& exc)
     {
-        std::cout << "Unexpected error happened while running Minomaly! " << exc.what()
-                  << std::endl;
+        logService->error("Unexpected exception was thrown while running Minomaly!");
+        logService->error(exc.what());
     }
     catch (...)
     {
-        std::cout << "Unknown error happened while running Minomaly! " << std::endl;
+        logService->error("Unknown error happened while running Minomaly!");
     }
 }
 
 void EngineCore::run(bool)
 {
     active = true;
-    scene->start();
     lastUpdate = std::chrono::system_clock::now();
     lastFixedUpdate = std::chrono::system_clock::now();
     Milli lag{0.0};
+
+    time->update(lastUpdate);
+    scene->start();
     while (active)
     {
         auto now = std::chrono::system_clock::now();
@@ -57,6 +61,7 @@ void EngineCore::run(bool)
             lag -= targetMsPerUpdate;
             lastUpdate = std::chrono::system_clock::now();
         }
+        physicsSystem->update();
         renderer->update();
     }
 }

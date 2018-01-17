@@ -10,29 +10,68 @@ void PhysicsComponent::start()
 
 void PhysicsComponent::update()
 {
-    auto deltaTime = time->deltaTime();
+    auto deltaTime = 1 / time->deltaTime();
     auto position = transform->getPosition();
-    velocity = velocity + acceleration;
-    auto x = position.x() + velocity.x() / deltaTime;
-    auto y = position.y() + velocity.y() / deltaTime;
-    transform->setPosition(x, y);
+    position = position + (velocity * deltaTime);
+    transform->setPosition(position);
+    lastPosition = position;
 }
 
-void PhysicsComponent::handleCollision(Vector2<double> const& point)
+void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
 {
-    auto deltaTime = time->deltaTime();
-    auto position = transform->getPosition();
-    auto x = position.x() - velocity.x() / deltaTime;
-    auto y = position.y() - velocity.y() / deltaTime;
-    auto originalPos = Vector2<double>(x, y);
+    subs.push_back(
+        {coll, coll->onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});
+}
 
-    auto traveled = point - originalPos;
+void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
+{
+    if (!velocity) return;
 
-    Vector2<double> bounceVector{velocity.x(), velocity.y()};
-    bounceVector.rotateDeg(180.0);
-    bounceVector = bounceVector * (velocity.length() / traveled.length());
+    auto box1 = collistionData.first.asBoundingBox();
+    auto box2 = collistionData.second.asBoundingBox();
 
-    auto result = point + bounceVector;
+    auto idealDeltaW = (box1.getWidth() + box2.getWidth()) * 0.5;
+    auto idealX = box1.getCenter().x() > box2.getCenter().x()
+                      ? box1.getCenter().x() - box2.getCenter().x()
+                      : box2.getCenter().x() - box1.getCenter().x();
+    auto deltaX = idealDeltaW - idealX;
 
-    transform->setPosition(result);
+    auto idealDeltaH = (box1.getHeight() + box2.getHeight()) * 0.5;
+    auto idealY = box1.getCenter().y() > box2.getCenter().y()
+                      ? box1.getCenter().y() - box2.getCenter().y()
+                      : box2.getCenter().y() - box1.getCenter().y();
+    auto deltaY = idealDeltaH - idealY;
+
+    auto corrected = transform->getPosition();
+    const auto c = 2.0 - time->deltaTime() / velocity.length();
+
+    if (deltaX < deltaY)
+    {
+        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
+        auto x = cx * deltaX;
+        corrected = {corrected.x() + x, corrected.y()};
+    }
+    else if (deltaY < deltaX)
+    {
+        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
+        auto y = cy * deltaY;
+        corrected = {corrected.x(), corrected.y() + y};
+    }
+    else
+    {
+        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
+        auto x = cx * deltaX;
+        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
+        auto y = cy * deltaY;
+        corrected = {corrected.x() + x, corrected.y() + y};
+    }
+
+    transform->setPosition(corrected);
+}
+
+void PhysicsComponent::setVelocity(Vector2<double> const& v)
+{
+    velocity = v;
+    auto norm = v.normalized();
+    normalDirection = {-norm.y(), norm.x()};
 }

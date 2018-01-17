@@ -12,9 +12,10 @@ public:
     MOCK_METHOD4(render, void(Texture const&, SDL_Rect*, SDL_Rect*, RotationData const&));
     MOCK_METHOD3(loadTexture, std::shared_ptr<Texture>(std::string const&, bool, Color const*));
     MOCK_METHOD1(setViewport, void(SDL_Rect* viewport));
-    MOCK_METHOD0(clear, void());
-    MOCK_METHOD0(update, void());
     MOCK_METHOD0(getRaw, SDL_Renderer*());
+    MOCK_METHOD0(update, void());
+    MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
 };
 
 class SpriteRendererTests : public ::testing::Test

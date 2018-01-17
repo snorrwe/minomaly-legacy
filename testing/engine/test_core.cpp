@@ -19,6 +19,7 @@ public:
     MOCK_METHOD4(fillRect, void(const SDL_Rect*, uint8_t, uint8_t, uint8_t));
     MOCK_METHOD3(blitSurface, void(SDL_Surface*, const SDL_Rect*, SDL_Rect*));
     MOCK_METHOD3(blitScaled, void(SDL_Surface*, const SDL_Rect*, SDL_Rect*));
+    MOCK_METHOD0(size, Vector2<int>());
 };
 
 class MockInput : public IInputSystem
@@ -42,6 +43,8 @@ public:
     MOCK_METHOD1(setViewport, void(SDL_Rect* viewport));
     MOCK_METHOD0(getRaw, SDL_Renderer*());
     MOCK_METHOD0(update, void());
+    MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
 };
 
 class MockAudioSystem : public IAudioSystem
@@ -75,6 +78,15 @@ public:
 
 protected:
     MOCK_METHOD1(update, void(TimePoint const&));
+};
+
+class MockPhysics : public IPhysicsSystem
+{
+public:
+    MOCK_METHOD0(update, void());
+    MOCK_METHOD0(getWorld, std::shared_ptr<Quadtree<Collider>>());
+    MOCK_METHOD1(add, void(std::weak_ptr<Collider> const&));
+    MOCK_METHOD1(remove, void(std::weak_ptr<Collider> const&));
 };
 
 class FakeProgram : public Scene
@@ -116,10 +128,12 @@ protected:
         mockInput = std::make_shared<NiceMock<MockInput>>();
         mockRenderer = std::make_shared<NiceMock<MockRenderer>>();
         mockWindow = std::make_shared<NiceMock<MockWindow>>();
+        mockPhysics = std::make_shared<NiceMock<MockPhysics>>();
         mockAudioSystem = std::make_shared<NiceMock<MockAudioSystem>>();
         mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
         engine = std::make_shared<EngineCore>(mockSubsystems, mockInput, mockWindow, mockRenderer,
-                                              mockAudioSystem, mockLogService, mockTimeSystem);
+                                              mockAudioSystem, mockPhysics, mockLogService,
+                                              mockTimeSystem);
         fakeProgram = std::make_shared<FakeProgram>(engine);
         engine->setScene(fakeProgram);
     }
@@ -133,6 +147,7 @@ protected:
     std::shared_ptr<MockRenderer> mockRenderer;
     std::shared_ptr<FakeProgram> fakeProgram;
     std::shared_ptr<MockWindow> mockWindow;
+    std::shared_ptr<MockPhysics> mockPhysics;
     std::shared_ptr<MockAudioSystem> mockAudioSystem;
     std::shared_ptr<MockTimeSystem> mockTimeSystem;
 };

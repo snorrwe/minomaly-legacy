@@ -49,6 +49,8 @@ TEST_F(ObjectPoolTests, CanCreateItems)
     }
 }
 
+TEST_F(ObjectPoolTests, CanCreateItem) { auto ref = pool.enable(); }
+
 TEST_F(ObjectPoolTests, CanIterate)
 {
     std::vector<Pool::Reference> references;

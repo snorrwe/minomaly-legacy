@@ -18,6 +18,7 @@ public:
     MOCK_CONST_METHOD0(getRenderer, std::shared_ptr<IRenderSystem>());
     MOCK_CONST_METHOD0(getAudio, std::shared_ptr<IAudioSystem>());
     MOCK_CONST_METHOD0(getScene, std::shared_ptr<Scene>());
+    MOCK_CONST_METHOD0(getPhysicsSystem, std::shared_ptr<IPhysicsSystem>());
     MOCK_CONST_METHOD0(getTime, std::shared_ptr<ITimeService>());
     MOCK_METHOD1(setScene, void(std::shared_ptr<Scene> scene));
     MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));

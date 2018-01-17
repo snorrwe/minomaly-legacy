@@ -7,11 +7,12 @@
 #include <vector>
 
 using namespace Mino;
+using ::testing::_;
 
 class MockRenderComponent : public RenderComponent
 {
 public:
-    MOCK_METHOD0(render, void());
+    MOCK_METHOD1(render, void(Transform::TransformRef camera));
     MOCK_METHOD0(start, void());
     MOCK_METHOD0(update, void());
 
@@ -53,7 +54,7 @@ TEST_F(RenderSystemTests, RendersRenderComponentsOnUpdate)
 
     for (auto i = renderers.begin(); i != renderers.end(); ++i)
     {
-        EXPECT_CALL(**i, render()).Times(5);
+        EXPECT_CALL(**i, render(_)).Times(5);
     }
 
     for (int i = 0; i < 5; ++i)
@@ -69,14 +70,14 @@ TEST_F(RenderSystemTests, OnlyRendersEnabledRenderers)
         createMockRenderer(), createMockRenderer(), createMockRenderer(),
     };
 
-    EXPECT_CALL(*mockRenderers[0], render()).Times(5);
-    EXPECT_CALL(*mockRenderers[2], render()).Times(5);
-    EXPECT_CALL(*mockRenderers[3], render()).Times(5);
-    EXPECT_CALL(*mockRenderers[4], render()).Times(5);
-    EXPECT_CALL(*mockRenderers[5], render()).Times(5);
+    EXPECT_CALL(*mockRenderers[0], render(_)).Times(5);
+    EXPECT_CALL(*mockRenderers[2], render(_)).Times(5);
+    EXPECT_CALL(*mockRenderers[3], render(_)).Times(5);
+    EXPECT_CALL(*mockRenderers[4], render(_)).Times(5);
+    EXPECT_CALL(*mockRenderers[5], render(_)).Times(5);
 
     renderer->disableRenderer(mockRenderers[1]);
-    EXPECT_CALL(*mockRenderers[1], render()).Times(0);
+    EXPECT_CALL(*mockRenderers[1], render(_)).Times(0);
 
     for (int i = 0; i < 5; ++i)
     {

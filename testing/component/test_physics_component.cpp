@@ -51,7 +51,6 @@ TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
         auto milliseconds = FakeTime::Milli{10 * i};
         fakeTime->setDtime(milliseconds);
         physics->update();
-        gameObject->getTransform()->flip();
         auto currentPosition = gameObject->getTransform()->getPosition();
         auto delta = currentPosition - lastPosition;
         lastPosition = currentPosition;

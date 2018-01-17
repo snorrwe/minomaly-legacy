@@ -3,6 +3,7 @@
 #include "game_object.h"
 #include "iterable_pool.h"
 #include "transform.h"
+#include "vector2.h"
 #include <algorithm>
 #include <memory>
 #include <vector>
@@ -27,7 +28,8 @@ public:
     virtual void update() = 0;
     virtual void start() {}
 
-    template <typename... TComponents> std::shared_ptr<GameObject> createGameObject();
+    template <typename... TComponents>
+    std::shared_ptr<GameObject> createGameObject(Vector2<double> position = {0, 0});
     void destroyGameObject(std::shared_ptr<GameObject>);
 
     IEngineCore* getEngineCore() { return engine; }
@@ -61,9 +63,12 @@ template <typename T, typename... Ts> void Scene::addComponentHelper(GameObject&
     addComponents<Ts...>(go);
 }
 
-template <typename... TComponents> std::shared_ptr<GameObject> Scene::createGameObject()
+template <typename... TComponents>
+std::shared_ptr<GameObject> Scene::createGameObject(Vector2<double> position)
 {
     auto go = createEmptyGameObject();
+    auto tr = go->getTransform();
+    tr->setPosition(position);
     addComponents<TComponents...>(*go);
     return go;
 }

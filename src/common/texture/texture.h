@@ -57,9 +57,7 @@ public:
     int getHeight() { return height; }
 
     void render(Vector2 const& pos) const;
-    void render(Vector2 const& pos, ICamera& camera) const;
     void render(Vector2 const& pos, RotationData const& rotation) const;
-    void render(Vector2 const& pos, ICamera& camera, RotationData const& rotation) const;
     void render(Vector2 const& pos,
                 std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)>) const;
     void color(Color const& color);

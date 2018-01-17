@@ -19,13 +19,19 @@ public:
 
     Vector2<TValue> operator+(Vector2<TValue> const& other) const;
     Vector2<TValue> operator-(Vector2<TValue> const& other) const;
-    Vector2<TValue> operator*(double);
+    Vector2<TValue> operator*(double)const;
+
     bool operator==(Vector2<TValue> const& other) const;
     bool operator!=(Vector2<TValue> const& other) const { return !(*this == other); }
+
+    operator bool() const { return _x != 0 || _y != 0; }
 
     TValue x() const { return _x; }
     TValue y() const { return _y; }
     TValue length() const { return sqrt(_x * _x + _y * _y); }
+
+    Vector2<TValue> normalized() const { return *this ? *this * (1.0 / length()) : *this; }
+    TValue dot(Vector2<TValue> const& v) { return _x * v._x + _y * v._y; }
 
     void rotate(const double rads);
     void rotateDeg(const double degrees);
@@ -54,7 +60,7 @@ template <typename TValue> bool Vector2<TValue>::operator==(Vector2<TValue> cons
     return _x == other._x && _y == other._y;
 }
 
-template <typename TValue> Vector2<TValue> Vector2<TValue>::operator*(double x)
+template <typename TValue> Vector2<TValue> Vector2<TValue>::operator*(double x) const
 {
     return Vector2<TValue>(_x * x, _y * x);
 }
@@ -80,7 +86,7 @@ template <typename TValue> void Vector2<TValue>::rotateDeg(const double theta)
 
 template <typename T> std::ostream& operator<<(std::ostream& os, Vector2<T> const& v)
 {
-    os << v._x << " " << v._y;
+    os << "(" << v._x << ", " << v._y << ")";
     return os;
 }
 

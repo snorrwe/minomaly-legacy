@@ -13,21 +13,24 @@ template <class T> class IterablePool
 {
 public:
     using PoolItem = Pool::Private::PoolItem<T>;
-    using InternalRef = Pool::Private::PoolItemRef<T>;
     using Reference = ManagedRef<T>;
 
     IterablePool(size_t count = 0);
+    IterablePool(IterablePool const&) = default;
+    IterablePool(IterablePool&&) = default;
     virtual ~IterablePool();
+
+    IterablePool& operator=(IterablePool const&) = default;
+    IterablePool& operator=(IterablePool&&) = default;
 
     Reference enable();
     Reference enable(size_t id);
     void disable(size_t id);
-    void disable(InternalRef& item);
 
     size_t size() { return pool.size(); }
     size_t enabled() { return next; }
 
-    T& get(size_t id) { return pool[refs[id].poolIndex]; }
+    T& get(size_t id) { return pool[refs[id]]; }
 
     void iterateActive(std::function<void(T&)> callback);
     void iterateAll(std::function<void(T&)> callback);
@@ -37,7 +40,7 @@ protected:
 
     size_t next = 0;
     std::vector<PoolItem> pool;
-    std::vector<InternalRef> refs;
+    std::vector<size_t> refs;
 
 private:
     void swapItems(size_t index1, size_t index2);
@@ -52,44 +55,38 @@ template <class T> IterablePool<T>::IterablePool(size_t count = 0)
     }
 }
 
-template <class T> IterablePool<T>::~IterablePool() {}
+template <class T> IterablePool<T>::~IterablePool()
+{
+    next = 0; // This fixes a lifetime management issue in Release configuration
+}
 
 template <class T> void IterablePool<T>::add()
 {
     pool.emplace_back();
     refs.emplace_back();
     auto index = pool.size() - 1;
-    refs.back().set(index, &pool[index]);
-    pool.back().refIndex = index;
+    refs.back() = index;
+    pool.back().poolId = index;
 }
 
 template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable()
 {
-    if (++next < pool.size()) return IterablePool<T>::Reference(pool[next].refIndex, *this);
+    if (++next < pool.size()) return IterablePool<T>::Reference(pool[next].poolId, this);
     add();
-    return IterablePool<T>::Reference(pool.size() - 1, *this);
+    return IterablePool<T>::Reference(pool.size() - 1, this);
 }
 
 template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable(size_t id)
 {
     assert(id < refs.size());
-    auto& ref = refs[id];
-    swapItems(next++, ref.poolIndex);
-    return IterablePool<T>::Reference(id, *this);
+    swapItems(next++, refs[id]);
+    return IterablePool<T>::Reference(id, this);
 }
 
-template <class T> void IterablePool<T>::disable(size_t index)
+template <class T> void IterablePool<T>::disable(size_t id)
 {
-    auto poolIndex = refs[index].poolIndex;
-    swapItems(poolIndex, --next);
-}
-
-template <class T> void IterablePool<T>::disable(typename IterablePool<T>::InternalRef& item)
-{
-    if (item.poolIndex < --next)
-    {
-        swapItems(item.poolIndex, next);
-    }
+    assert(id < refs.size());
+    if (next > 0) swapItems(refs[id], --next);
 }
 
 template <class T> void IterablePool<T>::swapItems(size_t index1, size_t index2)
@@ -99,8 +96,8 @@ template <class T> void IterablePool<T>::swapItems(size_t index1, size_t index2)
     using std::swap;
 
     swap(pool[index1], pool[index2]);
-    refs[index2].set(index1, &pool[index1]);
-    refs[index1].set(index2, &pool[index2]);
+    refs[index2] = index1;
+    refs[index1] = index2;
 }
 
 template <class T> void IterablePool<T>::iterateActive(std::function<void(T&)> callback)

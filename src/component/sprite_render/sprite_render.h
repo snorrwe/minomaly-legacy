@@ -13,8 +13,8 @@ class SpriteRenderComponent : public RenderComponent
 {
 public:
     virtual void start();
-    virtual void render();
     virtual void update();
+    virtual void render(Transform::TransformRef camera = nullptr);
 
     void clearTexture();
     void setTexture(std::shared_ptr<Texture> t);

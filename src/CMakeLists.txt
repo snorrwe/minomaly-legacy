@@ -45,6 +45,7 @@ set(_COMPONENT_INCLUDES component
                         component/game_object
                         component/physics
                         component/collider
+                        component/box_collider
                         component/sprite_render)
 
 set(_SERVICE_INCLUDES services
@@ -69,7 +70,6 @@ add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp
 
 add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
                             ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
-                            ${PROJECT_SOURCE_DIR}/common/quadtree/quadtree.cpp
                             ${PROJECT_SOURCE_DIR}/common/bounding_box/bounding_box.cpp
                             ${PROJECT_SOURCE_DIR}/common/audio/audio.cpp)
 
@@ -78,6 +78,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/renderer/renderer.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
                                ${PROJECT_SOURCE_DIR}/component/collider/collider.cpp
+                               ${PROJECT_SOURCE_DIR}/component/box_collider/box_collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/physics/physics_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
