@@ -44,11 +44,6 @@ void Program::addEgg()
 
 void Program::update()
 {
-    // TODO: Fix
-    // TODO: the bar's position is reset between start() and the first update()
-    gameObjects[0]->getTransform()->setPosition(
-        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 150) * 0.5});
-
     auto mousePos = input->mouseScreenPosition();
     const auto width = 15.0;
     const auto height = 15.0;
