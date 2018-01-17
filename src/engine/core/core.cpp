@@ -41,10 +41,12 @@ void EngineCore::run()
 void EngineCore::run(bool)
 {
     active = true;
-    scene->start();
     lastUpdate = std::chrono::system_clock::now();
     lastFixedUpdate = std::chrono::system_clock::now();
     Milli lag{0.0};
+
+    time->update(lastUpdate);
+    scene->start();
     while (active)
     {
         auto now = std::chrono::system_clock::now();

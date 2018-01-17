@@ -34,7 +34,7 @@ void Program::start()
 void Program::addEgg()
 {
     eggs.push_back(createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent>(
-        {(double)eggs.size(), 0.0}));
+        {(double)eggs.size(), (double)eggs.size()}));
     eggs.back()->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
     auto eggCollider = eggs.back()->getComponent<BoxColliderComponent>();
     eggCollider->set(30, 30);
@@ -59,6 +59,7 @@ void Program::update()
     {
         auto& egg = *i;
         auto velocity = Vector2<double>(x, y) - egg->getTransform()->getPosition();
-        egg->getComponent<PhysicsComponent>()->setVelocity(velocity * 2.0);
+        velocity = velocity.normalized() * 50.0;
+        egg->getComponent<PhysicsComponent>()->setVelocity(velocity);
     }
 }

@@ -25,6 +25,8 @@ void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
 
 void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
 {
+    if (!velocity) return;
+
     auto box1 = collistionData.first.asBoundingBox();
     auto box2 = collistionData.second.asBoundingBox();
 
@@ -41,23 +43,25 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
     auto deltaY = idealDeltaH - idealY;
 
     auto corrected = transform->getPosition();
+    const auto c = 2.0 - time->deltaTime() / velocity.length();
+
     if (deltaX < deltaY)
     {
-        const auto c = box1.getCenter().x() > box2.getCenter().x() ? 1 : -1;
-        auto x = c * deltaX;
+        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
+        auto x = cx * deltaX;
         corrected = {corrected.x() + x, corrected.y()};
     }
     else if (deltaY < deltaX)
     {
-        const auto c = box1.getCenter().y() > box2.getCenter().y() ? 1 : -1;
-        auto y = c * deltaY;
+        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
+        auto y = cy * deltaY;
         corrected = {corrected.x(), corrected.y() + y};
     }
     else
     {
-        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? 1 : -1;
+        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
         auto x = cx * deltaX;
-        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? 1 : -1;
+        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
         auto y = cy * deltaY;
         corrected = {corrected.x() + x, corrected.y() + y};
     }
