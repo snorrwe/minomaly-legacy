@@ -14,6 +14,7 @@ public:
     friend class EngineCore;
 
     typedef std::chrono::duration<double, std::milli> Milli;
+    typedef std::chrono::duration<double> Seconds;
     typedef std::chrono::time_point<std::chrono::system_clock, Milli> TimePoint;
 
     virtual ~ITimeService() {}
@@ -38,12 +39,12 @@ public:
 protected:
     virtual void update(TimePoint const& now)
     {
-        dtime = now - currentTime;
+        dtime = std::chrono::duration_cast<Seconds>(now - currentTime);
         currentTime = now;
     }
 
 private:
-    Milli dtime;
+    Seconds dtime;
     TimePoint currentTime;
 };
 

@@ -10,7 +10,7 @@ public:
     virtual void update()
     {
         Mino::Vector2<double> velocity = {0, 0};
-        double sv = 20;
+        double sv = 200;
         if (input->isDown(SDLK_LEFT))
         {
             velocity = {velocity.x() - sv, velocity.y()};

@@ -55,7 +55,7 @@ TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
         auto delta = currentPosition - lastPosition;
         lastPosition = currentPosition;
 
-        ASSERT_NEAR(delta.x(), 1.0 / milliseconds.count(), 0.001);
-        ASSERT_NEAR(delta.y(), 1.0 / milliseconds.count(), 0.001);
+        ASSERT_NEAR(delta.x(), milliseconds.count() / 1000, 0.001);
+        ASSERT_NEAR(delta.y(), milliseconds.count() / 1000, 0.001);
     }
 }
