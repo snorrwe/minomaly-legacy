@@ -54,7 +54,7 @@ void Program::update()
     {
         auto& egg = *i;
         auto velocity = Vector2<double>(x, y) - egg->getTransform()->getPosition();
-        velocity = velocity.normalized() * 50.0;
+        velocity = velocity.normalized() * 150.0;
         egg->getComponent<PhysicsComponent>()->setVelocity(velocity);
     }
 }

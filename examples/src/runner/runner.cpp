@@ -22,22 +22,23 @@ void Program::start()
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
     auto barGo = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
-        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 150) * 0.5});
+        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 120)});
 
-    const auto bar = "assets/collision_demo/bar.png";
+    const auto bar = "assets/runner/bar.png";
     barGo->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(bar));
-    barGo->getComponent<BoxColliderComponent>()->set(30, 120);
+    auto barCollider = barGo->getComponent<BoxColliderComponent>();
+    barCollider->set(30, 120);
+    barCollider->setLayers(0x1 | 0x2);
 
     auto eggGo = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
                                   EggComponent>({0, 0});
-    const auto egg = "assets/collision_demo/egg.png";
+    const auto egg = "assets/runner/egg.png";
     auto eggPic = renderer->loadTexture(egg);
+    auto eggEgg = eggGo->getComponent<EggComponent>();
+    eggEgg->input = input;
+    eggEgg->bottom = SCREEN_HEIGHT - eggPic->getHeight();
     eggGo->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    auto eggCollider = eggGo->getComponent<BoxColliderComponent>();
-    eggCollider->set(30, 30);
-    auto eggPhysics = eggGo->getComponent<PhysicsComponent>();
-    eggPhysics->addCollider(eggCollider);
-    eggGo->getComponent<EggComponent>()->input = input;
+    eggGo->getTransform()->setPosition(50, eggEgg->bottom);
 }
 
 void Program::update()
@@ -54,11 +55,11 @@ void Program::update()
     }
     if (input->isDown(SDLK_w))
     {
-        velocity = {velocity.x(), velocity.y() + sv};
+        velocity = {velocity.x(), velocity.y() - sv};
     }
     if (input->isDown(SDLK_s))
     {
-        velocity = {velocity.x(), velocity.y() - sv};
+        velocity = {velocity.x(), velocity.y() + sv};
     }
     velocity = velocity * time->deltaTime();
 
