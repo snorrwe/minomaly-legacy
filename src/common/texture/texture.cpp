@@ -73,13 +73,6 @@ void Texture::render(Vector2 const& pos) const
     });
 }
 
-void Texture::render(Vector2 const& pos, ICamera& camera) const
-{
-    render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
-        camera.render(t, srcrect, dstrect);
-    });
-}
-
 void Texture::render(Vector2 const& pos,
                      std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)> renderfn) const
 {
@@ -91,13 +84,6 @@ void Texture::render(Vector2 const& pos, RotationData const& rotation) const
 {
     render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
         renderer.render(t, srcrect, dstrect, rotation);
-    });
-}
-
-void Texture::render(Vector2 const& pos, ICamera& camera, RotationData const& rotation) const
-{
-    render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
-        camera.render(t, srcrect, dstrect, rotation);
     });
 }
 

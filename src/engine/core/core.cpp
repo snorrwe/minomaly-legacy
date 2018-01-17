@@ -27,14 +27,14 @@ void EngineCore::run()
     {
         run(true);
     }
-    catch (std::runtime_error& exc)
+    catch (std::exception& exc)
     {
-        std::cout << "Unexpected error happened while running Minomaly! " << exc.what()
-                  << std::endl;
+        logService->error("Unexpected exception was thrown while running Minomaly!");
+        logService->error(exc.what());
     }
     catch (...)
     {
-        std::cout << "Unknown error happened while running Minomaly! " << std::endl;
+        logService->error("Unknown error happened while running Minomaly!");
     }
 }
 

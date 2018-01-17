@@ -13,10 +13,17 @@ std::shared_ptr<IRenderSystem> RenderSystem::create(WindowSystem& window)
         throw std::runtime_error("RenderSystem could not be created!");
     }
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    return std::make_shared<RenderSystem>(renderer);
+    auto result = std::make_shared<RenderSystem>(renderer);
+    auto& mainCamera = result->getMainCamera();
+    auto win = window.size();
+    mainCamera->setViewport(0, 0, win.x(), win.y());
+    return result;
 }
 
-RenderSystem::RenderSystem(SDL_Renderer* renderer) : renderer(renderer) {}
+RenderSystem::RenderSystem(SDL_Renderer* renderer) : renderer(renderer)
+{
+    mainCamera = addCamera();
+}
 
 RenderSystem::~RenderSystem() { SDL_DestroyRenderer(renderer); }
 
@@ -38,11 +45,14 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
 void RenderSystem::update()
 {
     clear();
-    for (auto i = renderComponentRefs.begin(); i != renderComponentRefs.begin() + enabledRenderers;
-         ++i)
-    {
-        (*i)->render();
-    }
+    cameras.iterateActive([&](auto& camera) {
+        setViewport(&camera.getViewpoit());
+        for (auto j = renderComponentRefs.begin();
+             j != renderComponentRefs.begin() + enabledRenderers; ++j)
+        {
+            (*j)->render(camera.getTransform());
+        }
+    });
     SDL_RenderPresent(renderer);
 }
 
@@ -92,4 +102,9 @@ void IRenderSystem::disableRenderer(std::shared_ptr<RenderComponent> renderer)
             iter_swap(it, renderComponentRefs.rbegin());
         --enabledRenderers;
     }
+}
+
+typename RenderSystem::CameraReferences::Reference RenderSystem::addCamera()
+{
+    return cameras.enable();
 }

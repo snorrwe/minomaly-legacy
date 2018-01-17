@@ -19,6 +19,7 @@ public:
     MOCK_METHOD4(fillRect, void(const SDL_Rect*, uint8_t, uint8_t, uint8_t));
     MOCK_METHOD3(blitSurface, void(SDL_Surface*, const SDL_Rect*, SDL_Rect*));
     MOCK_METHOD3(blitScaled, void(SDL_Surface*, const SDL_Rect*, SDL_Rect*));
+    MOCK_METHOD0(size, Vector2<int>());
 };
 
 class MockInput : public IInputSystem
@@ -42,6 +43,8 @@ public:
     MOCK_METHOD1(setViewport, void(SDL_Rect* viewport));
     MOCK_METHOD0(getRaw, SDL_Renderer*());
     MOCK_METHOD0(update, void());
+    MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
 };
 
 class MockAudioSystem : public IAudioSystem

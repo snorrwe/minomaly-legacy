@@ -16,9 +16,10 @@ void SpriteRenderComponent::update()
     if (!texture && isEnabled()) disable();
 }
 
-void SpriteRenderComponent::render()
+void SpriteRenderComponent::render(Transform::TransformRef camera)
 {
-    auto& position = transform->getPosition();
+    auto offset = camera ? camera->getPosition() : Vector2<double>{0, 0};
+    auto position = transform->getPosition() - offset;
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());
     texture->render({x, y});

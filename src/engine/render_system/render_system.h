@@ -1,7 +1,9 @@
 #pragma once
 #include "SDL.h"
+#include "camera.h"
 #include "color.h"
 #include "core.h"
+#include "iterable_pool.h"
 #include "renderdata.h"
 #include "renderer.h"
 #include "texture.h"
@@ -26,6 +28,7 @@ public:
     friend class EngineCore;
 
     using RenderComponentReferences = std::vector<std::shared_ptr<RenderComponent>>;
+    using CameraReferences = IterablePool<Camera>;
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
 
@@ -39,6 +42,8 @@ public:
                                                  Color const* color = nullptr) = 0;
     virtual void setViewport(SDL_Rect* viewport) = 0;
     virtual void update() = 0;
+    virtual CameraReferences::Reference addCamera() = 0;
+    virtual CameraReferences::Reference getMainCamera() = 0;
 
     virtual SDL_Renderer* getRaw() = 0;
 
@@ -77,7 +82,14 @@ public:
     virtual void setViewport(SDL_Rect* viewport);
     virtual void update();
 
+    virtual CameraReferences::Reference addCamera();
+    virtual CameraReferences::Reference getMainCamera() { return mainCamera; }
+
     virtual SDL_Renderer* getRaw() { return renderer; }
+
+protected:
+    CameraReferences cameras;
+    CameraReferences::Reference mainCamera;
 
 private:
     void clear();

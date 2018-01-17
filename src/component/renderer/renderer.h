@@ -1,6 +1,7 @@
 #pragma once
 #include "component.h"
 #include "render_system.h"
+#include "transform.h"
 #include <memory>
 
 namespace Mino
@@ -16,7 +17,7 @@ public:
 
     virtual ~RenderComponent() {}
 
-    virtual void render() = 0;
+    virtual void render(Transform::TransformRef camera = nullptr) = 0;
 
     virtual void enable();
     virtual void disable();
