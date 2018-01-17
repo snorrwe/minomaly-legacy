@@ -42,6 +42,9 @@ private:
     std::shared_ptr<ITimeService> time = nullptr;
     Vector2<double> normalDirection = {0, 0};
     Vector2<double> velocity = {0, 0};
+
+    Vector2<double> lastPosition = {0, 0};
+
     std::vector<ColliderRef> subs = {};
 };
 

@@ -59,7 +59,6 @@ void EngineCore::run(bool)
             lag -= targetMsPerUpdate;
             lastUpdate = std::chrono::system_clock::now();
         }
-        scene->flipTransforms();
         physicsSystem->update();
         renderer->update();
     }

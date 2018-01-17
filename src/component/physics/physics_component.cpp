@@ -14,6 +14,7 @@ void PhysicsComponent::update()
     auto position = transform->getPosition();
     position = position + (velocity * deltaTime);
     transform->setPosition(position);
+    lastPosition = position;
 }
 
 void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
@@ -62,8 +63,6 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
     }
 
     transform->setPosition(corrected);
-    transform->flip();
-    transform->reset();
 }
 
 void PhysicsComponent::setVelocity(Vector2<double> const& v)

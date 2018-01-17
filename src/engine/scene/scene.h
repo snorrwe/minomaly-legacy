@@ -27,7 +27,6 @@ public:
     void updateGameObjects();
     virtual void update() = 0;
     virtual void start() {}
-    virtual void flipTransforms();
 
     template <typename... TComponents>
     std::shared_ptr<GameObject> createGameObject(Vector2<double> position = {0, 0});
@@ -70,8 +69,6 @@ std::shared_ptr<GameObject> Scene::createGameObject(Vector2<double> position)
     auto go = createEmptyGameObject();
     auto tr = go->getTransform();
     tr->setPosition(position);
-    tr->flip();
-    tr->reset();
     addComponents<TComponents...>(*go);
     return go;
 }
