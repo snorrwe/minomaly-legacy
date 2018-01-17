@@ -46,6 +46,8 @@ public:
     void setLayers(uint32_t l) { layers = l; }
     uint32_t getLayers() { return layers; }
 
+    Vector2<double> getPositionDelta() const { return deltaPos; }
+
 protected:
     void updateCornersByDeltaPos();
 
