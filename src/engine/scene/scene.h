@@ -33,6 +33,7 @@ public:
     void destroyGameObject(std::shared_ptr<GameObject>);
 
     IEngineCore* getEngineCore() { return engine; }
+    Transform::TransformRef getRootTransform() { return rootTransforms.enable(); }
 
 protected:
     std::shared_ptr<GameObject> createEmptyGameObject();
