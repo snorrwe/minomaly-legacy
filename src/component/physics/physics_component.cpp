@@ -25,8 +25,6 @@ void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
 
 void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
 {
-    if (!velocity) return;
-
     auto box1 = collistionData.first.asBoundingBox();
     auto box2 = collistionData.second.asBoundingBox();
 
@@ -43,7 +41,7 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
     auto deltaY = idealDeltaH - idealY;
 
     auto corrected = transform->getPosition();
-    const auto c = 2.0 - time->deltaTime() / velocity.length();
+    const auto c = velocity ? 2.0 - time->deltaTime() / velocity.length() : 1.0;
 
     if (deltaX < deltaY)
     {

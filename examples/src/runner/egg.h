@@ -25,7 +25,7 @@ public:
         height = eggCollider->getHeight();
 
         auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(2, 31);
+        bottomCollider->set(5, 31);
         bottomCollider->onCollision().subscribe([&](auto const& cd) { handleGroundCollision(cd); });
         bottomCollider->setLayers(0x2);
     }
