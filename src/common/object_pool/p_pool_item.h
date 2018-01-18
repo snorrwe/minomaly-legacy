@@ -34,7 +34,7 @@ public:
     {
         if (refs) ++*refs;
     }
-    ~ManagedRef()
+    virtual ~ManagedRef()
     {
         if (refs && --*refs == 0 && pool)
         {
@@ -66,8 +66,8 @@ public:
     operator size_t() const { return refIndex; }
     operator bool() const { return *refs > 0 && pool; }
 
-    T& operator*() const { return pool->get(refIndex); }
-    T* operator->() const { return &(pool->get(refIndex)); }
+    virtual T& operator*() const { return pool->get(refIndex); }
+    virtual T* operator->() const { return &(pool->get(refIndex)); }
 
     bool operator==(ManagedRef const& r) const { return r.refIndex == refIndex && r.pool == pool; }
 

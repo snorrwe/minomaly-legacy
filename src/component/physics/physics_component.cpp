@@ -10,9 +10,9 @@ void PhysicsComponent::start()
 
 void PhysicsComponent::update()
 {
-    auto deltaTime = 1 / time->deltaTime();
+    auto deltaTime = time->deltaTime();
     auto position = transform->getPosition();
-    position = position + (velocity * deltaTime);
+    position = position + velocity * deltaTime;
     transform->setPosition(position);
     lastPosition = position;
 }

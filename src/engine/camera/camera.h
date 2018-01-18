@@ -18,6 +18,7 @@ public:
     virtual void setViewport(int x, int y, int width, int height) = 0;
     virtual SDL_Rect getViewpoit() = 0;
     virtual Transform::TransformRef getTransform() = 0;
+    virtual void setTransform(Transform::TransformRef) = 0;
 };
 
 class Camera : public ICamera
@@ -25,7 +26,7 @@ class Camera : public ICamera
 public:
     static std::shared_ptr<Camera> create() { return std::make_shared<Camera>(); }
 
-    Camera() = default;
+    Camera(Transform::TransformRef transform = nullptr) : transform(transform) {}
     Camera(Camera const&) = default;
     Camera(Camera&&) = default;
     ~Camera();
@@ -36,6 +37,7 @@ public:
     virtual void setViewport(int x, int y, int width, int height);
     virtual SDL_Rect getViewpoit() { return viewport; }
     virtual Transform::TransformRef getTransform() { return transform; }
+    virtual void setTransform(Transform::TransformRef value) { transform = value; }
 
 private:
     void updateViewport();

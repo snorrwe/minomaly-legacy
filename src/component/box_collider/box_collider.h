@@ -21,8 +21,8 @@ public:
 
     virtual void start();
 
-    double getWidth(double value) const { return width; }
-    double getHeight(double value) const { return height; }
+    double getWidth() const { return width; }
+    double getHeight() const { return height; }
     void set(double w, double h);
 
     virtual void checkCollisions();

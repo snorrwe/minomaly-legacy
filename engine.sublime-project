@@ -80,6 +80,22 @@
 					"shell_cmd": "cmake --build . --target examples/src/mouse/RUN_TESTS"
 				},
 				{
+					"name": "examples/src/runner/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/runner/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/runner/INSTALL",
+					"shell_cmd": "cmake --build . --target examples/src/runner/INSTALL"
+				},
+				{
+					"name": "examples/src/runner/runner",
+					"shell_cmd": "cmake --build . --target examples/src/runner/runner"
+				},
+				{
+					"name": "examples/src/runner/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/runner/RUN_TESTS"
+				},
+				{
 					"name": "examples/src/__template/ALL_BUILD",
 					"shell_cmd": "cmake --build . --target examples/src/__template/ALL_BUILD"
 				},

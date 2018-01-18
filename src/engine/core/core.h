@@ -133,6 +133,8 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
                                              logService, time);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
+    auto cameraTransform = scene->getRootTransform();
+    renderer->getMainCamera()->setTransform(cameraTransform);
 
     return core;
 }
