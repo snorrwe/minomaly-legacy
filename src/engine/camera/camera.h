@@ -19,12 +19,16 @@ public:
     virtual SDL_Rect getViewpoit() = 0;
     virtual Transform::TransformRef getTransform() = 0;
     virtual void setTransform(Transform::TransformRef) = 0;
+    virtual Vector2<double> screenToWorldPosition(Vector2<int> const&) = 0;
 };
 
 class Camera : public ICamera
 {
 public:
-    static std::shared_ptr<Camera> create() { return std::make_shared<Camera>(); }
+    static std::shared_ptr<Camera> create(Transform::TransformRef transform = nullptr)
+    {
+        return std::make_shared<Camera>(transform);
+    }
 
     Camera(Transform::TransformRef transform = nullptr) : transform(transform) {}
     Camera(Camera const&) = default;
@@ -38,6 +42,7 @@ public:
     virtual SDL_Rect getViewpoit() { return viewport; }
     virtual Transform::TransformRef getTransform() { return transform; }
     virtual void setTransform(Transform::TransformRef value) { transform = value; }
+    virtual Vector2<double> screenToWorldPosition(Vector2<int> const&);
 
 private:
     void updateViewport();
