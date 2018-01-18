@@ -38,7 +38,7 @@ public:
         auto boxB = cd.second.asBoundingBox();
 
         auto diffY = boxB.getCenter().y() - boxA.getCenter().y();
-        if (diffY + height < boxA.getHeight() * 0.5 + boxB.getHeight() * 0.5)
+        if (diffY + height < boxA.getHeight() * 0.5f + boxB.getHeight() * 0.5f)
         {
             if (state == State::Falling)
             {

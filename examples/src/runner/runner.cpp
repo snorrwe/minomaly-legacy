@@ -43,8 +43,8 @@ void Program::start()
 
 void Program::update()
 {
-    Mino::Vector2<float> velocity = {0, 0};
-    float sv = 200;
+    Mino::Vector2<float> velocity{0.0f, 0.0f};
+    float sv = 200.0f;
     if (input->isDown(SDLK_a))
     {
         velocity = {velocity.x() - sv, velocity.y()};

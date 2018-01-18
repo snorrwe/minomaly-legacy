@@ -13,8 +13,8 @@ class ITimeService : public IService
 public:
     friend class EngineCore;
 
-    typedef std::chrono::duration<float, std::milli> Milli;
-    typedef std::chrono::duration<float> Seconds;
+    typedef std::chrono::duration<double, std::milli> Milli;
+    typedef std::chrono::duration<double> Seconds;
     typedef std::chrono::time_point<std::chrono::system_clock, Milli> TimePoint;
 
     virtual ~ITimeService() {}
@@ -41,6 +41,8 @@ protected:
     {
         dtime = std::chrono::duration_cast<Seconds>(now - currentTime);
         currentTime = now;
+
+        std::cout << dtime.count() << std::endl;
     }
 
 private:
