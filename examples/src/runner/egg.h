@@ -110,7 +110,7 @@ private:
     Mino::Transform::TransformRef transform;
 
     Mino::Vector2<double> velocity = {0, 0};
-    const double gravity = 10.0;
+    const double gravity = 50.0;
     State state = State::Grounded;
     double airTime = 1000.0;
 };

@@ -35,19 +35,17 @@ void BoxColliderComponent::set(double w, double h, Vector2<double> of)
 void BoxColliderComponent::checkCollisions()
 {
     auto points = world.lock()->queryRange(asBoundingBox());
-    if (points.size() > 4)
+    if (points.size() <= 4) return;
+
+    std::sort(points.begin(), points.end(),
+              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
+    points.erase(std::unique(points.begin(), points.end(),
+                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
+                 points.end());
+    removeSelf(points);
+    for (auto i = points.begin(); i != points.end(); ++i)
     {
-        std::sort(points.begin(), points.end(),
-                  [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
-        points.erase(
-            std::unique(points.begin(), points.end(),
-                        [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
-            points.end());
-        removeSelf(points);
-        for (auto i = points.begin(); i != points.end(); ++i)
-        {
-            i->item->handleCollision(*this);
-        }
+        i->item->handleCollision(*this);
     }
 }
 
