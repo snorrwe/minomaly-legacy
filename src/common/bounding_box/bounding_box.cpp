@@ -2,7 +2,7 @@
 
 using namespace Mino;
 
-bool BoundingBox::containsPoint(Vector2<double> const& point) const
+bool BoundingBox::containsPoint(Vector2<float> const& point) const
 {
     return center.x() - halfWidth <= point.x() && point.x() <= center.x() + halfWidth &&
            center.y() - halfHeight <= point.y() && point.y() <= center.y() + halfHeight;

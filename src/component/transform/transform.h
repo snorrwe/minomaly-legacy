@@ -21,7 +21,7 @@ public:
     using ChildrenContainer = IterablePool<Transform>;
     using TransformRef = ChildrenContainer::Reference;
     using RotationData = Mino::RenderData::RotationData;
-    using Vector = Vector2<double>;
+    using Vector = Vector2<float>;
 
     Transform() = default;
     Transform(Transform const&);
@@ -39,7 +39,7 @@ public:
     TransformRef getParent() { return parent; }
 
     void setPosition(Vector const& value) { position = value; }
-    void setPosition(double const x, double const y) { position = Vector{x, y}; }
+    void setPosition(float const x, float const y) { position = Vector{x, y}; }
     Vector& getPosition() { return position; }
     Vector const& getPosition() const { return position; }
     void setRotation(RotationData const& value) { rotation = value; }

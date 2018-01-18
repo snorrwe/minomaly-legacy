@@ -78,7 +78,7 @@ TEST_F(QuadtreeTests, CanEraseElement)
     std::vector<Quadtree::Node> nodes{{1, 2}, {123, 54}, {12, 34}, {54, 56}};
     for (int i = 0; i < 200; ++i)
     {
-        nodes.push_back({(double)i, (double)i});
+        nodes.push_back({(float)i, (float)i});
     }
     for (auto i = nodes.begin(); i != nodes.end(); ++i)
     {
@@ -101,7 +101,7 @@ TEST_F(QuadtreeTests, CanEraseElement)
 TEST_F(QuadtreeTests, CanFindNodesInRange)
 {
     Quadtree::Node rangeCenter{5, 5};
-    std::vector<Quadtree::Node> nodesInRange{{4, 5}, {5, 4}, {6, 5}, {5.7, 4.8}};
+    std::vector<Quadtree::Node> nodesInRange{{4, 5}, {5, 4}, {6, 5}, {5.7f, 4.8f}};
     std::vector<Quadtree::Node> nodesOutRange{{0, 0}, {10, 11}};
 
     for (auto i = nodesInRange.begin(); i != nodesInRange.end(); ++i)

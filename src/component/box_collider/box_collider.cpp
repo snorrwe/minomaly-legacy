@@ -13,12 +13,12 @@ void BoxColliderComponent::start()
 
 BoundingBox BoxColliderComponent::asBoundingBox() const
 {
-    Vector2<double> center{corners[Corner::TopLeft].x() + width * 0.5,
-                           corners[Corner::TopLeft].y() + height * 0.5};
+    Vector2<float> center{corners[Corner::TopLeft].x() + width * 0.5f,
+                          corners[Corner::TopLeft].y() + height * 0.5f};
     return {center, width, height};
 }
 
-void BoxColliderComponent::set(double w, double h, Vector2<double> of)
+void BoxColliderComponent::set(float w, float h, Vector2<float> of)
 {
     removeFromWorld();
     offset = of;

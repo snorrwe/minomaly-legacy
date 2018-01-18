@@ -5,7 +5,7 @@
 namespace Mino
 {
 
-template <typename TValue = double> class Vector2
+template <typename TValue = float> class Vector2
 {
 public:
     Vector2() = default;
@@ -19,7 +19,7 @@ public:
 
     Vector2<TValue> operator+(Vector2<TValue> const& other) const;
     Vector2<TValue> operator-(Vector2<TValue> const& other) const;
-    Vector2<TValue> operator*(double)const;
+    Vector2<TValue> operator*(float)const;
 
     bool operator==(Vector2<TValue> const& other) const;
     bool operator!=(Vector2<TValue> const& other) const { return !(*this == other); }
@@ -30,11 +30,11 @@ public:
     TValue y() const { return _y; }
     TValue length() const { return sqrt(_x * _x + _y * _y); }
 
-    Vector2<TValue> normalized() const { return *this ? *this * (1.0 / length()) : *this; }
+    Vector2<TValue> normalized() const { return *this ? *this * (1.0f / length()) : *this; }
     TValue dot(Vector2<TValue> const& v) { return _x * v._x + _y * v._y; }
 
-    void rotate(const double rads);
-    void rotateDeg(const double degrees);
+    void rotate(const float rads);
+    void rotateDeg(const float degrees);
 
     template <typename T> friend std::ostream& operator<<(std::ostream& os, Vector2<T> const& v);
 
@@ -60,12 +60,12 @@ template <typename TValue> bool Vector2<TValue>::operator==(Vector2<TValue> cons
     return _x == other._x && _y == other._y;
 }
 
-template <typename TValue> Vector2<TValue> Vector2<TValue>::operator*(double x) const
+template <typename TValue> Vector2<TValue> Vector2<TValue>::operator*(float x) const
 {
     return Vector2<TValue>(_x * x, _y * x);
 }
 
-template <typename TValue> void Vector2<TValue>::rotate(const double theta)
+template <typename TValue> void Vector2<TValue>::rotate(const float theta)
 {
     auto cs = cos(theta);
     auto sn = sin(theta);
@@ -76,7 +76,7 @@ template <typename TValue> void Vector2<TValue>::rotate(const double theta)
     _y = y;
 }
 
-template <typename TValue> void Vector2<TValue>::rotateDeg(const double theta)
+template <typename TValue> void Vector2<TValue>::rotateDeg(const float theta)
 {
     const auto PI = 3.14159265;
     const auto coeff = PI / 180.0;

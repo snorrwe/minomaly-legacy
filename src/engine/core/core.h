@@ -31,8 +31,8 @@ class IEngineCore
 {
 public:
     typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-    typedef std::chrono::duration<double, std::milli> Milli;
-    const double OneSecInMs = 1000.0;
+    typedef std::chrono::duration<float, std::milli> Milli;
+    const float OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
 
@@ -48,7 +48,7 @@ public:
     virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
-    virtual void setTargetFps(double f) = 0;
+    virtual void setTargetFps(float f) = 0;
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
     virtual std::vector<SdlStatus> subsystemStatus(std::vector<SdlSubSystemType> const&) const = 0;
@@ -85,7 +85,7 @@ public:
     virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const { return physicsSystem; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
-    virtual void setTargetFps(double f);
+    virtual void setTargetFps(float f);
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
     virtual std::vector<SdlStatus>
@@ -134,7 +134,7 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
     auto cameraTransform = scene->getRootTransform();
-    cameraTransform->setPosition({0.0, (double)screenHeight});
+    cameraTransform->setPosition({0.0, (float)screenHeight});
     renderer->getMainCamera()->setTransform(cameraTransform);
 
     return core;

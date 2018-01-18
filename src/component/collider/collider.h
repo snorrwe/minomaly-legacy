@@ -46,18 +46,18 @@ public:
     void setLayers(uint32_t l) { layers = l; }
     uint32_t getLayers() { return layers; }
 
-    Vector2<double> getPositionDelta() const { return deltaPos; }
+    Vector2<float> getPositionDelta() const { return deltaPos; }
 
 protected:
     void updateCornersByDeltaPos();
 
     uint32_t layers = 0x1;
     Transform::TransformRef transform;
-    Vector2<double> lastPos = {0, 0};
-    Vector2<double> deltaPos = {0, 0};
+    Vector2<float> lastPos = {0, 0};
+    Vector2<float> deltaPos = {0, 0};
     std::weak_ptr<IPhysicsSystem> physicsSystem;
     std::weak_ptr<World> world;
-    std::vector<Vector2<double>> corners;
+    std::vector<Vector2<float>> corners;
 
     std::shared_ptr<Subject<CollisionData>> onCollisionSubject =
         std::make_shared<Subject<CollisionData>>();

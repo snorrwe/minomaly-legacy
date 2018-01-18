@@ -21,18 +21,18 @@ public:
 
     virtual void start();
 
-    double getWidth() const { return width; }
-    double getHeight() const { return height; }
-    void set(double w, double h, Vector2<double> offset = {0, 0});
+    float getWidth() const { return width; }
+    float getHeight() const { return height; }
+    void set(float w, float h, Vector2<float> offset = {0, 0});
 
     virtual void checkCollisions();
     virtual BoundingBox asBoundingBox() const;
 
 protected:
     void removeSelf(std::vector<World::Node>&);
-    Vector2<double> offset = {0, 0};
-    double width = 0;
-    double height = 0;
+    Vector2<float> offset = {0, 0};
+    float width = 0;
+    float height = 0;
 };
 
 } // namespace Mino

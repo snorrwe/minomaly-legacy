@@ -30,8 +30,8 @@ public:
     virtual void start();
     virtual void update();
 
-    void setVelocity(Vector2<double> const& v);
-    Vector2<double> const& getVelocity() const { return velocity; }
+    void setVelocity(Vector2<float> const& v);
+    Vector2<float> const& getVelocity() const { return velocity; }
 
     void addCollider(std::shared_ptr<ColliderComponent> coll);
 
@@ -40,10 +40,10 @@ private:
 
     Transform::TransformRef transform = nullptr;
     std::shared_ptr<ITimeService> time = nullptr;
-    Vector2<double> normalDirection = {0, 0};
-    Vector2<double> velocity = {0, 0};
+    Vector2<float> normalDirection = {0, 0};
+    Vector2<float> velocity = {0, 0};
 
-    Vector2<double> lastPosition = {0, 0};
+    Vector2<float> lastPosition = {0, 0};
 
     std::vector<ColliderRef> subs = {};
 };

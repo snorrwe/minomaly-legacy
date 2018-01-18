@@ -21,9 +21,9 @@ void Camera::setViewport(int x, int y, int width, int height)
     updateViewport();
 }
 
-Vector2<double> Camera::screenToWorldPosition(Vector2<int> const& screenPoint)
+Vector2<float> Camera::screenToWorldPosition(Vector2<int> const& screenPoint)
 {
-    if (!transform) return {(double)screenPoint.x(), (double)screenPoint.y()};
+    if (!transform) return {(float)screenPoint.x(), (float)screenPoint.y()};
     auto& pos = transform->getPosition();
     return {screenPoint.x() - pos.x(), -screenPoint.y() + pos.y()};
 }

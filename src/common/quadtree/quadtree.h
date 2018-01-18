@@ -17,8 +17,8 @@ public:
     struct Node
     {
         Node() = default;
-        Node(double x, double y, T* item = nullptr) : pos({x, y}), item(item) {}
-        Node(Vector2<double> pos, T* item = nullptr) : pos(pos), item(item) {}
+        Node(float x, float y, T* item = nullptr) : pos({x, y}), item(item) {}
+        Node(Vector2<float> pos, T* item = nullptr) : pos(pos), item(item) {}
         Node(Node const&) = default;
         Node(Node&&) = default;
         Node& operator=(Node const&) = default;
@@ -27,7 +27,7 @@ public:
         bool operator==(Node const& n) const { return pos == n.pos && item == n.item; }
         bool operator!=(Node const& n) const { return !(*this == n); }
 
-        Vector2<double> pos;
+        Vector2<float> pos;
         T* item = nullptr;
     };
 
@@ -91,7 +91,7 @@ template <class T> bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)
 
 template <class T> void Quadtree<T>::subdivide()
 {
-    auto subDimension = boundary.getWidth() * 0.5;
+    auto subDimension = boundary.getWidth() * 0.5f;
     auto center = boundary.getCenter();
     northWest = std::make_unique<Quadtree>(
         BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), this);

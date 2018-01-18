@@ -85,4 +85,4 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
     return subsystems->subsystemStatus(types);
 }
 
-void EngineCore::setTargetFps(double f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
+void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
