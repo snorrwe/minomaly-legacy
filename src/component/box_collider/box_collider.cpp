@@ -43,8 +43,9 @@ void BoxColliderComponent::checkCollisions()
             std::unique(points.begin(), points.end(),
                         [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
             points.end());
-        points.erase(std::find_if(points.begin(), points.end(),
-                                  [&](auto const& i) { return i.item == this; }));
+        auto thisIt = std::find_if(points.begin(), points.end(),
+                                   [&](auto const& i) { return i.item == this; });
+        if (thisIt != points.end()) points.erase(thisIt);
 
         for (auto i = points.begin(); i != points.end(); ++i)
         {
