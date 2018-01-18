@@ -29,6 +29,7 @@ public:
     virtual BoundingBox asBoundingBox() const;
 
 protected:
+    void removeSelf(std::vector<World::Node>&);
     Vector2<double> offset = {0, 0};
     double width = 0;
     double height = 0;

@@ -43,13 +43,17 @@ void BoxColliderComponent::checkCollisions()
             std::unique(points.begin(), points.end(),
                         [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
             points.end());
-        auto thisIt = std::find_if(points.begin(), points.end(),
-                                   [&](auto const& i) { return i.item == this; });
-        if (thisIt != points.end()) points.erase(thisIt);
-
+        removeSelf(points);
         for (auto i = points.begin(); i != points.end(); ++i)
         {
             i->item->handleCollision(*this);
         }
     }
+}
+
+void BoxColliderComponent::removeSelf(std::vector<World::Node>& points)
+{
+    auto it =
+        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
+    if (it != points.end()) points.erase(it);
 }
