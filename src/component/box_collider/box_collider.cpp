@@ -13,22 +13,22 @@ void BoxColliderComponent::start()
 
 BoundingBox BoxColliderComponent::asBoundingBox() const
 {
-    Vector2<float> center{corners[Corner::TopLeft].x() + width * 0.5f,
-                          corners[Corner::TopLeft].y() + height * 0.5f};
+    Vector2<float> center{corners[Corner::BottomLeft].x() + width * 0.5f,
+                          corners[Corner::BottomLeft].y() + height * 0.5f};
     return {center, width, height};
 }
 
-void BoxColliderComponent::set(float w, float h, Vector2<float> of)
+void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
 {
     removeFromWorld();
-    offset = of;
+    offset = ofs;
     width = w;
     height = h;
     auto topLeft = transform->getPosition() + offset;
-    corners[Corner::TopLeft] = topLeft;
-    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y()};
-    corners[Corner::BottomLeft] = {topLeft.x(), topLeft.y() + height};
-    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y() + height};
+    corners[Corner::BottomLeft] = topLeft;
+    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y()};
+    corners[Corner::TopLeft] = {topLeft.x(), topLeft.y() + height};
+    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y() + height};
     addToWorld();
 }
 

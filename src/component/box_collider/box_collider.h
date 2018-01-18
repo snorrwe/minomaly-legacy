@@ -30,6 +30,7 @@ public:
 
 protected:
     void removeSelf(std::vector<World::Node>&);
+
     Vector2<float> offset = {0, 0};
     float width = 0;
     float height = 0;
