@@ -134,6 +134,7 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
     auto cameraTransform = scene->getRootTransform();
+    cameraTransform->setPosition({0.0, (double)screenHeight});
     renderer->getMainCamera()->setTransform(cameraTransform);
 
     return core;

@@ -25,7 +25,7 @@ public:
         height = eggCollider->getHeight();
 
         auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(5, 31);
+        bottomCollider->set(1, 1, {15, -1});
         bottomCollider->onCollision().subscribe([&](auto const& cd) { handleGroundCollision(cd); });
         bottomCollider->setLayers(0x2);
     }
@@ -38,7 +38,7 @@ public:
         auto boxB = cd.second.asBoundingBox();
 
         auto diffY = boxB.getCenter().y() - boxA.getCenter().y();
-        if (diffY + height >= boxA.getHeight() * 0.5 + boxB.getHeight() * 0.5)
+        if (diffY + height < boxA.getHeight() * 0.5 + boxB.getHeight() * 0.5)
         {
             if (state == State::Falling)
             {
@@ -53,13 +53,13 @@ public:
         const double sv = 400;
         if (state == State::Grounded)
         {
-            if (!touchingGround && transform->getPosition().y() <= bottom)
+            if (!touchingGround && transform->getPosition().y() > bottom)
             {
                 state = State::Airborn;
             }
             if (input->isDown(SDLK_UP))
             {
-                velocity = {velocity.x(), -525};
+                velocity = {velocity.x(), 525};
                 state = State::Airborn;
                 airTime = 0.0;
             }
@@ -75,9 +75,9 @@ public:
         }
         else if (state == State::Falling)
         {
-            velocity = {velocity.x(), velocity.y() + gravity};
+            velocity = {velocity.x(), velocity.y() - gravity};
             const auto pos = transform->getPosition();
-            if (pos.y() >= bottom) // TODO: replace this with colliders
+            if (pos.y() <= bottom)
             {
                 state = State::Grounded;
                 velocity = {velocity.x(), 0.0};

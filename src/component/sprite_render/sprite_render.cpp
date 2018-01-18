@@ -22,10 +22,14 @@ void SpriteRenderComponent::render(Transform::TransformRef camera)
     auto position = transform->getPosition() - offset;
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());
-    texture->render({x, y});
+    texture->render({x, -y - height});
 }
 
-void SpriteRenderComponent::setTexture(std::shared_ptr<Texture> t) { texture = t; }
+void SpriteRenderComponent::setTexture(std::shared_ptr<Texture> t)
+{
+    texture = t;
+    height = t->getHeight();
+}
 
 void SpriteRenderComponent::clearTexture()
 {

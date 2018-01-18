@@ -18,12 +18,13 @@ BoundingBox BoxColliderComponent::asBoundingBox() const
     return {center, width, height};
 }
 
-void BoxColliderComponent::set(double w, double h)
+void BoxColliderComponent::set(double w, double h, Vector2<double> of)
 {
     removeFromWorld();
+    offset = of;
     width = w;
     height = h;
-    auto& topLeft = transform->getPosition();
+    auto topLeft = transform->getPosition() + offset;
     corners[Corner::TopLeft] = topLeft;
     corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y()};
     corners[Corner::BottomLeft] = {topLeft.x(), topLeft.y() + height};
