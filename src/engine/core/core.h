@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "audio_system.h"
+#include "camera_component.h"
 #include "input.h"
 #include "log_service.h"
 #include "observer.h"
@@ -133,10 +134,9 @@ std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t s
                                              logService, time);
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
-    auto cameraTransform = scene->getRootTransform();
-    cameraTransform->setPosition({0.0, (float)screenHeight});
-    renderer->getMainCamera()->setTransform(cameraTransform);
-
+    auto camera = scene->createGameObject<>({0.0, (float)screenHeight});
+    camera->addComponent<CameraComponent>()->setCamera(renderer->getMainCamera());
+    std::static_pointer_cast<Scene>(scene)->setMainCamera(camera);
     return core;
 }
 

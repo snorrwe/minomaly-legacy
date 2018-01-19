@@ -25,10 +25,8 @@ public:
 class Camera : public ICamera
 {
 public:
-    static std::shared_ptr<Camera> create(Transform::TransformRef transform = nullptr)
-    {
-        return std::make_shared<Camera>(transform);
-    }
+    using CameraReferences = IterablePool<Camera>;
+    using CameraReference = CameraReferences::Reference;
 
     Camera(Transform::TransformRef transform = nullptr) : transform(transform) {}
     Camera(Camera const&) = default;

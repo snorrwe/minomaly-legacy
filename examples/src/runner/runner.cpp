@@ -63,6 +63,6 @@ void Program::update()
     }
     velocity = velocity * time->deltaTime();
 
-    auto cameraTransform = renderer->getMainCamera()->getTransform();
+    auto cameraTransform = getMainCamera()->getTransform();
     cameraTransform->setPosition(cameraTransform->getPosition() + velocity);
 }

@@ -26,11 +26,9 @@ public:
 
         auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
         bottomCollider->set(1, 1, {15, -1});
-        bottomCollider->onCollision().subscribe([&](auto const& cd) { handleGroundCollision(cd); });
+        bottomCollider->onCollision().subscribe([&](auto const& cd) { touchingGround = true; });
         bottomCollider->setLayers(0x2);
     }
-
-    void handleGroundCollision(Mino::CollisionData const& cd) { touchingGround = true; }
 
     void handleCollision(Mino::CollisionData const& cd)
     {
@@ -50,7 +48,6 @@ public:
 
     virtual void update()
     {
-        const float sv = 400;
         if (state == State::Grounded)
         {
             if (!touchingGround && transform->getPosition().y() > bottom)
@@ -85,6 +82,7 @@ public:
             }
         }
 
+        const float sv = 400.0f;
         float x = 0.0f;
         if (input->isDown(SDLK_LEFT))
         {
