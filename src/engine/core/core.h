@@ -93,6 +93,11 @@ public:
     subsystemStatus(std::vector<SdlSubSystemType> const& types) const;
 
 private:
+    static std::shared_ptr<EngineCore> initCore(std::string const& name, size_t screenWidth,
+                                            size_t screenHeight);
+    static void setupMainCamera(std::shared_ptr<Scene>, std::shared_ptr<IRenderSystem>, float);
+    template <class T> static void initScene(std::shared_ptr<EngineCore>, float screenHeight);
+
     void run(bool);
     void update();
 
@@ -117,27 +122,17 @@ template <typename TLogic>
 std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
                                                size_t screenHeight)
 {
-    auto logService = Services::get<ILogService>();
-    auto time = Services::get<ITimeService>();
-    auto subsystems = SdlSubsystems::initialize(logService);
-    auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
-                     ? AudioSystem::create()
-                     : std::make_shared<MuteAudioSystem>();
-    auto inp = Input::create();
-    auto window = WindowSystem::create(
-        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
-    auto renderer = RenderSystem::create(*window);
-    auto physics = PhysicsSystem::create();
+    auto core = initCore(name, screenWidth, screenHeight);
+    initScene<TLogic>(core, (float)screenHeight);
+    return core;
+}
 
-    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, physics,
-                                             logService, time);
+template <typename TLogic>
+void EngineCore::initScene(std::shared_ptr<EngineCore> core, float screenHeight)
+{
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
-    auto camera = scene->createGameObject<>({0.0, (float)screenHeight});
-    camera->addComponent<CameraComponent>()->setCamera(renderer->getMainCamera());
-    std::static_pointer_cast<Scene>(scene)->setMainCamera(camera);
-    return core;
+    setupMainCamera(scene, core->renderer, screenHeight);
 }
 
 } // namespace Mino

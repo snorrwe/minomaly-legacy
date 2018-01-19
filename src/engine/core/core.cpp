@@ -86,3 +86,31 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
 }
 
 void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
+
+void EngineCore::setupMainCamera(std::shared_ptr<Scene> scene,
+                                 std::shared_ptr<IRenderSystem> renderer, float screenHeight)
+{
+    auto camera = scene->createGameObject<>({0.0, screenHeight});
+    camera->addComponent<CameraComponent>()->setCamera(renderer->getMainCamera());
+    std::static_pointer_cast<Scene>(scene)->setMainCamera(camera);
+}
+
+std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t screenWidth,
+                                             size_t screenHeight)
+{
+    auto logService = Services::get<ILogService>();
+    auto time = Services::get<ITimeService>();
+    auto subsystems = SdlSubsystems::initialize(logService);
+    auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
+                     ? AudioSystem::create()
+                     : std::make_shared<MuteAudioSystem>();
+    auto inp = Input::create();
+    auto window = WindowSystem::create(
+        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+    auto renderer = RenderSystem::create(*window);
+    auto physics = PhysicsSystem::create();
+
+    return std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, physics,
+                                        logService, time);
+}
