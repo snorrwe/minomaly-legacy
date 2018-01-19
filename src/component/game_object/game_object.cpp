@@ -2,6 +2,15 @@
 
 using namespace Mino;
 
+GameObject::GameObject(Transform::TransformRef const& parentTransform) : transform(parentTransform)
+{
+}
+
+GameObject::GameObject(Transform::TransformRef const& parentTransform, Scene* scene)
+    : transform(parentTransform), scene(scene)
+{
+}
+
 void GameObject::disableComponent(std::shared_ptr<Component> component)
 {
     using std::iter_swap;
@@ -11,9 +20,13 @@ void GameObject::disableComponent(std::shared_ptr<Component> component)
     if (target != last)
     {
         if (components.size() > enabled)
+        {
             iter_swap(target, --last);
+        }
         else
+        {
             iter_swap(target, components.rbegin());
+        }
         --enabled;
     }
 }
@@ -33,6 +46,7 @@ void GameObject::enableComponent(std::shared_ptr<Component> component)
 
 void GameObject::update()
 {
+    if (!components.size()) return;
     auto toUpdate = components;
     auto last = toUpdate.begin() + enabled;
     for (auto i = toUpdate.begin(); i != last; ++i)
@@ -40,3 +54,5 @@ void GameObject::update()
         (*i)->update();
     }
 }
+
+void GameObject::addChild(GameObject& go) { go.transform = transform->addChild(go.transform); }

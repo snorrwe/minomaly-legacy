@@ -27,7 +27,7 @@ class IRenderSystem
 public:
     friend class EngineCore;
 
-    using RenderComponentReferences = std::vector<std::shared_ptr<RenderComponent>>;
+    using RenderComponentReferences = std::vector<std::weak_ptr<RenderComponent>>;
     using CameraReferences = Camera::CameraReferences;
     using CameraReference = Camera::CameraReference;
     using RotationData = RenderData::RotationData;
@@ -44,14 +44,14 @@ public:
     virtual void setViewport(SDL_Rect* viewport) = 0;
     virtual void update() = 0;
     virtual CameraReference addCamera() = 0;
-    virtual CameraReference getMainCamera() = 0;
+    virtual CameraReference getMainCamera() const = 0;
 
     virtual SDL_Renderer* getRaw() = 0;
 
     template <typename TRenderer> std::shared_ptr<TRenderer> createRenderer();
-    void removeRenderer(std::shared_ptr<RenderComponent>);
-    void enableRenderer(std::shared_ptr<RenderComponent>);
-    void disableRenderer(std::shared_ptr<RenderComponent>);
+    void removeRenderer(RenderComponent const&);
+    void enableRenderer(RenderComponent const&);
+    void disableRenderer(RenderComponent const&);
 
 protected:
     RenderComponentReferences renderComponentRefs;
@@ -84,7 +84,7 @@ public:
     virtual void update();
 
     virtual CameraReference addCamera();
-    virtual CameraReference getMainCamera() { return mainCamera; }
+    virtual CameraReference getMainCamera() const { return mainCamera; }
 
     virtual SDL_Renderer* getRaw() { return renderer; }
 

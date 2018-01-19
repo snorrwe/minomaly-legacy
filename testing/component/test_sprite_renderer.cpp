@@ -15,7 +15,7 @@ public:
     MOCK_METHOD0(getRaw, SDL_Renderer*());
     MOCK_METHOD0(update, void());
     MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
-    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_CONST_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
 };
 
 class SpriteRendererTests : public ::testing::Test

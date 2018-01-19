@@ -76,7 +76,7 @@ TEST_F(RenderSystemTests, OnlyRendersEnabledRenderers)
     EXPECT_CALL(*mockRenderers[4], render(_)).Times(5);
     EXPECT_CALL(*mockRenderers[5], render(_)).Times(5);
 
-    renderer->disableRenderer(mockRenderers[1]);
+    renderer->disableRenderer(*mockRenderers[1]);
     EXPECT_CALL(*mockRenderers[1], render(_)).Times(0);
 
     for (int i = 0; i < 5; ++i)

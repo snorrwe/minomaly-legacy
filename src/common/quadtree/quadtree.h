@@ -132,7 +132,7 @@ bool Quadtree<T>::move(typename Quadtree<T>::Node const& from, typename Quadtree
 
 template <class T> bool Quadtree<T>::erase(typename Quadtree<T>::Node const& v)
 {
-    return query(v, [&](Quadtree& qt) {
+    return query(v, [&](auto& qt) {
         auto i = std::find(qt.points.begin(), qt.points.end(), v);
         auto result = i != qt.points.end();
         if (result) qt.points.erase(i);

@@ -87,16 +87,8 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
 
 void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
 
-void EngineCore::setupMainCamera(std::shared_ptr<Scene> scene,
-                                 std::shared_ptr<IRenderSystem> renderer, float screenHeight)
-{
-    auto camera = scene->createGameObject<>({0.0, screenHeight});
-    camera->addComponent<CameraComponent>()->setCamera(renderer->getMainCamera());
-    std::static_pointer_cast<Scene>(scene)->setMainCamera(camera);
-}
-
 std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t screenWidth,
-                                             size_t screenHeight)
+                                                 size_t screenHeight)
 {
     auto logService = Services::get<ILogService>();
     auto time = Services::get<ITimeService>();

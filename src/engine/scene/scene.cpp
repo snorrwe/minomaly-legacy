@@ -3,9 +3,9 @@
 
 using namespace Mino;
 
-std::shared_ptr<GameObject> Scene::createEmptyGameObject()
+std::shared_ptr<GameObject>& Scene::createEmptyGameObject()
 {
-    gameObjects.emplace_back(std::make_shared<GameObject>(rootTransforms.enable(), this));
+    gameObjects.emplace_back(std::make_shared<GameObject>(rootTransform->addChild(), this));
     return gameObjects.back();
 }
 
@@ -21,10 +21,18 @@ void Scene::destroyGameObject(std::shared_ptr<GameObject> go)
 
 void Scene::updateGameObjects()
 {
-    for (auto i = gameObjects.begin(); i != gameObjects.end(); ++i)
+    for (auto& i : gameObjects)
     {
-        (**i).update();
+        i->update();
     }
+    rootTransform->updateChildren();
 }
 
 template <> void Scene::addComponents<>(GameObject& go) {}
+
+void Scene::initMainCamera(IRenderSystem const& renderer, float screenHeight)
+{
+    auto camera = createGameObject<>({0.0, screenHeight});
+    camera->addComponent<CameraComponent>()->setCamera(renderer.getMainCamera());
+    mainCamera = camera;
+}

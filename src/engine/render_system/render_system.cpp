@@ -50,7 +50,14 @@ void RenderSystem::update()
         for (auto j = renderComponentRefs.begin();
              j != renderComponentRefs.begin() + enabledRenderers; ++j)
         {
-            (*j)->render(camera.getTransform());
+            if (auto renderComponent = j->lock(); renderComponent)
+            {
+                renderComponent->render(camera.getTransform());
+            }
+            else
+            {
+                renderComponentRefs.erase(j);
+            }
         }
     });
     SDL_RenderPresent(renderer);
@@ -64,22 +71,24 @@ std::shared_ptr<Texture> RenderSystem::loadTexture(std::string const& name, bool
 
 void RenderSystem::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(renderer, viewport); }
 
-void IRenderSystem::removeRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::removeRenderer(RenderComponent const& renderer)
 {
-    auto it = std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
+    auto it = std::find_if(renderComponentRefs.begin(), renderComponentRefs.end(),
+                           [&](auto& r) { return r.lock().get() == &renderer; });
     if (it != renderComponentRefs.end())
     {
         renderComponentRefs.erase(it);
     }
 }
 
-void IRenderSystem::enableRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::enableRenderer(RenderComponent const& renderer)
 {
     /* TODO abstract this container */
     using std::iter_swap;
 
     auto first = renderComponentRefs.begin() + enabledRenderers;
-    auto it = std::find(first, renderComponentRefs.end(), renderer);
+    auto it = std::find_if(first, renderComponentRefs.end(),
+                           [&](auto& r) { return r.lock().get() == &renderer; });
     if (it != renderComponentRefs.end())
     {
         iter_swap(it, first);
@@ -87,13 +96,14 @@ void IRenderSystem::enableRenderer(std::shared_ptr<RenderComponent> renderer)
     }
 }
 
-void IRenderSystem::disableRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::disableRenderer(RenderComponent const& renderer)
 {
     /* TODO abstract this */
     using std::iter_swap;
 
     auto last = renderComponentRefs.begin() + enabledRenderers;
-    auto it = std::find(renderComponentRefs.begin(), last, renderer);
+    auto it = std::find_if(renderComponentRefs.begin(), last,
+                           [&](auto& r) { return r.lock().get() == &renderer; });
     if (it != last)
     {
         if (renderComponentRefs.size() > enabledRenderers)

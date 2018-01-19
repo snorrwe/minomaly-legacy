@@ -6,14 +6,17 @@ ColliderComponent::~ColliderComponent()
 {
     for (auto i = corners.begin(); i != corners.end(); ++i)
     {
-        world.lock()->erase({*i, this});
+        if (auto& w = world.lock(); w)
+        {
+            w->erase({*i, this});
+        }
     }
 }
 
 void ColliderComponent::start()
 {
     transform = gameObject->getTransform();
-    lastPos = transform->getPosition();
+    lastPos = transform->absolute().position;
     physicsSystem = gameObject->getScene()->getEngineCore()->getPhysicsSystem();
     world = physicsSystem.lock()->getWorld();
     addToWorld();
@@ -41,7 +44,7 @@ void ColliderComponent::handleCollision(ColliderComponent const& coll)
 
 void ColliderComponent::update()
 {
-    auto currentPos = transform->getPosition();
+    auto currentPos = transform->absolute().position;
     deltaPos = currentPos - lastPos;
     if (deltaPos)
     {
@@ -53,29 +56,34 @@ void ColliderComponent::update()
 void ColliderComponent::updateCornersByDeltaPos()
 {
     auto wrld = world.lock();
-    for (auto i = corners.begin(); i != corners.end(); ++i)
+    if (!wrld)
     {
-        IPhysicsSystem::World::Node from{*i, this};
-        IPhysicsSystem::World::Node to{*i + deltaPos, this};
+        disable();
+        return;
+    }
+    for (auto& i : corners)
+    {
+        auto from = IPhysicsSystem::World::Node{i, this};
+        auto to = IPhysicsSystem::World::Node{i + deltaPos, this};
         wrld->move(from, to);
-        *i = to.pos;
+        i = to.pos;
     }
 }
 
 void ColliderComponent::addToWorld()
 {
     auto wrld = world.lock();
-    for (auto i = corners.begin(); i != corners.end(); ++i)
+    for (auto& i : corners)
     {
-        wrld->insert({*i, this});
+        wrld->insert({i, this});
     }
 }
 
 void ColliderComponent::removeFromWorld()
 {
     auto wrld = world.lock();
-    for (auto i = corners.begin(); i != corners.end(); ++i)
+    for (auto& i : corners)
     {
-        wrld->erase({*i, this});
+        wrld->erase({i, this});
     }
 }

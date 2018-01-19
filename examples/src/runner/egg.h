@@ -48,9 +48,11 @@ public:
 
     virtual void update()
     {
+        std::cout << transform->position() << std::endl;
+
         if (state == State::Grounded)
         {
-            if (!touchingGround && transform->getPosition().y() > bottom)
+            if (!touchingGround && transform->position().y() > bottom)
             {
                 state = State::Airborn;
             }
@@ -73,12 +75,12 @@ public:
         else if (state == State::Falling)
         {
             velocity = {velocity.x(), velocity.y() - gravity};
-            const auto pos = transform->getPosition();
+            auto& pos = transform->position();
             if (pos.y() <= bottom)
             {
                 state = State::Grounded;
                 velocity = {velocity.x(), 0.0};
-                transform->setPosition({pos.x(), (float)bottom});
+                pos = {pos.x(), float(bottom)};
             }
         }
 

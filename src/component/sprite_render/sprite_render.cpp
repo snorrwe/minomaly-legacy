@@ -18,8 +18,8 @@ void SpriteRenderComponent::update()
 
 void SpriteRenderComponent::render(Transform::TransformRef camera)
 {
-    auto offset = camera ? camera->getPosition() : Vector2<float>{0, 0};
-    auto position = transform->getPosition() - offset;
+    auto offset = camera ? camera->absolute().position : Vector2<float>{0, 0};
+    auto position = transform->absolute().position - offset;
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());
     texture->render({x, -y - height});

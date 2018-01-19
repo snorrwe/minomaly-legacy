@@ -4,42 +4,49 @@ using namespace Mino;
 
 using TransformRef = Transform::TransformRef;
 
-Transform::~Transform() {}
+TransformRef Transform::getRoot()
+{
+    static Transform::ChildrenContainer roots = {};
 
-TransformRef Transform::addChild()
+    auto result = roots.enable();
+    result->self = result;
+    return result;
+}
+
+TransformRef Transform::addChild(TransformRef const& child)
 {
     auto result = children.enable();
     result->self = result;
     result->parent = self;
+    if (child)
+    {
+        result->children = child->children;
+        result->localTransform = child->localTransform;
+        result->absoluteTransform = child->absoluteTransform;
+    }
+    result->updateByParent(*this);
     return result;
 }
 
 void Transform::removeChild(TransformRef const& child) { child.disable(); }
 
-Transform::Transform(Transform const& t)
-    : parent(t.parent), position(t.position), rotation(t.rotation), children(t.children)
+void Transform::setPosition(Vector const& value) { localTransform.position = value; }
+
+void Transform::setRotation(RotationData const& value) { localTransform.rotation = value; }
+
+void Transform::updateChildren()
 {
+    if (!parent)
+    {
+        absoluteTransform = TransformData(localTransform);
+    }
+    children.iterateActive([&](auto& tr) {
+        tr.updateByParent(*this);
+        tr.updateChildren();
+    });
 }
 
-Transform::Transform(Transform&& t)
-    : parent(t.parent), position(t.position), rotation(t.rotation), children(t.children)
+void Transform::updateByParent(Transform const& parent)
 {
-}
-
-Transform& Transform::operator=(Transform const& t)
-{
-    parent = t.parent;
-    position = t.position;
-    rotation = t.rotation;
-    children = t.children;
-    return *this;
-}
-
-Transform& Transform::operator=(Transform&& t)
-{
-    parent = t.parent;
-    position = t.position;
-    rotation = t.rotation;
-    children = t.children;
-    return *this;
+    absoluteTransform.position = parent.absoluteTransform.position + localTransform.position;
 }
