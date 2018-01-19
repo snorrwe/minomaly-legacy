@@ -21,6 +21,7 @@ public:
     std::shared_ptr<Texture> getTexture() { return texture; }
 
 protected:
+    int height = 0;
     Transform::TransformRef transform = nullptr;
     std::shared_ptr<Texture> texture = nullptr;
 };

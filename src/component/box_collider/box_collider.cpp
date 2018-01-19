@@ -13,41 +13,45 @@ void BoxColliderComponent::start()
 
 BoundingBox BoxColliderComponent::asBoundingBox() const
 {
-    Vector2<double> center{corners[Corner::TopLeft].x() + width * 0.5,
-                           corners[Corner::TopLeft].y() + height * 0.5};
+    Vector2<float> center{corners[Corner::BottomLeft].x() + width * 0.5f,
+                          corners[Corner::BottomLeft].y() + height * 0.5f};
     return {center, width, height};
 }
 
-void BoxColliderComponent::set(double w, double h)
+void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
 {
     removeFromWorld();
+    offset = ofs;
     width = w;
     height = h;
-    auto& topLeft = transform->getPosition();
-    corners[Corner::TopLeft] = topLeft;
-    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y()};
-    corners[Corner::BottomLeft] = {topLeft.x(), topLeft.y() + height};
-    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y() + height};
+    auto topLeft = transform->getPosition() + offset;
+    corners[Corner::BottomLeft] = topLeft;
+    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y()};
+    corners[Corner::TopLeft] = {topLeft.x(), topLeft.y() + height};
+    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y() + height};
     addToWorld();
 }
 
 void BoxColliderComponent::checkCollisions()
 {
     auto points = world.lock()->queryRange(asBoundingBox());
-    if (points.size() > 4)
-    {
-        std::sort(points.begin(), points.end(),
-                  [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
-        points.erase(
-            std::unique(points.begin(), points.end(),
-                        [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
-            points.end());
-        points.erase(std::find_if(points.begin(), points.end(),
-                                  [&](auto const& i) { return i.item == this; }));
+    if (points.size() <= 4) return;
 
-        for (auto i = points.begin(); i != points.end(); ++i)
-        {
-            i->item->handleCollision(*this);
-        }
+    std::sort(points.begin(), points.end(),
+              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
+    points.erase(std::unique(points.begin(), points.end(),
+                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
+                 points.end());
+    removeSelf(points);
+    for (auto i = points.begin(); i != points.end(); ++i)
+    {
+        i->item->handleCollision(*this);
     }
+}
+
+void BoxColliderComponent::removeSelf(std::vector<World::Node>& points)
+{
+    auto it =
+        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
+    if (it != points.end()) points.erase(it);
 }

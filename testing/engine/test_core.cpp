@@ -74,7 +74,7 @@ class MockTimeSystem : public ITimeService
 {
 public:
     MOCK_CONST_METHOD0(now, TimePoint());
-    MOCK_CONST_METHOD0(deltaTime, double());
+    MOCK_CONST_METHOD0(deltaTime, float());
 
 protected:
     MOCK_METHOD1(update, void(TimePoint const&));

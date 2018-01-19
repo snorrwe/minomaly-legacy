@@ -20,7 +20,7 @@ public:
     virtual ~ITimeService() {}
 
     virtual TimePoint now() const = 0;
-    virtual double deltaTime() const = 0;
+    virtual float deltaTime() const = 0;
 
 protected:
     virtual void update(TimePoint const& now) = 0;
@@ -34,13 +34,15 @@ public:
     virtual ~TimeService() {}
 
     virtual TimePoint now() const { return currentTime; }
-    virtual double deltaTime() const { return dtime.count(); }
+    virtual float deltaTime() const { return dtime.count(); }
 
 protected:
     virtual void update(TimePoint const& now)
     {
         dtime = std::chrono::duration_cast<Seconds>(now - currentTime);
         currentTime = now;
+
+        std::cout << dtime.count() << std::endl;
     }
 
 private:

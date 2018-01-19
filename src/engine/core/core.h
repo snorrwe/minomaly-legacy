@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "audio_system.h"
+#include "camera_component.h"
 #include "input.h"
 #include "log_service.h"
 #include "observer.h"
@@ -31,8 +32,8 @@ class IEngineCore
 {
 public:
     typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-    typedef std::chrono::duration<double, std::milli> Milli;
-    const double OneSecInMs = 1000.0;
+    typedef std::chrono::duration<float, std::milli> Milli;
+    const float OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
 
@@ -48,7 +49,7 @@ public:
     virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const = 0;
     virtual void setScene(std::shared_ptr<Scene> scene) = 0;
 
-    virtual void setTargetFps(double f) = 0;
+    virtual void setTargetFps(float f) = 0;
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
     virtual std::vector<SdlStatus> subsystemStatus(std::vector<SdlSubSystemType> const&) const = 0;
@@ -85,13 +86,18 @@ public:
     virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const { return physicsSystem; }
     virtual void setScene(std::shared_ptr<Scene> scene) { this->scene = scene; }
 
-    virtual void setTargetFps(double f);
+    virtual void setTargetFps(float f);
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
     virtual std::vector<SdlStatus>
     subsystemStatus(std::vector<SdlSubSystemType> const& types) const;
 
 private:
+    static std::shared_ptr<EngineCore> initCore(std::string const& name, size_t screenWidth,
+                                            size_t screenHeight);
+    static void setupMainCamera(std::shared_ptr<Scene>, std::shared_ptr<IRenderSystem>, float);
+    template <class T> static void initScene(std::shared_ptr<EngineCore>, float screenHeight);
+
     void run(bool);
     void update();
 
@@ -116,27 +122,17 @@ template <typename TLogic>
 std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
                                                size_t screenHeight)
 {
-    auto logService = Services::get<ILogService>();
-    auto time = Services::get<ITimeService>();
-    auto subsystems = SdlSubsystems::initialize(logService);
-    auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
-                     ? AudioSystem::create()
-                     : std::make_shared<MuteAudioSystem>();
-    auto inp = Input::create();
-    auto window = WindowSystem::create(
-        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
-    auto renderer = RenderSystem::create(*window);
-    auto physics = PhysicsSystem::create();
+    auto core = initCore(name, screenWidth, screenHeight);
+    initScene<TLogic>(core, (float)screenHeight);
+    return core;
+}
 
-    auto core = std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, physics,
-                                             logService, time);
+template <typename TLogic>
+void EngineCore::initScene(std::shared_ptr<EngineCore> core, float screenHeight)
+{
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
-    auto cameraTransform = scene->getRootTransform();
-    renderer->getMainCamera()->setTransform(cameraTransform);
-
-    return core;
+    setupMainCamera(scene, core->renderer, screenHeight);
 }
 
 } // namespace Mino

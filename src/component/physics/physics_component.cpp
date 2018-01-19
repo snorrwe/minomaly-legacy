@@ -25,25 +25,23 @@ void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
 
 void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
 {
-    if (!velocity) return;
-
     auto box1 = collistionData.first.asBoundingBox();
     auto box2 = collistionData.second.asBoundingBox();
 
-    auto idealDeltaW = (box1.getWidth() + box2.getWidth()) * 0.5;
+    auto idealDeltaW = (box1.getWidth() + box2.getWidth()) * 0.5f;
     auto idealX = box1.getCenter().x() > box2.getCenter().x()
                       ? box1.getCenter().x() - box2.getCenter().x()
                       : box2.getCenter().x() - box1.getCenter().x();
     auto deltaX = idealDeltaW - idealX;
 
-    auto idealDeltaH = (box1.getHeight() + box2.getHeight()) * 0.5;
+    auto idealDeltaH = (box1.getHeight() + box2.getHeight()) * 0.5f;
     auto idealY = box1.getCenter().y() > box2.getCenter().y()
                       ? box1.getCenter().y() - box2.getCenter().y()
                       : box2.getCenter().y() - box1.getCenter().y();
     auto deltaY = idealDeltaH - idealY;
 
     auto corrected = transform->getPosition();
-    const auto c = 2.0 - time->deltaTime() / velocity.length();
+    const auto c = velocity ? 2.0f - time->deltaTime() / velocity.length() : 1.0f;
 
     if (deltaX < deltaY)
     {
@@ -69,7 +67,7 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
     transform->setPosition(corrected);
 }
 
-void PhysicsComponent::setVelocity(Vector2<double> const& v)
+void PhysicsComponent::setVelocity(Vector2<float> const& v)
 {
     velocity = v;
     auto norm = v.normalized();

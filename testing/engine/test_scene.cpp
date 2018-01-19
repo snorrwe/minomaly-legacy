@@ -24,7 +24,7 @@ public:
     MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));
     MOCK_CONST_METHOD1(subsystemStatus,
                        std::vector<SdlStatus>(std::vector<SdlSubSystemType> const&));
-    MOCK_METHOD1(setTargetFps, void(double f));
+    MOCK_METHOD1(setTargetFps, void(float f));
 };
 
 class FakeScene : public Scene

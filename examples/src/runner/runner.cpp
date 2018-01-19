@@ -22,7 +22,7 @@ void Program::start()
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
     auto barGo = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
-        {(SCREEN_WIDTH - 50) * 0.5, (SCREEN_HEIGHT - 120)});
+        {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
     const auto bar = "assets/runner/bar.png";
     barGo->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(bar));
@@ -36,15 +36,15 @@ void Program::start()
     auto eggPic = renderer->loadTexture(egg);
     auto eggEgg = eggGo->getComponent<EggComponent>();
     eggEgg->input = input;
-    eggEgg->bottom = SCREEN_HEIGHT - eggPic->getHeight();
+    eggEgg->bottom = 0;
     eggGo->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    eggGo->getTransform()->setPosition(50, eggEgg->bottom);
+    eggGo->getTransform()->setPosition(50, 0.0);
 }
 
 void Program::update()
 {
-    Mino::Vector2<double> velocity = {0, 0};
-    double sv = 200;
+    Mino::Vector2<float> velocity{0.0f, 0.0f};
+    float sv = 200.0f;
     if (input->isDown(SDLK_a))
     {
         velocity = {velocity.x() - sv, velocity.y()};
@@ -55,14 +55,14 @@ void Program::update()
     }
     if (input->isDown(SDLK_w))
     {
-        velocity = {velocity.x(), velocity.y() - sv};
+        velocity = {velocity.x(), velocity.y() + sv};
     }
     if (input->isDown(SDLK_s))
     {
-        velocity = {velocity.x(), velocity.y() + sv};
+        velocity = {velocity.x(), velocity.y() - sv};
     }
     velocity = velocity * time->deltaTime();
 
-    auto cameraTransform = renderer->getMainCamera()->getTransform();
+    auto cameraTransform = getMainCamera()->getTransform();
     cameraTransform->setPosition(cameraTransform->getPosition() + velocity);
 }

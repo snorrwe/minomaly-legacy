@@ -45,6 +45,7 @@ set(_COMPONENT_INCLUDES component
                         component/game_object
                         component/physics
                         component/collider
+                        component/camera
                         component/box_collider
                         component/sprite_render)
 
@@ -77,6 +78,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_render/sprite_render.cpp
                                ${PROJECT_SOURCE_DIR}/component/renderer/renderer.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
+                               ${PROJECT_SOURCE_DIR}/component/camera/camera_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/collider/collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/box_collider/box_collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/physics/physics_component.cpp

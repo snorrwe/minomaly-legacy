@@ -25,12 +25,10 @@ public:
         height = eggCollider->getHeight();
 
         auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(2, 31);
-        bottomCollider->onCollision().subscribe([&](auto const& cd) { handleGroundCollision(cd); });
+        bottomCollider->set(1, 1, {15, -1});
+        bottomCollider->onCollision().subscribe([&](auto const& cd) { touchingGround = true; });
         bottomCollider->setLayers(0x2);
     }
-
-    void handleGroundCollision(Mino::CollisionData const& cd) { touchingGround = true; }
 
     void handleCollision(Mino::CollisionData const& cd)
     {
@@ -38,7 +36,7 @@ public:
         auto boxB = cd.second.asBoundingBox();
 
         auto diffY = boxB.getCenter().y() - boxA.getCenter().y();
-        if (diffY + height >= boxA.getHeight() * 0.5 + boxB.getHeight() * 0.5)
+        if (diffY + height < boxA.getHeight() * 0.5f + boxB.getHeight() * 0.5f)
         {
             if (state == State::Falling)
             {
@@ -50,16 +48,15 @@ public:
 
     virtual void update()
     {
-        const double sv = 400;
         if (state == State::Grounded)
         {
-            if (!touchingGround && transform->getPosition().y() <= bottom)
+            if (!touchingGround && transform->getPosition().y() > bottom)
             {
                 state = State::Airborn;
             }
             if (input->isDown(SDLK_UP))
             {
-                velocity = {velocity.x(), -525};
+                velocity = {velocity.x(), 525.0f};
                 state = State::Airborn;
                 airTime = 0.0;
             }
@@ -69,23 +66,24 @@ public:
             airTime += time->deltaTime();
             if (airTime > 0.3)
             {
-                velocity = {velocity.x(), 0.0};
+                velocity = {velocity.x(), 0.0f};
                 state = State::Falling;
             }
         }
         else if (state == State::Falling)
         {
-            velocity = {velocity.x(), velocity.y() + gravity};
+            velocity = {velocity.x(), velocity.y() - gravity};
             const auto pos = transform->getPosition();
-            if (pos.y() >= bottom) // TODO: replace this with colliders
+            if (pos.y() <= bottom)
             {
                 state = State::Grounded;
                 velocity = {velocity.x(), 0.0};
-                transform->setPosition({pos.x(), (double)bottom});
+                transform->setPosition({pos.x(), (float)bottom});
             }
         }
 
-        double x = 0.0;
+        const float sv = 400.0f;
+        float x = 0.0f;
         if (input->isDown(SDLK_LEFT))
         {
             x -= sv;
@@ -101,7 +99,7 @@ public:
 
     std::shared_ptr<Mino::IInputSystem> input;
     int bottom;
-    double height;
+    float height;
     bool touchingGround = false;
 
 private:
@@ -109,8 +107,8 @@ private:
     std::shared_ptr<Mino::ITimeService> time;
     Mino::Transform::TransformRef transform;
 
-    Mino::Vector2<double> velocity = {0, 0};
-    const double gravity = 10.0;
+    Mino::Vector2<float> velocity = {0, 0};
+    const float gravity = 50.0;
     State state = State::Grounded;
-    double airTime = 1000.0;
+    float airTime = 1000.0;
 };

@@ -28,7 +28,7 @@ struct Vector2
 struct RotationData
 {
     RotationData() = default;
-    RotationData(double angle, SDL_RendererFlip flip, Vector2 center)
+    RotationData(float angle, SDL_RendererFlip flip, Vector2 center)
         : angle(angle), flip(flip), center(center)
     {
     }
@@ -38,7 +38,7 @@ struct RotationData
     RotationData& operator=(RotationData const&) = default;
     RotationData& operator=(RotationData&&) = default;
 
-    double angle = 0.0;
+    float angle = 0.0;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Vector2 center = Vector2();
 };

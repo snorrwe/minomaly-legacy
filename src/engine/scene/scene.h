@@ -25,12 +25,15 @@ public:
     Scene& operator=(Scene&&) = delete;
 
     void updateGameObjects();
-    virtual void update() = 0;
+    virtual void update() {}
     virtual void start() {}
 
     template <typename... TComponents>
-    std::shared_ptr<GameObject> createGameObject(Vector2<double> position = {0, 0});
+    std::shared_ptr<GameObject> createGameObject(Vector2<float> position = {0, 0});
     void destroyGameObject(std::shared_ptr<GameObject>);
+
+    std::shared_ptr<GameObject> getMainCamera() { return mainCamera; }
+    void setMainCamera(std::shared_ptr<GameObject> value) { mainCamera = value; }
 
     IEngineCore* getEngineCore() { return engine; }
     Transform::TransformRef getRootTransform() { return rootTransforms.enable(); }
@@ -41,8 +44,9 @@ protected:
     template <typename... Ts> void addComponents(GameObject& go);
     template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
 
-    Transform::ChildrenContainer rootTransforms = Transform::ChildrenContainer{};
+    Transform::ChildrenContainer rootTransforms = {};
     std::vector<std::shared_ptr<GameObject>> gameObjects;
+    std::shared_ptr<GameObject> mainCamera;
     IEngineCore* engine;
 };
 
@@ -65,7 +69,7 @@ template <typename T, typename... Ts> void Scene::addComponentHelper(GameObject&
 }
 
 template <typename... TComponents>
-std::shared_ptr<GameObject> Scene::createGameObject(Vector2<double> position)
+std::shared_ptr<GameObject> Scene::createGameObject(Vector2<float> position)
 {
     auto go = createEmptyGameObject();
     auto tr = go->getTransform();
