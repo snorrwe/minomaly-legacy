@@ -67,7 +67,7 @@ public:
 protected:
     TransformRef::WeakRef parent = nullptr;
     TransformRef::WeakRef self = nullptr;
-    ChildrenContainer children = ChildrenContainer{};
+    ChildrenContainer children = {};
 
     TransformData localTransform = {};
     TransformData absoluteTransform = {};

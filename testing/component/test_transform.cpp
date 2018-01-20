@@ -6,7 +6,11 @@ using namespace Mino;
 class TransformTests : public ::testing::Test
 {
 public:
-    Transform::TransformRef tr = Transform::getRoot();
+    void SetUp() { tr = Transform::getRoot(); }
+
+    void TearDown() { tr = nullptr; }
+
+    Transform::TransformRef tr;
 };
 
 TEST_F(TransformTests, CanCreateWithoutParent) {}
