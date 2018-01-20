@@ -43,7 +43,6 @@ void ColliderComponent::disable()
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
-    if (!(layers & coll.layers)) return;
 
     touching.insert(&coll);
     onCollisionSubject->next({*this, coll});
@@ -105,7 +104,12 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
 void ColliderComponent::checkCollisions()
 {
     auto points = world.lock()->queryRange(asBoundingBox());
-    if (points.size() <= 4) return;
+    if (points.empty())
+    {
+        handleResolvedCollisions(TouchContainer{});
+        touching.clear();
+        return;
+    }
 
     std::sort(points.begin(), points.end(),
               [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
@@ -117,20 +121,27 @@ void ColliderComponent::checkCollisions()
     auto currentlyTouching = TouchContainer{};
     for (auto& i : points)
     {
-        i.item->handleCollision(*this);
-        currentlyTouching.insert(i.item);
+        if (layers & i.item->layers)
+        {
+            i.item->handleCollision(*this);
+            currentlyTouching.insert(i.item);
+        }
     }
 
+    handleResolvedCollisions(currentlyTouching);
+    touching = std::move(currentlyTouching);
+}
+
+void ColliderComponent::handleResolvedCollisions(TouchContainer& currentlyTouching)
+{
     auto noLongerTouching = TouchContainer{};
     std::set_difference(touching.begin(), touching.end(), currentlyTouching.begin(),
                         currentlyTouching.end(),
                         std::inserter(noLongerTouching, noLongerTouching.begin()));
-
     for (auto& collider : noLongerTouching)
     {
         onCollisionResolutionSubject->next({*this, *collider});
     }
-    touching = std::move(currentlyTouching);
 }
 
 void ColliderComponent::removeSelf(std::vector<World::Node>& points)

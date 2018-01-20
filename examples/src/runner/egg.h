@@ -24,33 +24,12 @@ public:
         eggCollider->setLayers(0x1);
         body->addCollider(eggCollider);
         height = eggCollider->getHeight();
-
-        auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(28, 2, {1, -1});
-        bottomCollider->setLayers(0x2);
-
-        bottomCollider->onCollision().subscribe([&](auto const& cd) {
-            if (touchingGround) return;
-
-            auto boxA = cd.first.asBoundingBox();
-            auto boxB = cd.second.asBoundingBox();
-
-            auto dir = boxB.getCenter() - boxA.getCenter();
-            if (dir.y() >= 0) return;
-            auto angle = dir.y() / dir.length();
-            if (0.8 <= fabs(angle))
-            {
-                state = State::Grounded;
-                velocity = {velocity.x(), 0.0f};
-                touchingGround = true;
-            }
-        });
-        bottomCollider->onCollisionResolve().subscribe([&](auto const& cd) {
-            if (touchingGround)
-            {
-                touchingGround = false;
-            }
-        });
+        bottomCollider = eggCollider.get();
+        /*
+                bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>().get();
+                bottomCollider->set(28, 2, {1, -1});
+                bottomCollider->setLayers(0x2);
+                */
     }
 
     void handleCollision(Mino::CollisionData const& cd)
@@ -71,6 +50,7 @@ public:
 
     virtual void update()
     {
+        bool touchingGround = bottomCollider->touchingAny();
         if (state == State::Grounded)
         {
             if (!touchingGround && transform->position().y() > bottom)
@@ -122,12 +102,12 @@ public:
     std::shared_ptr<Mino::IInputSystem> input;
     int bottom;
     float height;
-    bool touchingGround = false;
 
 private:
     std::shared_ptr<Mino::PhysicsComponent> body;
     std::shared_ptr<Mino::ITimeService> time;
     Mino::Transform::TransformRef transform;
+    Mino::BoxColliderComponent* bottomCollider;
 
     Mino::Vector2<float> velocity = {0, 0};
     const float gravity = 50.0;

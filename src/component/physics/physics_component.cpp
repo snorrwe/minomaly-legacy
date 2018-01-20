@@ -40,9 +40,10 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
                       : box2.getCenter().y() - box1.getCenter().y();
     auto deltaY = idealDeltaH - idealY;
 
-    const auto c = 1.0f;
-    const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
-    const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
+    const auto cx =
+        box1.getCenter().x() > box2.getCenter().x() ? material.restitution : -material.restitution;
+    const auto cy =
+        box1.getCenter().y() > box2.getCenter().y() ? material.restitution : -material.restitution;
     auto x = cx * deltaX;
     auto y = cy * deltaY;
 

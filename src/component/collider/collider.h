@@ -53,6 +53,8 @@ public:
     uint32_t getLayers() { return layers; }
 
     Vector2<float> getPositionDelta() const { return deltaPos; }
+    TouchContainer const& getTouchingColliders() const { return touching; }
+    bool touchingAny() const { return !touching.empty(); }
 
 protected:
     void updateCornersByDeltaPos();
@@ -67,6 +69,7 @@ protected:
 
 private:
     void removeSelf(std::vector<World::Node>&);
+    void handleResolvedCollisions(TouchContainer& currentlyTouching);
 
     TouchContainer touching = {};
     CollisionEvent onCollisionSubject = std::make_unique<Subject<CollisionData>>();
