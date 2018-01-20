@@ -19,13 +19,13 @@ public:
         time = Mino::Services::get<Mino::ITimeService>();
         transform = gameObject->getTransform();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
-        eggCollider->set(20, 30, {5.0f, 0.0f});
+        eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);
         body->addCollider(eggCollider);
         height = eggCollider->getHeight();
 
         bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>().get();
-        bottomCollider->set(14, 2, {8, -1});
+        bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
     }
 
