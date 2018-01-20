@@ -32,27 +32,3 @@ void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
     corners[Corner::TopRight] = {x + width, y + height};
     addToWorld();
 }
-
-void BoxColliderComponent::checkCollisions()
-{
-    auto points = world.lock()->queryRange(asBoundingBox());
-    if (points.size() <= 4) return;
-
-    std::sort(points.begin(), points.end(),
-              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
-    points.erase(std::unique(points.begin(), points.end(),
-                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
-                 points.end());
-    removeSelf(points);
-    for (auto& i : points)
-    {
-        i.item->handleCollision(*this);
-    }
-}
-
-void BoxColliderComponent::removeSelf(std::vector<World::Node>& points)
-{
-    auto it =
-        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
-    if (it != points.end()) points.erase(it);
-}

@@ -111,9 +111,9 @@ template <class T> void IterablePool<T>::iterateActive(std::function<void(T&)> c
 
 template <class T> void IterablePool<T>::iterateAll(std::function<void(T&)> callback)
 {
-    for (auto i = pool.begin(); i != pool.end(); ++i)
+    for (auto& i : pool)
     {
-        callback(*i);
+        callback(i);
     }
 }
 

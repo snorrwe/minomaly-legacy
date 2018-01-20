@@ -34,20 +34,20 @@ TEST_F(TransformTests, ChildrenPositionsAreRelativeToParent)
     auto child1 = tr->addChild();
     auto child2 = child1->addChild();
     child1->setPosition({1, 0});
-    child2->setPosition({1, 0});
+    child2->setPosition({2, 0});
 
     tr->updateChildren();
 
     ASSERT_EQ(child1->position().x(), 1);
     ASSERT_EQ(child1->absolute().position.x(), 1);
-    ASSERT_EQ(child2->position().x(), 1);
-    ASSERT_EQ(child2->absolute().position.x(), 2);
+    ASSERT_EQ(child2->position().x(), 2);
+    ASSERT_EQ(child2->absolute().position.x(), 3);
 
     tr->setPosition({1, 0});
     tr->updateChildren();
 
     ASSERT_EQ(child1->position().x(), 1);
     ASSERT_EQ(child1->absolute().position.x(), 2);
-    ASSERT_EQ(child2->position().x(), 1);
-    ASSERT_EQ(child2->absolute().position.x(), 3);
+    ASSERT_EQ(child2->position().x(), 2);
+    ASSERT_EQ(child2->absolute().position.x(), 4);
 }

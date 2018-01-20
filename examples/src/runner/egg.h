@@ -1,5 +1,6 @@
 #pragma once
 #include "mino.h"
+#include <cmath>
 #include <memory>
 
 enum class State
@@ -18,16 +19,38 @@ public:
         time = Mino::Services::get<Mino::ITimeService>();
         transform = gameObject->getTransform();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
-        eggCollider->set(30, 30);
+        eggCollider->set(20, 30, {5.0f, 0.0f});
         eggCollider->onCollision().subscribe([&](auto const& cd) { handleCollision(cd); });
         eggCollider->setLayers(0x1);
         body->addCollider(eggCollider);
         height = eggCollider->getHeight();
 
         auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(1, 1, {15, -1});
-        bottomCollider->onCollision().subscribe([&](auto const& cd) { touchingGround = true; });
+        bottomCollider->set(28, 2, {1, -1});
         bottomCollider->setLayers(0x2);
+
+        bottomCollider->onCollision().subscribe([&](auto const& cd) {
+            if (touchingGround) return;
+
+            auto boxA = cd.first.asBoundingBox();
+            auto boxB = cd.second.asBoundingBox();
+
+            auto dir = boxB.getCenter() - boxA.getCenter();
+            if (dir.y() >= 0) return;
+            auto angle = dir.y() / dir.length();
+            if (0.8 <= fabs(angle))
+            {
+                state = State::Grounded;
+                velocity = {velocity.x(), 0.0f};
+                touchingGround = true;
+            }
+        });
+        bottomCollider->onCollisionResolve().subscribe([&](auto const& cd) {
+            if (touchingGround)
+            {
+                touchingGround = false;
+            }
+        });
     }
 
     void handleCollision(Mino::CollisionData const& cd)
@@ -48,13 +71,11 @@ public:
 
     virtual void update()
     {
-        std::cout << transform->position() << std::endl;
-
         if (state == State::Grounded)
         {
             if (!touchingGround && transform->position().y() > bottom)
             {
-                state = State::Airborn;
+                state = State::Falling;
             }
             if (input->isDown(SDLK_UP))
             {
@@ -66,7 +87,7 @@ public:
         else if (state == State::Airborn)
         {
             airTime += time->deltaTime();
-            if (airTime > 0.3)
+            if (airTime > 0.3f)
             {
                 velocity = {velocity.x(), 0.0f};
                 state = State::Falling;
@@ -96,7 +117,6 @@ public:
         }
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
-        touchingGround = false;
     }
 
     std::shared_ptr<Mino::IInputSystem> input;

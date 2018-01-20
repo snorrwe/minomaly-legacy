@@ -22,8 +22,8 @@ class Child : public Component
 public:
     virtual void update()
     {
-        std::cout << "Child: " << gameObject->getTransform()->position() << " "
-                  << gameObject->getTransform()->absolute().position << std::endl;
+        // std::cout << "Child: " << gameObject->getTransform()->position() << " "
+        //          << gameObject->getTransform()->absolute().position << std::endl;
     }
 };
 
@@ -52,7 +52,7 @@ void Program::start()
     auto childEgg = createGameObject<Child>();
     egg->addChild(*childEgg);
     childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    childEgg->getTransform()->setPosition({0, 30});
+    childEgg->getTransform()->setPosition({10, 30});
 }
 
 void Program::update()

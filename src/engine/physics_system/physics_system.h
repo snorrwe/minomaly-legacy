@@ -21,8 +21,8 @@ public:
 
     virtual void update() = 0;
     virtual std::shared_ptr<World> getWorld() = 0;
-    virtual void add(std::weak_ptr<Collider> const&) = 0;
-    virtual void remove(std::weak_ptr<Collider> const&) = 0;
+    virtual void add(Collider*) = 0;
+    virtual void remove(Collider*) = 0;
 };
 
 class PhysicsSystem : public IPhysicsSystem
@@ -31,14 +31,14 @@ public:
     static std::shared_ptr<PhysicsSystem> create() { return std::make_shared<PhysicsSystem>(); }
 
     virtual void update();
-    virtual void add(std::weak_ptr<Collider> const&);
-    virtual void remove(std::weak_ptr<Collider> const&);
+    virtual void add(Collider*);
+    virtual void remove(Collider*);
 
     virtual std::shared_ptr<World> getWorld() { return world; }
 
 protected:
     std::shared_ptr<World> world = std::make_shared<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr);
-    std::vector<std::weak_ptr<Collider>> colliders;
+    std::vector<Collider*> colliders;
 };
 
 } // namespace Mino

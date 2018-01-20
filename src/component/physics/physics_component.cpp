@@ -40,31 +40,18 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
                       : box2.getCenter().y() - box1.getCenter().y();
     auto deltaY = idealDeltaH - idealY;
 
-    auto corrected = transform->getPosition();
-    const auto c = velocity ? 2.0f - time->deltaTime() / velocity.length() : 1.0f;
+    const auto c = 1.0f;
+    const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
+    const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
+    auto x = cx * deltaX;
+    auto y = cy * deltaY;
 
-    if (deltaX < deltaY)
-    {
-        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
-        auto x = cx * deltaX;
-        corrected = {corrected.x() + x, corrected.y()};
-    }
-    else if (deltaY < deltaX)
-    {
-        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
-        auto y = cy * deltaY;
-        corrected = {corrected.x(), corrected.y() + y};
-    }
-    else
-    {
-        const auto cx = box1.getCenter().x() > box2.getCenter().x() ? c : -c;
-        auto x = cx * deltaX;
-        const auto cy = box1.getCenter().y() > box2.getCenter().y() ? c : -c;
-        auto y = cy * deltaY;
-        corrected = {corrected.x() + x, corrected.y() + y};
-    }
+    if (deltaX >= deltaY)
+        x = 0.0f;
+    else if (deltaY >= deltaX)
+        y = 0.0f;
 
-    transform->setPosition(corrected);
+    transform->setPosition(transform->getPosition() + Vector2<float>{x, y});
 }
 
 void PhysicsComponent::setVelocity(Vector2<float> const& v)

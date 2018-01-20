@@ -4,11 +4,15 @@ using namespace Mino;
 
 ColliderComponent::~ColliderComponent()
 {
-    for (auto i = corners.begin(); i != corners.end(); ++i)
+    if (auto phs = physicsSystem.lock(); phs)
     {
-        if (auto& w = world.lock(); w)
+        phs->remove(this);
+    }
+    if (auto& w = world.lock(); w)
+    {
+        for (auto& corner : corners)
         {
-            w->erase({*i, this});
+            w->erase({corner, this});
         }
     }
 }
@@ -20,31 +24,34 @@ void ColliderComponent::start()
     physicsSystem = gameObject->getScene()->getEngineCore()->getPhysicsSystem();
     world = physicsSystem.lock()->getWorld();
     addToWorld();
-    physicsSystem.lock()->add(std::static_pointer_cast<ColliderComponent>(self.lock()));
+    physicsSystem.lock()->add(this);
 }
 
 void ColliderComponent::enable()
 {
     addToWorld();
-    physicsSystem.lock()->add(std::static_pointer_cast<ColliderComponent>(self.lock()));
+    physicsSystem.lock()->add(this);
     Component::enable();
 }
 
 void ColliderComponent::disable()
 {
     removeFromWorld();
-    physicsSystem.lock()->remove(std::static_pointer_cast<ColliderComponent>(self.lock()));
+    physicsSystem.lock()->remove(this);
     Component::disable();
 }
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
-    if (layers & coll.layers) onCollisionSubject->next({*this, coll});
+    if (!(layers & coll.layers)) return;
+
+    touching.insert(&coll);
+    onCollisionSubject->next({*this, coll});
 }
 
-void ColliderComponent::update()
+void ColliderComponent::updatePosition()
 {
-    auto currentPos = transform->absolute().position;
+    auto& currentPos = transform->absolute().position;
     deltaPos = currentPos - lastPos;
     if (deltaPos)
     {
@@ -86,4 +93,49 @@ void ColliderComponent::removeFromWorld()
     {
         wrld->erase({i, this});
     }
+}
+
+Observable<CollisionData>& ColliderComponent::onCollision() { return *onCollisionSubject; }
+
+Observable<CollisionData>& ColliderComponent::onCollisionResolve()
+{
+    return *onCollisionResolutionSubject;
+}
+
+void ColliderComponent::checkCollisions()
+{
+    auto points = world.lock()->queryRange(asBoundingBox());
+    if (points.size() <= 4) return;
+
+    std::sort(points.begin(), points.end(),
+              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
+    points.erase(std::unique(points.begin(), points.end(),
+                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
+                 points.end());
+    removeSelf(points);
+
+    auto currentlyTouching = TouchContainer{};
+    for (auto& i : points)
+    {
+        i.item->handleCollision(*this);
+        currentlyTouching.insert(i.item);
+    }
+
+    auto noLongerTouching = TouchContainer{};
+    std::set_difference(touching.begin(), touching.end(), currentlyTouching.begin(),
+                        currentlyTouching.end(),
+                        std::inserter(noLongerTouching, noLongerTouching.begin()));
+
+    for (auto& collider : noLongerTouching)
+    {
+        onCollisionResolutionSubject->next({*this, *collider});
+    }
+    touching = std::move(currentlyTouching);
+}
+
+void ColliderComponent::removeSelf(std::vector<World::Node>& points)
+{
+    auto it =
+        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
+    if (it != points.end()) points.erase(it);
 }
