@@ -20,36 +20,19 @@ public:
         transform = gameObject->getTransform();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(20, 30, {5.0f, 0.0f});
-        eggCollider->onCollision().subscribe([&](auto const& cd) { handleCollision(cd); });
         eggCollider->setLayers(0x1);
         body->addCollider(eggCollider);
         height = eggCollider->getHeight();
-        bottomCollider = eggCollider.get();
-        /*
-                bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>().get();
-                bottomCollider->set(28, 2, {1, -1});
-                bottomCollider->setLayers(0x2);
-                */
-    }
 
-    void handleCollision(Mino::CollisionData const& cd)
-    {
-        auto boxA = cd.first.asBoundingBox();
-        auto boxB = cd.second.asBoundingBox();
-
-        auto diffY = boxB.getCenter().y() - boxA.getCenter().y();
-        if (diffY + height < boxA.getHeight() * 0.5f + boxB.getHeight() * 0.5f)
-        {
-            if (state == State::Falling)
-            {
-                state = State::Grounded;
-                velocity = {velocity.x(), 0.0};
-            }
-        }
+        bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>().get();
+        bottomCollider->set(14, 2, {8, -1});
+        bottomCollider->setLayers(0x2);
     }
 
     virtual void update()
     {
+        // reportState();
+
         bool touchingGround = bottomCollider->touchingAny();
         if (state == State::Grounded)
         {
@@ -75,13 +58,19 @@ public:
         }
         else if (state == State::Falling)
         {
-            velocity = {velocity.x(), velocity.y() - gravity};
             auto& pos = transform->position();
-            if (pos.y() <= bottom)
+            if (touchingGround || pos.y() <= bottom)
             {
                 state = State::Grounded;
                 velocity = {velocity.x(), 0.0};
-                pos = {pos.x(), float(bottom)};
+                if (pos.y() <= bottom)
+                {
+                    pos = {pos.x(), float(bottom)};
+                }
+            }
+            else
+            {
+                velocity = {velocity.x(), velocity.y() - gravity};
             }
         }
 
@@ -104,6 +93,22 @@ public:
     float height;
 
 private:
+    void reportState()
+    {
+        switch (state)
+        {
+        case State::Grounded:
+            std::cout << "Grounded\n";
+            break;
+        case State::Airborn:
+            std::cout << "Airborn\n";
+            break;
+        case State::Falling:
+            std::cout << "Falling\n";
+            break;
+        }
+    }
+
     std::shared_ptr<Mino::PhysicsComponent> body;
     std::shared_ptr<Mino::ITimeService> time;
     Mino::Transform::TransformRef transform;
