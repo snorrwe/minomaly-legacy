@@ -88,15 +88,14 @@ public:
         return *this;
     }
 
-    operator size_t() const { return WeakRef::operator size_t(); }
-    operator bool() const { return WeakRef::operator bool(); }
-
-    operator WeakRef() const { return WeakRef(*this); }
-
-    T& operator*() const { return WeakRef::operator*(); }
-    T* operator->() const { return WeakRef::operator->(); }
-
-    bool operator==(ManagedRef const& r) const { return r.itemId == itemId && r.pool == pool; }
+    WeakRef& release()
+    { /*
+         Releases control of the managed object.
+         Note: if there are copies of the Reference they will still own the item
+     */
+        refs = nullptr;
+        return *this;
+    }
 
 private:
     std::shared_ptr<size_t> refs = std::make_shared<size_t>(1);
