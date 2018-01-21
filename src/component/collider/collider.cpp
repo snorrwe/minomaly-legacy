@@ -8,7 +8,7 @@ ColliderComponent::~ColliderComponent()
     {
         phs->remove(this);
     }
-    if (auto& w = world.lock(); w)
+    if (auto w = world.lock(); w)
     {
         for (auto& corner : corners)
         {
@@ -104,9 +104,10 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
 void ColliderComponent::checkCollisions()
 {
     auto points = world.lock()->queryRange(asBoundingBox());
+    auto currentlyTouching = TouchContainer{};
     if (points.empty())
     {
-        handleResolvedCollisions(TouchContainer{});
+        handleResolvedCollisions(currentlyTouching);
         touching.clear();
         return;
     }
@@ -118,7 +119,6 @@ void ColliderComponent::checkCollisions()
                  points.end());
     removeSelf(points);
 
-    auto currentlyTouching = TouchContainer{};
     for (auto& i : points)
     {
         if (layers & i.item->layers)
