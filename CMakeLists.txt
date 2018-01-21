@@ -53,7 +53,6 @@ if(WIN32)
   set(SDL2_IMAGE_DIR ${SDL2_ROOT}/SDL2_image-2.0.2)
   set(SDL2_TTF_DIR ${SDL2_ROOT}/SDL2_ttf-2.0.14)
   set(SDL2_MIXER_DIR ${SDL2_ROOT}/SDL2_mixer-2.0.2)
-
 endif(WIN32)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
@@ -145,14 +144,8 @@ if(test)
 
   #[[ gtest ]]
 
-  # This adds another subdirectory, which has 'project(gtest)'.
-  add_subdirectory(${PROJECT_SOURCE_DIR}/lib/googletest)
+  set(GTEST_ROOT_DIR ${PROJECT_SOURCE_DIR}/lib/googletest)
    
   enable_testing()
-
-  # Include the gtest library. gtest_SOURCE_DIR is available due to
-  # 'project(gtest)' above.
-  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
   add_subdirectory("${PROJECT_SOURCE_DIR}/testing")
 endif()

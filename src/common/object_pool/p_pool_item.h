@@ -33,8 +33,7 @@ public:
     virtual void enable() const { pool->enable(itemId); }
     virtual void disable() const { pool->disable(itemId); }
 
-    operator size_t() const { return itemId; }
-    operator bool() const { return pool; }
+    operator bool() const { return pool != nullptr; }
 
     T& operator*() const { return pool->get(itemId); }
     T* operator->() const { return &(pool->get(itemId)); }
