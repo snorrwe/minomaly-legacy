@@ -153,24 +153,6 @@ protected:
     std::shared_ptr<MockTimeSystem> mockTimeSystem;
 };
 
-TEST(TestCreate, CanCreateActual)
-{
-    /*
-        Does not test Mixer status, as AppVoyer does not support audio endpoints
-        TODO: find a way to test the audio system on the CI
-    */
-    auto engine = EngineCore::create<FakeProgram>("...", 0, 0);
-    auto status = engine->subsystemStatus({
-        SdlSubSystemType::SDL,
-        SdlSubSystemType::SDL_image,
-        SdlSubSystemType::SDL_ttf,
-    });
-    for (auto i = status.begin(); i != status.end(); ++i)
-    {
-        ASSERT_EQ(*i, SdlStatus::Initialized);
-    }
-}
-
 TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }
 
 TEST_F(CoreTest, CanStopEngineFromLogic)

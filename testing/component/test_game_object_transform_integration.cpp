@@ -39,6 +39,7 @@ TEST_F(TestGameObjectTransformIntegration, CanAddChild)
     ASSERT_FLOAT_EQ(childTr->absolute().position.x(), 2.0f);
     ASSERT_FLOAT_EQ(childTr->absolute().position.y(), -1.0f);
 }
+
 /*
 // TODO
 
