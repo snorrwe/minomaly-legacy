@@ -3,8 +3,19 @@ project(${_MINO_TEST})
 
 #[[ gtest ]]
 
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-include_directories(gmock gmock_main)
+set(gtest_include_dirs "${GTEST_ROOT_DIR}/googletest"
+                       "${GTEST_ROOT_DIR}/googletest/include"
+                       "${GTEST_ROOT_DIR}/googlemock"
+                       "${GTEST_ROOT_DIR}/googlemock/include")
+
+
+include_directories(${gtest_include_dirs})
+
+add_library(gtest STATIC "${GTEST_ROOT_DIR}/googletest/src/gtest-all.cc"
+                         "${GTEST_ROOT_DIR}/googletest/src/gtest_main.cc")
+add_library(gmock STATIC "${GTEST_ROOT_DIR}/googlemock/src/gmock-all.cc"
+                         "${GTEST_ROOT_DIR}/googlemock/src/gmock_main.cc")
+
 
 #[[ Tests ]]
 
@@ -15,6 +26,8 @@ FOREACH(subdir ${MINO_INCLUDES})
 ENDFOREACH()
 
 add_executable(${_MINO_TEST} main.cpp ${TEST_SOURCES})
-target_link_libraries(${_MINO_TEST} ${MINO_ENGINE} gtest gtest_main gmock gmock_main)
+target_link_libraries(${_MINO_TEST} ${MINO_ENGINE} gtest gmock)
 
 COPY_SDL_DLLS(${_MINO_TEST})
+
+message(STATUS ${GTEST_ROOT_DIR})
