@@ -66,16 +66,15 @@ public:
     }
     virtual ~ManagedRef()
     {
-        if (refs && --*refs == 0 && pool)
+        if (refs && --*refs == 0 && WeakRef::pool)
         {
-            pool->disable(itemId);
+            WeakRef::disable();
         }
     }
 
     ManagedRef& operator=(ManagedRef const& mrf)
     {
-        itemId = mrf.itemId;
-        pool = mrf.pool;
+        WeakRef::operator=(mrf);
         refs = mrf.refs;
         if (refs) ++*refs;
         return *this;
@@ -83,22 +82,19 @@ public:
 
     ManagedRef& operator=(ManagedRef&& mrf)
     {
-        itemId = std::move(mrf.itemId);
-        pool = std::move(mrf.pool);
         refs = std::move(mrf.refs);
         if (refs) ++*refs;
+        WeakRef::operator=(std::move(mrf));
         return *this;
     }
 
-    void enable() const { pool->enable(itemId); }
-    void disable() const { pool->disable(itemId); }
+    operator size_t() const { return WeakRef::operator size_t(); }
+    operator bool() const { return WeakRef::operator bool(); }
 
-    operator size_t() const { return itemId; }
-    operator bool() const { return *refs > 0 && pool; }
     operator WeakRef() const { return WeakRef(*this); }
 
-    T& operator*() const { return pool->get(itemId); }
-    T* operator->() const { return &(pool->get(itemId)); }
+    T& operator*() const { return WeakRef::operator*(); }
+    T* operator->() const { return WeakRef::operator->(); }
 
     bool operator==(ManagedRef const& r) const { return r.itemId == itemId && r.pool == pool; }
 

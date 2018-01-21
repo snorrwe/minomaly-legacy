@@ -17,10 +17,10 @@ void PhysicsComponent::update()
     lastPosition = position;
 }
 
-void PhysicsComponent::addCollider(std::shared_ptr<ColliderComponent> coll)
+void PhysicsComponent::addCollider(ColliderComponent &coll)
 {
     subs.push_back(
-        {coll, coll->onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});
+        {&coll, coll.onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});
 }
 
 void PhysicsComponent::resolveCollision(CollisionData const& collistionData)

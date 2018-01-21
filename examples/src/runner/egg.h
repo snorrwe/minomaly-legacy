@@ -21,10 +21,10 @@ public:
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);
-        body->addCollider(eggCollider);
+        body->addCollider(*eggCollider);
         height = eggCollider->getHeight();
 
-        bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>().get();
+        bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
         bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
     }
@@ -109,7 +109,7 @@ private:
         }
     }
 
-    std::shared_ptr<Mino::PhysicsComponent> body;
+    Mino::PhysicsComponent* body;
     std::shared_ptr<Mino::ITimeService> time;
     Mino::Transform::TransformRef transform;
     Mino::BoxColliderComponent* bottomCollider;

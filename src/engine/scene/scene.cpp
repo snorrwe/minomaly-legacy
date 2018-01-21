@@ -3,16 +3,16 @@
 
 using namespace Mino;
 
-std::shared_ptr<GameObject>& Scene::createEmptyGameObject()
+GameObject* Scene::createEmptyGameObject()
 {
-    gameObjects.emplace_back(std::make_shared<GameObject>(rootTransform->addChild(), this));
-    return gameObjects.back();
+    gameObjects.emplace_back(std::make_unique<GameObject>(rootTransform->addChild(), this));
+    return gameObjects.back().get();
 }
 
-void Scene::destroyGameObject(std::shared_ptr<GameObject> go)
+void Scene::destroyGameObject(GameObject* go)
 {
-    auto it =
-        std::find_if(gameObjects.begin(), gameObjects.end(), [&](auto& g) { return &g == &go; });
+    auto it = std::find_if(gameObjects.begin(), gameObjects.end(),
+                           [&](auto& g) { return g.get() == go; });
     if (it != gameObjects.end())
     {
         gameObjects.erase(it);

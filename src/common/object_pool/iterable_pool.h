@@ -46,7 +46,7 @@ private:
     void swapItems(size_t index1, size_t index2);
 };
 
-template <class T> IterablePool<T>::IterablePool(size_t count = 0)
+template <class T> IterablePool<T>::IterablePool(size_t count)
 {
 
     for (int i = 0; i < count; ++i)

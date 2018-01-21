@@ -44,7 +44,8 @@ public:
     MOCK_METHOD0(getRaw, SDL_Renderer*());
     MOCK_METHOD0(update, void());
     MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
-    MOCK_CONST_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReference&());
+    MOCK_CONST_METHOD0(getMainCamera, IRenderSystem::CameraReference const&());
 };
 
 class MockAudioSystem : public IAudioSystem

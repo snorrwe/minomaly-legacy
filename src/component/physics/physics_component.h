@@ -21,7 +21,7 @@ class PhysicsComponent : public Component
 public:
     struct ColliderRef
     {
-        std::weak_ptr<ColliderComponent> coll;
+        ColliderComponent* coll;
         ISubscription sub;
     };
 
@@ -42,7 +42,7 @@ public:
     Material const& getMaterial() const { return material; }
     void setMaterial(Material const& value) { material = value; }
 
-    void addCollider(std::shared_ptr<ColliderComponent> coll);
+    void addCollider(ColliderComponent &coll);
 
 private:
     void resolveCollision(CollisionData const& collistionData);

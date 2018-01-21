@@ -32,7 +32,7 @@ public:
 
     template <typename... TComponents>
     GameObject* createGameObject(Vector2<float> position = {0, 0});
-    void destroyGameObject(std::shared_ptr<GameObject>);
+    void destroyGameObject(GameObject*);
 
     GameObject* getMainCamera() { return mainCamera; }
     void initMainCamera(IRenderSystem const& renderer, float screenHeight);
@@ -41,13 +41,13 @@ public:
     Transform::TransformRef getRootTransform() { return rootTransform->addChild(); }
 
 protected:
-    std::shared_ptr<GameObject>& createEmptyGameObject();
+    GameObject* createEmptyGameObject();
     template <typename TComponent> void addComponent(GameObject& go);
     template <typename... Ts> void addComponents(GameObject& go);
     template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
 
     Transform::TransformRef rootTransform = Transform::getRoot();
-    std::vector<std::shared_ptr<GameObject>> gameObjects;
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
     GameObject* mainCamera;
     IEngineCore* engine;
 };
@@ -76,7 +76,7 @@ template <typename... TComponents> GameObject* Scene::createGameObject(Vector2<f
     auto tr = go->getTransform();
     tr->setPosition(position);
     addComponents<TComponents...>(*go);
-    return go.get();
+    return go;
 }
 
 } // namespace Mino

@@ -46,18 +46,12 @@ void RenderSystem::update()
 {
     clear();
     cameras.iterateActive([&](auto& camera) {
-        setViewport(&camera.getViewpoit());
-        for (auto j = renderComponentRefs.begin();
-             j != renderComponentRefs.begin() + enabledRenderers; ++j)
+        setViewport(&camera.getViewport());
+        auto last = renderComponentRefs.begin() + enabledRenderers;
+        for (auto i = renderComponentRefs.begin(); i != last; ++i)
         {
-            if (auto renderComponent = j->lock(); renderComponent)
-            {
-                renderComponent->render(camera.getTransform());
-            }
-            else
-            {
-                renderComponentRefs.erase(j);
-            }
+            auto& renderComponent = *i;
+            renderComponent->render(camera.getTransform());
         }
     });
     SDL_RenderPresent(renderer);
@@ -71,24 +65,21 @@ std::shared_ptr<Texture> RenderSystem::loadTexture(std::string const& name, bool
 
 void RenderSystem::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(renderer, viewport); }
 
-void IRenderSystem::removeRenderer(RenderComponent const& renderer)
+void IRenderSystem::removeRenderer(RenderComponent* renderer)
 {
-    auto it = std::find_if(renderComponentRefs.begin(), renderComponentRefs.end(),
-                           [&](auto& r) { return r.lock().get() == &renderer; });
+    auto it = std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
     {
         renderComponentRefs.erase(it);
     }
 }
 
-void IRenderSystem::enableRenderer(RenderComponent const& renderer)
+void IRenderSystem::enableRenderer(RenderComponent* renderer)
 {
-    /* TODO abstract this container */
     using std::iter_swap;
 
     auto first = renderComponentRefs.begin() + enabledRenderers;
-    auto it = std::find_if(first, renderComponentRefs.end(),
-                           [&](auto& r) { return r.lock().get() == &renderer; });
+    auto it = std::find(first, renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
     {
         iter_swap(it, first);
@@ -96,14 +87,12 @@ void IRenderSystem::enableRenderer(RenderComponent const& renderer)
     }
 }
 
-void IRenderSystem::disableRenderer(RenderComponent const& renderer)
+void IRenderSystem::disableRenderer(RenderComponent* renderer)
 {
-    /* TODO abstract this */
     using std::iter_swap;
 
     auto last = renderComponentRefs.begin() + enabledRenderers;
-    auto it = std::find_if(renderComponentRefs.begin(), last,
-                           [&](auto& r) { return r.lock().get() == &renderer; });
+    auto it = std::find(renderComponentRefs.begin(), last, renderer);
     if (it != last)
     {
         if (renderComponentRefs.size() > enabledRenderers)

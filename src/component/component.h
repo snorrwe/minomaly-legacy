@@ -13,7 +13,7 @@ class Component
 {
 public:
     template <typename TComponent>
-    static std::shared_ptr<TComponent> create(GameObject* gameObject);
+    static std::unique_ptr<TComponent> create(GameObject* gameObject);
 
     virtual ~Component() {}
 
@@ -26,27 +26,25 @@ public:
     bool isEnabled() { return enabled; }
 
 protected:
-    template <typename TComponent> static std::shared_ptr<TComponent> create();
+    template <typename TComponent> static std::unique_ptr<TComponent> create();
 
     GameObject* gameObject = nullptr;
-    std::weak_ptr<Component> self = std::weak_ptr<Component>(std::shared_ptr<Component>(nullptr));
     bool enabled = true;
 };
 
-template <typename TComponent> std::shared_ptr<TComponent> Component::create(GameObject* gameObject)
+template <typename TComponent> std::unique_ptr<TComponent> Component::create(GameObject* gameObject)
 {
     static_assert(std::is_convertible<TComponent*, Component*>::value,
                   "Components must derive from Component!");
     auto result = create<TComponent>();
     result->gameObject = gameObject;
-    result->self = std::weak_ptr<Component>(result);
     result->start();
-    return result;
+    return std::move(result);
 }
 
-template <typename TComponent> std::shared_ptr<TComponent> Component::create()
+template <typename TComponent> std::unique_ptr<TComponent> Component::create()
 {
-    return std::make_shared<TComponent>();
+    return std::make_unique<TComponent>();
 }
 
 } // namespace Mino

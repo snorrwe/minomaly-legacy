@@ -27,7 +27,7 @@ protected:
 };
 
 template <>
-std::shared_ptr<SpriteRenderComponent>
+std::unique_ptr<SpriteRenderComponent>
 Component::create<SpriteRenderComponent>(GameObject* gameObject);
 
 } // namespace Mino
