@@ -2,6 +2,7 @@
 #include "core.h"
 #include "game_object.h"
 #include "iterable_pool.h"
+#include "render_system.h"
 #include "transform.h"
 #include "vector2.h"
 #include <algorithm>
@@ -12,6 +13,7 @@ namespace Mino
 {
 
 class IEngineCore;
+class IRenderSystem;
 
 class Scene
 {
@@ -29,24 +31,24 @@ public:
     virtual void start() {}
 
     template <typename... TComponents>
-    std::shared_ptr<GameObject> createGameObject(Vector2<float> position = {0, 0});
-    void destroyGameObject(std::shared_ptr<GameObject>);
+    GameObject* createGameObject(Vector2<float> position = {0, 0});
+    void destroyGameObject(GameObject*);
 
-    std::shared_ptr<GameObject> getMainCamera() { return mainCamera; }
-    void setMainCamera(std::shared_ptr<GameObject> value) { mainCamera = value; }
+    GameObject* getMainCamera() { return mainCamera; }
+    void initMainCamera(IRenderSystem const& renderer, float screenHeight);
 
     IEngineCore* getEngineCore() { return engine; }
-    Transform::TransformRef getRootTransform() { return rootTransforms.enable(); }
+    Transform::TransformRef getRootTransform() { return rootTransform->addChild(); }
 
 protected:
-    std::shared_ptr<GameObject> createEmptyGameObject();
+    GameObject* createEmptyGameObject();
     template <typename TComponent> void addComponent(GameObject& go);
     template <typename... Ts> void addComponents(GameObject& go);
     template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
 
-    Transform::ChildrenContainer rootTransforms = {};
-    std::vector<std::shared_ptr<GameObject>> gameObjects;
-    std::shared_ptr<GameObject> mainCamera;
+    Transform::TransformRef rootTransform = Transform::getRoot();
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    GameObject* mainCamera;
     IEngineCore* engine;
 };
 
@@ -68,8 +70,7 @@ template <typename T, typename... Ts> void Scene::addComponentHelper(GameObject&
     addComponents<Ts...>(go);
 }
 
-template <typename... TComponents>
-std::shared_ptr<GameObject> Scene::createGameObject(Vector2<float> position)
+template <typename... TComponents> GameObject* Scene::createGameObject(Vector2<float> position)
 {
     auto go = createEmptyGameObject();
     auto tr = go->getTransform();

@@ -27,12 +27,12 @@ public:
     bool intersects(BoundingBox const& other) const;
 
     Vector2<float> getCenter() const { return center; }
-    float getWidth() { return halfWidth * 2; }
-    float getHeight() { return halfHeight * 2; }
+    float getWidth() { return halfWidth * 2.0f; }
+    float getHeight() { return halfHeight * 2.0f; }
 
     void setCenter(Vector2<float> const& value) { center = value; }
-    void setWidth(float value) { halfWidth = value * 0.5; }
-    void setHeight(float value) { halfHeight = value * 0.5; }
+    void setWidth(float value) { halfWidth = value * 0.5f; }
+    void setHeight(float value) { halfHeight = value * 0.5f; }
 
 private:
     Vector2<float> center;

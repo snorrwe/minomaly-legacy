@@ -15,7 +15,7 @@ BoundingBox BoxColliderComponent::asBoundingBox() const
 {
     Vector2<float> center{corners[Corner::BottomLeft].x() + width * 0.5f,
                           corners[Corner::BottomLeft].y() + height * 0.5f};
-    return {center, width, height};
+    return {center, width - 0.1f, height - 0.1f};
 }
 
 void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
@@ -24,34 +24,11 @@ void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
     offset = ofs;
     width = w;
     height = h;
-    auto topLeft = transform->getPosition() + offset;
+    auto topLeft = transform->absolute().position + offset;
+    auto x = topLeft.x(), y = topLeft.y();
     corners[Corner::BottomLeft] = topLeft;
-    corners[Corner::BottomRight] = {topLeft.x() + width, topLeft.y()};
-    corners[Corner::TopLeft] = {topLeft.x(), topLeft.y() + height};
-    corners[Corner::TopRight] = {topLeft.x() + width, topLeft.y() + height};
+    corners[Corner::BottomRight] = {x + width, y};
+    corners[Corner::TopLeft] = {x, y + height};
+    corners[Corner::TopRight] = {x + width, y + height};
     addToWorld();
-}
-
-void BoxColliderComponent::checkCollisions()
-{
-    auto points = world.lock()->queryRange(asBoundingBox());
-    if (points.size() <= 4) return;
-
-    std::sort(points.begin(), points.end(),
-              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
-    points.erase(std::unique(points.begin(), points.end(),
-                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
-                 points.end());
-    removeSelf(points);
-    for (auto i = points.begin(); i != points.end(); ++i)
-    {
-        i->item->handleCollision(*this);
-    }
-}
-
-void BoxColliderComponent::removeSelf(std::vector<World::Node>& points)
-{
-    auto it =
-        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
-    if (it != points.end()) points.erase(it);
 }

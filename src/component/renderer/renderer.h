@@ -13,9 +13,9 @@ class Component;
 class RenderComponent : public Component
 {
 public:
-    template <typename TRender> static std::shared_ptr<TRender> create(GameObject* gameObject);
+    template <typename TRender> static std::unique_ptr<TRender> create(GameObject* gameObject);
 
-    virtual ~RenderComponent() {}
+    virtual ~RenderComponent();
 
     virtual void render(Transform::TransformRef camera = nullptr) = 0;
 
@@ -26,17 +26,16 @@ protected:
     std::weak_ptr<IRenderSystem> renderSystem;
 };
 
-template <typename TRender> std::shared_ptr<TRender> RenderComponent::create(GameObject* gameObject)
+template <typename TRender> std::unique_ptr<TRender> RenderComponent::create(GameObject* gameObject)
 {
     static_assert(std::is_convertible<TRender*, RenderComponent*>::value);
 
     auto renderSystem = gameObject->getScene()->getEngineCore()->getRenderer();
     auto result = renderSystem->createRenderer<TRender>();
     result->gameObject = gameObject;
-    result->self = std::weak_ptr<Component>(result);
     result->renderSystem = renderSystem;
     result->start();
-    return result;
+    return std::move(result);
 }
 
 } // namespace Mino

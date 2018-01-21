@@ -27,7 +27,7 @@ class IRenderSystem
 public:
     friend class EngineCore;
 
-    using RenderComponentReferences = std::vector<std::shared_ptr<RenderComponent>>;
+    using RenderComponentReferences = std::vector<RenderComponent*>;
     using CameraReferences = Camera::CameraReferences;
     using CameraReference = Camera::CameraReference;
     using RotationData = RenderData::RotationData;
@@ -44,14 +44,15 @@ public:
     virtual void setViewport(SDL_Rect* viewport) = 0;
     virtual void update() = 0;
     virtual CameraReference addCamera() = 0;
-    virtual CameraReference getMainCamera() = 0;
+    virtual CameraReference& getMainCamera() = 0;
+    virtual CameraReference const& getMainCamera() const = 0;
 
     virtual SDL_Renderer* getRaw() = 0;
 
-    template <typename TRenderer> std::shared_ptr<TRenderer> createRenderer();
-    void removeRenderer(std::shared_ptr<RenderComponent>);
-    void enableRenderer(std::shared_ptr<RenderComponent>);
-    void disableRenderer(std::shared_ptr<RenderComponent>);
+    template <typename TRenderer> std::unique_ptr<TRenderer> createRenderer();
+    void removeRenderer(RenderComponent*);
+    void enableRenderer(RenderComponent*);
+    void disableRenderer(RenderComponent*);
 
 protected:
     RenderComponentReferences renderComponentRefs;
@@ -84,7 +85,8 @@ public:
     virtual void update();
 
     virtual CameraReference addCamera();
-    virtual CameraReference getMainCamera() { return mainCamera; }
+    virtual CameraReference& getMainCamera() { return mainCamera; }
+    virtual CameraReference const& getMainCamera() const { return mainCamera; }
 
     virtual SDL_Renderer* getRaw() { return renderer; }
 
@@ -98,13 +100,13 @@ private:
     SDL_Renderer* renderer;
 };
 
-template <typename TRenderer> std::shared_ptr<TRenderer> IRenderSystem::createRenderer()
+template <typename TRenderer> std::unique_ptr<TRenderer> IRenderSystem::createRenderer()
 {
     static_assert(std::is_convertible<TRenderer*, RenderComponent*>::value);
-    auto result = std::make_shared<TRenderer>();
-    renderComponentRefs.insert(renderComponentRefs.begin() + enabledRenderers, result);
+    auto result = std::make_unique<TRenderer>();
+    renderComponentRefs.insert(renderComponentRefs.begin() + enabledRenderers, result.get());
     ++enabledRenderers;
-    return result;
+    return std::move(result);
 }
 
 } // namespace Mino

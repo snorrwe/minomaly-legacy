@@ -4,14 +4,20 @@ using namespace Mino;
 
 void RenderComponent::enable()
 {
-    auto myself = std::static_pointer_cast<RenderComponent>(self.lock());
-    renderSystem.lock()->enableRenderer(myself);
+    renderSystem.lock()->enableRenderer(this);
     Component::enable();
 }
 
 void RenderComponent::disable()
 {
-    auto myself = std::static_pointer_cast<RenderComponent>(self.lock());
-    renderSystem.lock()->disableRenderer(myself);
+    renderSystem.lock()->disableRenderer(this);
     Component::disable();
+}
+
+RenderComponent::~RenderComponent()
+{
+    if (auto rendersys = renderSystem.lock(); rendersys)
+    {
+        rendersys->removeRenderer(this);
+    }
 }

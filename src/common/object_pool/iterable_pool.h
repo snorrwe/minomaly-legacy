@@ -46,7 +46,7 @@ private:
     void swapItems(size_t index1, size_t index2);
 };
 
-template <class T> IterablePool<T>::IterablePool(size_t count = 0)
+template <class T> IterablePool<T>::IterablePool(size_t count)
 {
 
     for (int i = 0; i < count; ++i)
@@ -111,9 +111,9 @@ template <class T> void IterablePool<T>::iterateActive(std::function<void(T&)> c
 
 template <class T> void IterablePool<T>::iterateAll(std::function<void(T&)> callback)
 {
-    for (auto i = pool.begin(); i != pool.end(); ++i)
+    for (auto& i : pool)
     {
-        callback(*i);
+        callback(i);
     }
 }
 

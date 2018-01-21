@@ -44,7 +44,8 @@ public:
     MOCK_METHOD0(getRaw, SDL_Renderer*());
     MOCK_METHOD0(update, void());
     MOCK_METHOD0(addCamera, IRenderSystem::CameraReferences::Reference());
-    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReferences::Reference());
+    MOCK_METHOD0(getMainCamera, IRenderSystem::CameraReference&());
+    MOCK_CONST_METHOD0(getMainCamera, IRenderSystem::CameraReference const&());
 };
 
 class MockAudioSystem : public IAudioSystem
@@ -85,8 +86,8 @@ class MockPhysics : public IPhysicsSystem
 public:
     MOCK_METHOD0(update, void());
     MOCK_METHOD0(getWorld, std::shared_ptr<Quadtree<Collider>>());
-    MOCK_METHOD1(add, void(std::weak_ptr<Collider> const&));
-    MOCK_METHOD1(remove, void(std::weak_ptr<Collider> const&));
+    MOCK_METHOD1(add, void(Collider*));
+    MOCK_METHOD1(remove, void(Collider*));
 };
 
 class FakeProgram : public Scene

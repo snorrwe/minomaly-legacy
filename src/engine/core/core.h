@@ -94,8 +94,7 @@ public:
 
 private:
     static std::shared_ptr<EngineCore> initCore(std::string const& name, size_t screenWidth,
-                                            size_t screenHeight);
-    static void setupMainCamera(std::shared_ptr<Scene>, std::shared_ptr<IRenderSystem>, float);
+                                                size_t screenHeight);
     template <class T> static void initScene(std::shared_ptr<EngineCore>, float screenHeight);
 
     void run(bool);
@@ -132,7 +131,7 @@ void EngineCore::initScene(std::shared_ptr<EngineCore> core, float screenHeight)
 {
     auto scene = std::make_shared<TLogic>(core);
     core->setScene(scene);
-    setupMainCamera(scene, core->renderer, screenHeight);
+    std::static_pointer_cast<Scene>(scene)->initMainCamera(*core->renderer, screenHeight);
 }
 
 } // namespace Mino

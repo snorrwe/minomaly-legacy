@@ -46,11 +46,12 @@ void RenderSystem::update()
 {
     clear();
     cameras.iterateActive([&](auto& camera) {
-        setViewport(&camera.getViewpoit());
-        for (auto j = renderComponentRefs.begin();
-             j != renderComponentRefs.begin() + enabledRenderers; ++j)
+        setViewport(&camera.getViewport());
+        auto last = renderComponentRefs.begin() + enabledRenderers;
+        for (auto i = renderComponentRefs.begin(); i != last; ++i)
         {
-            (*j)->render(camera.getTransform());
+            auto& renderComponent = *i;
+            renderComponent->render(camera.getTransform());
         }
     });
     SDL_RenderPresent(renderer);
@@ -64,7 +65,7 @@ std::shared_ptr<Texture> RenderSystem::loadTexture(std::string const& name, bool
 
 void RenderSystem::setViewport(SDL_Rect* viewport) { SDL_RenderSetViewport(renderer, viewport); }
 
-void IRenderSystem::removeRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::removeRenderer(RenderComponent* renderer)
 {
     auto it = std::find(renderComponentRefs.begin(), renderComponentRefs.end(), renderer);
     if (it != renderComponentRefs.end())
@@ -73,9 +74,8 @@ void IRenderSystem::removeRenderer(std::shared_ptr<RenderComponent> renderer)
     }
 }
 
-void IRenderSystem::enableRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::enableRenderer(RenderComponent* renderer)
 {
-    /* TODO abstract this container */
     using std::iter_swap;
 
     auto first = renderComponentRefs.begin() + enabledRenderers;
@@ -87,9 +87,8 @@ void IRenderSystem::enableRenderer(std::shared_ptr<RenderComponent> renderer)
     }
 }
 
-void IRenderSystem::disableRenderer(std::shared_ptr<RenderComponent> renderer)
+void IRenderSystem::disableRenderer(RenderComponent* renderer)
 {
-    /* TODO abstract this */
     using std::iter_swap;
 
     auto last = renderComponentRefs.begin() + enabledRenderers;

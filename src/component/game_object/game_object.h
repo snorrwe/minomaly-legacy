@@ -17,14 +17,11 @@ class Scene;
 class GameObject
 {
 public:
-    typedef std::vector<std::shared_ptr<Component>> ComponentContainer;
+    using ComponentContainer = std::vector<std::unique_ptr<Component>>;
 
     GameObject() = default;
-    GameObject(Transform::TransformRef const& parentTransform) : transform(parentTransform) {}
-    GameObject(Transform::TransformRef const& parentTransform, Scene* scene)
-        : transform(parentTransform), scene(scene)
-    {
-    }
+    GameObject(Transform::TransformRef const& parentTransform);
+    GameObject(Transform::TransformRef const& parentTransform, Scene* scene);
     GameObject(GameObject const& go) = delete;
     GameObject(GameObject&& go) = default;
     virtual ~GameObject() {}
@@ -32,39 +29,42 @@ public:
     GameObject& operator=(GameObject const& go) = delete;
     GameObject& operator=(GameObject&& go) = default;
 
-    Transform::TransformRef getTransform() const { return transform; }
+    Transform::TransformRef& getTransform() { return transform; }
+    Transform::TransformRef const& getTransform() const { return transform; }
 
-    template <typename TComponent> std::shared_ptr<TComponent> addComponent();
-    template <typename TComponent> std::shared_ptr<TComponent> getComponent() const;
-    virtual void disableComponent(std::shared_ptr<Component>);
-    virtual void enableComponent(std::shared_ptr<Component>);
+    template <typename TComponent> TComponent* addComponent();
+    template <typename TComponent> TComponent* getComponent() const;
+    virtual void disableComponent(Component*);
+    virtual void enableComponent(Component*);
 
     virtual void update();
+    virtual void addChild(GameObject&);
 
-    Scene* getScene() { return scene; }
+    Scene* getScene() const { return scene; }
 
 protected:
-    ComponentContainer components = ComponentContainer{};
+    ComponentContainer components = {};
     Transform::TransformRef transform = nullptr;
     size_t enabled = 0;
     Scene* scene = nullptr;
 };
 
-template <typename TComponent> std::shared_ptr<TComponent> GameObject::addComponent()
+template <typename TComponent> TComponent* GameObject::addComponent()
 {
-    auto result = Component::create<TComponent>(this);
-    components.insert(components.begin() + enabled, result);
+    auto component = Component::create<TComponent>(this);
+    auto result = component.get();
+    components.insert(components.begin() + enabled, std::move(component));
     ++enabled;
     return result;
 }
 
-template <typename TComponent> std::shared_ptr<TComponent> GameObject::getComponent() const
+template <typename TComponent> TComponent* GameObject::getComponent() const
 {
-    for (auto i = components.begin(); i != components.end(); ++i)
+    for (auto& i : components)
     {
-        if (*i && typeid(**i) == typeid(TComponent))
+        if (i && typeid(*i) == typeid(TComponent))
         {
-            return std::static_pointer_cast<TComponent>(*i);
+            return static_cast<TComponent*>(i.get());
         }
     }
     return nullptr;

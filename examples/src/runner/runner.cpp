@@ -17,34 +17,48 @@ Program::~Program()
     }
 }
 
+class Child : public Component
+{
+public:
+    virtual void update()
+    {
+        // std::cout << "Child: " << gameObject->getTransform()->position() << " "
+        //          << gameObject->getTransform()->absolute().position << std::endl;
+    }
+};
+
 void Program::start()
 {
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
-    auto barGo = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
+    auto bar = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
         {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
-    const auto bar = "assets/runner/bar.png";
-    barGo->getComponent<SpriteRenderComponent>()->setTexture(renderer->loadTexture(bar));
-    auto barCollider = barGo->getComponent<BoxColliderComponent>();
+    bar->getComponent<SpriteRenderComponent>()->setTexture(
+        renderer->loadTexture("assets/runner/bar.png"));
+    auto barCollider = bar->getComponent<BoxColliderComponent>();
     barCollider->set(30, 120);
     barCollider->setLayers(0x1 | 0x2);
 
-    auto eggGo = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
-                                  EggComponent>({0, 0});
-    const auto egg = "assets/runner/egg.png";
-    auto eggPic = renderer->loadTexture(egg);
-    auto eggEgg = eggGo->getComponent<EggComponent>();
+    auto egg = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
+                                EggComponent>({0, 0});
+    auto eggPic = renderer->loadTexture("assets/runner/egg.png");
+    auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
-    eggGo->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    eggGo->getTransform()->setPosition(50, 0.0);
+    egg->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
+    egg->getTransform()->setPosition({50, 0.0});
+
+    auto childEgg = createGameObject<Child>();
+    egg->addChild(*childEgg);
+    childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
+    childEgg->getTransform()->setPosition({10, 30});
 }
 
 void Program::update()
 {
-    Mino::Vector2<float> velocity{0.0f, 0.0f};
-    float sv = 200.0f;
+    auto velocity = Mino::Vector2<float>{0.0f, 0.0f};
+    auto sv = 200.0f;
     if (input->isDown(SDLK_a))
     {
         velocity = {velocity.x() - sv, velocity.y()};
@@ -63,6 +77,6 @@ void Program::update()
     }
     velocity = velocity * time->deltaTime();
 
-    auto cameraTransform = getMainCamera()->getTransform();
-    cameraTransform->setPosition(cameraTransform->getPosition() + velocity);
+    auto& cameraPos = getMainCamera()->getTransform()->position();
+    cameraPos = cameraPos + velocity;
 }

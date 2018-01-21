@@ -24,10 +24,10 @@ public:
 
 bool GameObjectTests::called = false;
 
-template <> std::shared_ptr<FakeComponent> Component::create<FakeComponent>()
+template <> std::unique_ptr<FakeComponent> Component::create<FakeComponent>()
 {
     GameObjectTests::called = true;
-    return std::make_shared<FakeComponent>();
+    return std::make_unique<FakeComponent>();
 }
 
 TEST_F(GameObjectTests, CanAddComponentWithNoError)
@@ -211,7 +211,7 @@ TEST_F(GameObjectTests, CanToggleAnotherComponentFromUpdate)
         }
 
         size_t updates = 0;
-        std::shared_ptr<FakeComponent1> fake1 = nullptr;
+        FakeComponent1* fake1 = nullptr;
     };
 
     auto go = GameObject();

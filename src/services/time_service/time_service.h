@@ -41,8 +41,6 @@ protected:
     {
         dtime = std::chrono::duration_cast<Seconds>(now - currentTime);
         currentTime = now;
-
-        std::cout << dtime.count() << std::endl;
     }
 
 private:

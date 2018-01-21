@@ -16,7 +16,8 @@ public:
     virtual ~ICamera() {}
 
     virtual void setViewport(int x, int y, int width, int height) = 0;
-    virtual SDL_Rect getViewpoit() = 0;
+    virtual SDL_Rect& getViewport() = 0;
+    virtual SDL_Rect const& getViewport() const = 0;
     virtual Transform::TransformRef getTransform() = 0;
     virtual void setTransform(Transform::TransformRef) = 0;
     virtual Vector2<float> screenToWorldPosition(Vector2<int> const&) = 0;
@@ -37,7 +38,8 @@ public:
     Camera& operator=(Camera&&) = default;
 
     virtual void setViewport(int x, int y, int width, int height);
-    virtual SDL_Rect getViewpoit() { return viewport; }
+    virtual SDL_Rect& getViewport() { return viewport; }
+    virtual SDL_Rect const& getViewport() const { return viewport; }
     virtual Transform::TransformRef getTransform() { return transform; }
     virtual void setTransform(Transform::TransformRef value) { transform = value; }
     virtual Vector2<float> screenToWorldPosition(Vector2<int> const&);

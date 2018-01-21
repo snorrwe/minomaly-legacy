@@ -1,5 +1,6 @@
 #pragma once
 #include "mino.h"
+#include <cmath>
 #include <memory>
 
 enum class State
@@ -18,41 +19,26 @@ public:
         time = Mino::Services::get<Mino::ITimeService>();
         transform = gameObject->getTransform();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
-        eggCollider->set(30, 30);
-        eggCollider->onCollision().subscribe([&](auto const& cd) { handleCollision(cd); });
+        eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);
-        body->addCollider(eggCollider);
+        body->addCollider(*eggCollider);
         height = eggCollider->getHeight();
 
-        auto bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(1, 1, {15, -1});
-        bottomCollider->onCollision().subscribe([&](auto const& cd) { touchingGround = true; });
+        bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
+        bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
-    }
-
-    void handleCollision(Mino::CollisionData const& cd)
-    {
-        auto boxA = cd.first.asBoundingBox();
-        auto boxB = cd.second.asBoundingBox();
-
-        auto diffY = boxB.getCenter().y() - boxA.getCenter().y();
-        if (diffY + height < boxA.getHeight() * 0.5f + boxB.getHeight() * 0.5f)
-        {
-            if (state == State::Falling)
-            {
-                state = State::Grounded;
-                velocity = {velocity.x(), 0.0};
-            }
-        }
     }
 
     virtual void update()
     {
+        // reportState();
+
+        bool touchingGround = bottomCollider->touchingAny();
         if (state == State::Grounded)
         {
-            if (!touchingGround && transform->getPosition().y() > bottom)
+            if (!touchingGround && transform->position().y() > bottom)
             {
-                state = State::Airborn;
+                state = State::Falling;
             }
             if (input->isDown(SDLK_UP))
             {
@@ -64,7 +50,7 @@ public:
         else if (state == State::Airborn)
         {
             airTime += time->deltaTime();
-            if (airTime > 0.3)
+            if (airTime > 0.3f)
             {
                 velocity = {velocity.x(), 0.0f};
                 state = State::Falling;
@@ -72,13 +58,19 @@ public:
         }
         else if (state == State::Falling)
         {
-            velocity = {velocity.x(), velocity.y() - gravity};
-            const auto pos = transform->getPosition();
-            if (pos.y() <= bottom)
+            auto& pos = transform->position();
+            if (touchingGround || pos.y() <= bottom)
             {
                 state = State::Grounded;
                 velocity = {velocity.x(), 0.0};
-                transform->setPosition({pos.x(), (float)bottom});
+                if (pos.y() <= bottom)
+                {
+                    pos = {pos.x(), float(bottom)};
+                }
+            }
+            else
+            {
+                velocity = {velocity.x(), velocity.y() - gravity};
             }
         }
 
@@ -94,18 +86,33 @@ public:
         }
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
-        touchingGround = false;
     }
 
     std::shared_ptr<Mino::IInputSystem> input;
     int bottom;
     float height;
-    bool touchingGround = false;
 
 private:
-    std::shared_ptr<Mino::PhysicsComponent> body;
+    void reportState()
+    {
+        switch (state)
+        {
+        case State::Grounded:
+            std::cout << "Grounded\n";
+            break;
+        case State::Airborn:
+            std::cout << "Airborn\n";
+            break;
+        case State::Falling:
+            std::cout << "Falling\n";
+            break;
+        }
+    }
+
+    Mino::PhysicsComponent* body;
     std::shared_ptr<Mino::ITimeService> time;
     Mino::Transform::TransformRef transform;
+    Mino::BoxColliderComponent* bottomCollider;
 
     Mino::Vector2<float> velocity = {0, 0};
     const float gravity = 50.0;

@@ -52,6 +52,7 @@ public:
     bool erase(Node const& v);
 
     std::vector<Node> queryRange(BoundingBox const& range);
+    void queryRange(BoundingBox const& range, std::vector<Node>& result);
 
 protected:
     bool query(Node const& v, std::function<bool(Quadtree&)> callback);
@@ -132,7 +133,7 @@ bool Quadtree<T>::move(typename Quadtree<T>::Node const& from, typename Quadtree
 
 template <class T> bool Quadtree<T>::erase(typename Quadtree<T>::Node const& v)
 {
-    return query(v, [&](Quadtree& qt) {
+    return query(v, [&](auto& qt) {
         auto i = std::find(qt.points.begin(), qt.points.end(), v);
         auto result = i != qt.points.end();
         if (result) qt.points.erase(i);
@@ -177,24 +178,27 @@ bool Quadtree<T>::query(typename Quadtree<T>::Node const& node,
 template <class T>
 std::vector<typename Quadtree<T>::Node> Quadtree<T>::queryRange(BoundingBox const& range)
 {
-    std::vector<Node> result{};
-    if (!boundary.intersects(range)) return result;
+    auto result = std::vector<Node>{};
+    queryRange(range, result);
+    return result;
+}
+
+template <class T>
+void Quadtree<T>::queryRange(BoundingBox const& range,
+                             std::vector<typename Quadtree<T>::Node>& result)
+{
+    if (!boundary.intersects(range)) return;
 
     std::copy_if(points.begin(), points.end(), std::back_inserter(result),
                  [&](auto const& i) { return range.containsPoint(i.pos); });
 
     if (northWest)
     {
-        auto northWestResult = northWest->queryRange(range);
-        auto northEastResult = northEast->queryRange(range);
-        auto southWestResult = southWest->queryRange(range);
-        auto southEastResult = southEast->queryRange(range);
-        std::copy(northWestResult.begin(), northWestResult.end(), std::back_inserter(result));
-        std::copy(northEastResult.begin(), northEastResult.end(), std::back_inserter(result));
-        std::copy(southWestResult.begin(), southWestResult.end(), std::back_inserter(result));
-        std::copy(southEastResult.begin(), southEastResult.end(), std::back_inserter(result));
+        northWest->queryRange(range, result);
+        northEast->queryRange(range, result);
+        southWest->queryRange(range, result);
+        southEast->queryRange(range, result);
     }
-    return result;
 }
 
 } // namespace Mino

@@ -28,14 +28,14 @@ public:
     {
         fakeTime = std::make_shared<FakeTime>();
         Services::overrideService<ITimeService>(fakeTime);
-        gameObject = std::make_shared<GameObject>(transforms.enable());
+        gameObject = std::make_unique<GameObject>(transforms.enable());
         physics = gameObject->addComponent<PhysicsComponent>();
         physics->start();
     }
 
 protected:
-    std::shared_ptr<GameObject> gameObject;
-    std::shared_ptr<PhysicsComponent> physics;
+    std::unique_ptr<GameObject> gameObject;
+    PhysicsComponent* physics;
     std::shared_ptr<FakeTime> fakeTime;
     Transform::ChildrenContainer transforms;
 };
