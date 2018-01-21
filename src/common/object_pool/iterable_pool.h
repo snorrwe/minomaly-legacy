@@ -30,6 +30,8 @@ public:
     size_t size() { return pool.size(); }
     size_t enabled() { return next; }
 
+    bool isEnabled(size_t id);
+
     T& get(size_t id) { return pool[refs[id]]; }
 
     void iterateActive(std::function<void(T&)> callback);
@@ -116,5 +118,7 @@ template <class T> void IterablePool<T>::iterateAll(std::function<void(T&)> call
         callback(i);
     }
 }
+
+template <class T> bool IterablePool<T>::isEnabled(size_t id) { return id < refs.size() && refs[id] < next; }
 
 } // namespace Mino

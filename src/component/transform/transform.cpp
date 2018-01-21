@@ -28,7 +28,7 @@ TransformRef Transform::addChild(TransformRef const& child)
     return result;
 }
 
-void Transform::removeChild(TransformRef const& child) { child.disable(); }
+void Transform::removeChild(TransformRef const& child) {if(child.enabled()) child.disable(); }
 
 void Transform::setPosition(Vector const& value) { localTransform.position = value; }
 

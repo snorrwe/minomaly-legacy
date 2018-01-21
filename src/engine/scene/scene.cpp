@@ -3,6 +3,19 @@
 
 using namespace Mino;
 
+Scene::~Scene()
+{
+    auto gameObjectsToDelete = GameObjectContainer{std::move(gameObjects)};
+    gameObjects = std::move(GameObjectContainer{});
+    for (auto& go : gameObjectsToDelete)
+    {
+        if (!go->getParent())
+        {
+            go.reset();
+        }
+    }
+}
+
 GameObject* Scene::createEmptyGameObject()
 {
     gameObjects.emplace_back(std::make_unique<GameObject>(rootTransform->addChild(), this));
