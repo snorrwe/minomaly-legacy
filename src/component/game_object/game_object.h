@@ -18,13 +18,14 @@ class GameObject
 {
 public:
     using ComponentContainer = std::vector<std::unique_ptr<Component>>;
+    using ChildrenContainer = std::vector<GameObject*>;
 
     GameObject() = default;
     GameObject(Transform::TransformRef const& parentTransform);
     GameObject(Transform::TransformRef const& parentTransform, Scene* scene);
     GameObject(GameObject const& go) = delete;
     GameObject(GameObject&& go) = default;
-    virtual ~GameObject() {}
+    virtual ~GameObject();
 
     GameObject& operator=(GameObject const& go) = delete;
     GameObject& operator=(GameObject&& go) = default;
@@ -39,11 +40,16 @@ public:
 
     virtual void update();
     virtual void addChild(GameObject&);
+    virtual void removeChild(GameObject&);
+
+    GameObject* getParent() { return parent; }
 
     Scene* getScene() const { return scene; }
 
 protected:
     ComponentContainer components = {};
+    GameObject* parent = nullptr;
+    ChildrenContainer children = {};
     Transform::TransformRef transform = nullptr;
     size_t enabled = 0;
     Scene* scene = nullptr;

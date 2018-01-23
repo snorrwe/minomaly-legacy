@@ -1,6 +1,8 @@
 #include "game_object.h"
+#include "scene.h" // TODO
 
 using namespace Mino;
+using std::iter_swap;
 
 GameObject::GameObject(Transform::TransformRef const& parentTransform) : transform(parentTransform)
 {
@@ -11,9 +13,24 @@ GameObject::GameObject(Transform::TransformRef const& parentTransform, Scene* sc
 {
 }
 
+GameObject::~GameObject()
+{
+    if (scene)
+    {
+        for (auto child : children)
+        {
+            child->parent = nullptr;
+            scene->destroyGameObject(child);
+        }
+    }
+    if (parent)
+    {
+        parent->removeChild(*this);
+    }
+}
+
 void GameObject::disableComponent(Component* component)
 {
-    using std::iter_swap;
 
     auto last = components.begin() + enabled;
     auto target =
@@ -34,8 +51,6 @@ void GameObject::disableComponent(Component* component)
 
 void GameObject::enableComponent(Component* component)
 {
-    using std::iter_swap;
-
     auto first = components.begin() + enabled;
     auto target =
         std::find_if(first, components.end(), [&](auto& i) { return i.get() == component; });
@@ -60,4 +75,24 @@ void GameObject::update()
     }
 }
 
-void GameObject::addChild(GameObject& go) { go.transform = transform->addChild(go.transform); }
+void GameObject::addChild(GameObject& go)
+{
+    if (std::find(children.begin(), children.end(), &go) == children.end())
+    {
+        go.transform = transform->addChild(go.transform);
+        children.push_back(&go);
+        go.parent = this;
+    }
+}
+
+void GameObject::removeChild(GameObject& go)
+{
+    auto it = std::find(children.begin(), children.end(), &go);
+    if (it != children.end())
+    {
+        transform->removeChild(go.transform);
+        go.parent = nullptr;
+        children.erase(it);
+        if (scene) go.transform = scene->getRootTransform();
+    }
+}

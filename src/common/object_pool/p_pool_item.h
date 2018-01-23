@@ -17,6 +17,8 @@ public:
     size_t poolId;
 };
 
+} // namespace Pool::Private
+
 template <class T> class WeakRef
 {
 public:
@@ -32,11 +34,13 @@ public:
 
     virtual void enable() const { pool->enable(itemId); }
     virtual void disable() const { pool->disable(itemId); }
+    virtual bool enabled() const { return pool->isEnabled(itemId); }
+    virtual T& get() const { return pool->get(itemId); }
 
     operator bool() const { return pool != nullptr; }
 
-    T& operator*() const { return pool->get(itemId); }
-    T* operator->() const { return &(pool->get(itemId)); }
+    T& operator*() const { return get(); }
+    T* operator->() const { return &get(); }
 
     bool operator==(WeakRef const& r) const { return r.itemId == itemId && r.pool == pool; }
 
@@ -45,12 +49,10 @@ protected:
     IterablePool<T>* pool = nullptr;
 };
 
-} // namespace Pool::Private
-
-template <class T> class ManagedRef : public Pool::Private::WeakRef<T>
+template <class T> class ManagedRef : public WeakRef<T>
 {
 public:
-    using WeakRef = Pool::Private::WeakRef<T>;
+    using WeakRef = WeakRef<T>;
 
     ManagedRef() {}
     ManagedRef(std::nullptr_t) : WeakRef(nullptr) {}

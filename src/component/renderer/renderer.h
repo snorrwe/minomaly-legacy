@@ -1,5 +1,6 @@
 #pragma once
 #include "component.h"
+#include "game_object.h"
 #include "render_system.h"
 #include "transform.h"
 #include <memory>
@@ -9,6 +10,7 @@ namespace Mino
 
 class IRenderSystem;
 class Component;
+class GameObject;
 
 class RenderComponent : public Component
 {

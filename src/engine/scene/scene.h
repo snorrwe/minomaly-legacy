@@ -14,14 +14,17 @@ namespace Mino
 
 class IEngineCore;
 class IRenderSystem;
+class GameObject;
 
 class Scene
 {
 public:
+    using GameObjectContainer = std::vector<std::unique_ptr<GameObject>>;
+
     Scene(std::shared_ptr<IEngineCore> engine) : engine(engine.get()) {}
     Scene(Scene const&) = delete;
     Scene(Scene&&) = delete;
-    virtual ~Scene() {}
+    virtual ~Scene();
 
     Scene& operator=(Scene const&) = delete;
     Scene& operator=(Scene&&) = delete;
@@ -47,7 +50,7 @@ protected:
     template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
 
     Transform::TransformRef rootTransform = Transform::getRoot();
-    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    GameObjectContainer gameObjects;
     GameObject* mainCamera;
     IEngineCore* engine;
 };
