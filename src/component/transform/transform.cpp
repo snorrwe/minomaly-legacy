@@ -28,7 +28,10 @@ TransformRef Transform::addChild(TransformRef const& child)
     return result;
 }
 
-void Transform::removeChild(TransformRef const& child) {if(child.enabled()) child.disable(); }
+void Transform::removeChild(TransformRef const& child)
+{
+    if (child.enabled()) child.disable();
+}
 
 void Transform::setPosition(Vector const& value) { localTransform.position = value; }
 
@@ -36,14 +39,14 @@ void Transform::setRotation(RotationData const& value) { localTransform.rotation
 
 void Transform::updateChildren()
 {
-    if (!parent)
-    {
-        absoluteTransform = TransformData(localTransform);
-    }
-    children.iterateActive([&](auto& tr) {
-        tr.updateByParent(*this);
-        tr.updateChildren();
-    });
+    children.iterateActive([&](auto& tr) { tr.updateByParent(*this); });
+    children.iterateActive([&](auto& tr) { tr.updateChildren(); });
+}
+
+void Transform::updateAsRoot()
+{
+    absoluteTransform = TransformData(localTransform);
+    updateChildren();
 }
 
 void Transform::updateByParent(Transform const& parent)

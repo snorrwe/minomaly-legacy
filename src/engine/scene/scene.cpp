@@ -31,7 +31,7 @@ void Scene::updateGameObjects()
     {
         i->update();
     }
-    rootTransform->updateChildren();
+    rootTransform->updateAsRoot();
 }
 
 template <> void Scene::addComponents<>(GameObject& go) {}

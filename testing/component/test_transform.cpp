@@ -40,7 +40,7 @@ TEST_F(TransformTests, ChildrenPositionsAreRelativeToParent)
     child1->setPosition({1, 0});
     child2->setPosition({2, 0});
 
-    tr->updateChildren();
+    tr->updateAsRoot();
 
     ASSERT_EQ(child1->position().x(), 1);
     ASSERT_EQ(child1->absolute().position.x(), 1);
@@ -48,7 +48,7 @@ TEST_F(TransformTests, ChildrenPositionsAreRelativeToParent)
     ASSERT_EQ(child2->absolute().position.x(), 3);
 
     tr->setPosition({1, 0});
-    tr->updateChildren();
+    tr->updateAsRoot();
 
     ASSERT_EQ(child1->position().x(), 1);
     ASSERT_EQ(child1->absolute().position.x(), 2);

@@ -51,6 +51,7 @@ public:
     size_t childCount() { return children.enabled(); }
 
     void updateChildren();
+    void updateAsRoot();
 
     TransformRef::WeakRef getParent() { return parent; }
 
