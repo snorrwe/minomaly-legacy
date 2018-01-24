@@ -43,7 +43,6 @@ void ColliderComponent::disable()
 
 void ColliderComponent::handleCollision(ColliderComponent const& coll)
 {
-
     touching.insert(&coll);
     onCollisionSubject->next({*this, coll});
 }
@@ -71,7 +70,13 @@ void ColliderComponent::updateCornersByDeltaPos()
     {
         auto from = IPhysicsSystem::World::Node{i, this};
         auto to = IPhysicsSystem::World::Node{i + deltaPos, this};
-        wrld->move(from, to);
+
+        if (!wrld->move(from, to))
+        {
+            removeFromWorld();
+            addToWorld();
+        }
+
         i = to.pos;
     }
 }
@@ -103,7 +108,8 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
 
 void ColliderComponent::checkCollisions()
 {
-    auto points = world.lock()->queryRange(asBoundingBox());
+    auto box = asBoundingBox();
+    auto points = world.lock()->queryRange(box);
     auto currentlyTouching = TouchContainer{};
     if (points.empty())
     {

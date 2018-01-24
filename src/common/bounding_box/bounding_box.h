@@ -1,6 +1,7 @@
 #pragma once
 #include "vector2.h"
 #include <cmath>
+#include <iostream>
 
 namespace Mino
 {
@@ -27,8 +28,8 @@ public:
     bool intersects(BoundingBox const& other) const;
 
     Vector2<float> getCenter() const { return center; }
-    float getWidth() { return halfWidth * 2.0f; }
-    float getHeight() { return halfHeight * 2.0f; }
+    float getWidth() const { return halfWidth * 2.0f; }
+    float getHeight() const { return halfHeight * 2.0f; }
 
     void setCenter(Vector2<float> const& value) { center = value; }
     void setWidth(float value) { halfWidth = value * 0.5f; }

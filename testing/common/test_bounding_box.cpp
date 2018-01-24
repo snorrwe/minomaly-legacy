@@ -8,6 +8,16 @@ class TestBoundingBox : public ::testing::Test
 public:
 };
 
+TEST_F(TestBoundingBox, TestContainsPoint)
+{
+    auto box = BoundingBox{{0, 0}, 5};
+    auto point1 = Vector2<float>{2.5, 3.4};
+    auto point2 = Vector2<float>{65, 87};
+
+    ASSERT_TRUE(box.containsPoint(point1));
+    ASSERT_FALSE(box.containsPoint(point2));
+}
+
 TEST_F(TestBoundingBox, TestIntersectsContaining)
 {
     BoundingBox box1{{0, 0}, 5};

@@ -78,6 +78,7 @@ template <typename... TComponents> GameObject* Scene::createGameObject(Vector2<f
     auto go = createEmptyGameObject();
     auto tr = go->getTransform();
     tr->setPosition(position);
+    tr->updateAsRoot();
     addComponents<TComponents...>(*go);
     return go;
 }

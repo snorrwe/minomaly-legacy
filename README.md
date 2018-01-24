@@ -29,6 +29,7 @@
 ## Setup
 
 ### General
+
 - Init CMake. `cmake -H. -Bbuild`
 
 ### CMake options

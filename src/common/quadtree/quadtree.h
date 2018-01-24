@@ -24,7 +24,11 @@ public:
         Node& operator=(Node const&) = default;
         Node& operator=(Node&&) = default;
 
-        bool operator==(Node const& n) const { return pos == n.pos && item == n.item; }
+        bool operator==(Node const& n) const
+        {
+            const auto marginForError = 0.001f;
+            return (pos - n.pos).length() < marginForError && (!item || !n.item || item == n.item);
+        }
         bool operator!=(Node const& n) const { return !(*this == n); }
 
         Vector2<float> pos;
@@ -33,7 +37,7 @@ public:
 
     using Points = std::vector<Node>;
 
-    static const size_t capacity = 64;
+    static const size_t capacity = 32;
 
     Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr)
         : boundary(boundary), parent(parent)
@@ -113,7 +117,7 @@ template <class T> bool Quadtree<T>::contains(typename Quadtree<T>::Node const& 
 
 template <class T> bool Quadtree<T>::propagateUp(typename Quadtree<T>::Node const& v)
 {
-    if (boundary.containsPoint(v.pos)) return insert(v);
+    if (insert(v)) return true;
     if (!parent) return false;
     return parent->propagateUp(v);
 }
@@ -122,13 +126,15 @@ template <class T>
 bool Quadtree<T>::move(typename Quadtree<T>::Node const& from, typename Quadtree<T>::Node const& to)
 {
     if (from == to) return true;
-    auto i = std::find(points.begin(), points.end(), from);
-    if (i != points.end())
-    {
-        points.erase(i);
-        if (propagateUp(to)) return true;
-    }
-    return false;
+    return query(from, [&](auto& qt) {
+        auto it = std::find(qt.points.begin(), qt.points.end(), from);
+        if (it != qt.points.end())
+        {
+            qt.points.erase(it);
+            return qt.propagateUp(to);
+        }
+        return false;
+    });
 }
 
 template <class T> bool Quadtree<T>::erase(typename Quadtree<T>::Node const& v)

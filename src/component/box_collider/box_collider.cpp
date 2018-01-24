@@ -4,6 +4,7 @@ using namespace Mino;
 
 void BoxColliderComponent::start()
 {
+    corners.reserve(4);
     for (int i = 0; i < 4; ++i)
     {
         corners.push_back({0, 0});
@@ -21,12 +22,12 @@ BoundingBox BoxColliderComponent::asBoundingBox() const
 void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
 {
     removeFromWorld();
-    offset = ofs;
+    offset = std::move(ofs);
     width = w;
     height = h;
     auto topLeft = transform->absolute().position + offset;
     auto x = topLeft.x(), y = topLeft.y();
-    corners[Corner::BottomLeft] = topLeft;
+    corners[Corner::BottomLeft] = std::move(topLeft);
     corners[Corner::BottomRight] = {x + width, y};
     corners[Corner::TopLeft] = {x, y + height};
     corners[Corner::TopRight] = {x + width, y + height};
