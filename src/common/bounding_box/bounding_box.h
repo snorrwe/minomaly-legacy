@@ -27,7 +27,7 @@ public:
     bool containsPoint(Vector2<float> const& point) const;
     bool intersects(BoundingBox const& other) const;
 
-    Vector2<float> getCenter() const { return center; }
+    Vector2<float> const& getCenter() const { return center; }
     float getWidth() const { return halfWidth * 2.0f; }
     float getHeight() const { return halfHeight * 2.0f; }
 

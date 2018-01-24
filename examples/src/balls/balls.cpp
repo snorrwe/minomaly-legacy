@@ -18,15 +18,19 @@ Program::~Program()
 
 void Program::start()
 {
-    auto eggPic = renderer->loadTexture("assets/balls/egg.png");
 
-    // const size_t SCREEN_WIDTH = 640;
-    // const size_t SCREEN_HEIGHT = 480;
+    auto eggPic = renderer->loadTexture("assets/balls/egg.png");
     std::srand(std::time(nullptr));
-    for (int i = 0; i < 20; ++i)
+    std::mt19937 rng;
+    rng.seed(std::random_device()());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(
+        1, SCREEN_WIDTH > SCREEN_HEIGHT ? SCREEN_WIDTH
+                                        : SCREEN_HEIGHT); // distribution in range [1, 6]
+
+    for (int i = 0; i < 300; ++i)
     {
-        auto x = std::rand() % 60 * 10 + 50;
-        auto y = std::rand() % 45 * 10 + 50;
+        auto x = dist6(rng) % (SCREEN_WIDTH - 50) + 50;
+        auto y = dist6(rng) % (SCREEN_HEIGHT - 50) + 50;
 
         auto egg = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
                                     BallComponent>({x, y});
@@ -35,19 +39,19 @@ void Program::start()
 
     auto leftWall = createGameObject<BoxColliderComponent>({0, 0});
     auto leftWallCollider = leftWall->getComponent<BoxColliderComponent>();
-    leftWallCollider->set(3000, 480, {-3000, 0});
+    leftWallCollider->set(3000, SCREEN_HEIGHT, {-3000, 0});
 
-    auto rightWall = createGameObject<BoxColliderComponent>({640, 0});
+    auto rightWall = createGameObject<BoxColliderComponent>({SCREEN_WIDTH, 0});
     auto rightWallCollider = rightWall->getComponent<BoxColliderComponent>();
-    rightWallCollider->set(3000, 480, {0, 0});
+    rightWallCollider->set(3000, SCREEN_HEIGHT, {0, 0});
 
-    auto topWall = createGameObject<BoxColliderComponent>({0, 480});
+    auto topWall = createGameObject<BoxColliderComponent>({0, SCREEN_HEIGHT});
     auto topWallCollider = topWall->getComponent<BoxColliderComponent>();
-    topWallCollider->set(640, 3000, {0, 0});
+    topWallCollider->set(SCREEN_WIDTH, 3000, {0, 0});
 
     auto botWall = createGameObject<BoxColliderComponent>({0, 0});
     auto botWallCollider = botWall->getComponent<BoxColliderComponent>();
-    botWallCollider->set(640, 3000, {0, -3000});
+    botWallCollider->set(SCREEN_WIDTH, 3000, {0, -3000});
 }
 
 void Program::update() {}

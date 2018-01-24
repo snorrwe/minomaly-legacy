@@ -47,7 +47,6 @@ public:
 
     virtual void checkCollisions();
     virtual void addToWorld();
-    virtual void removeFromWorld();
 
     void setLayers(uint32_t l) { layers = l; }
     uint32_t getLayers() { return layers; }

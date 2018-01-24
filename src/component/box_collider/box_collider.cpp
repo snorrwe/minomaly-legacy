@@ -21,7 +21,6 @@ BoundingBox BoxColliderComponent::asBoundingBox() const
 
 void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
 {
-    removeFromWorld();
     offset = std::move(ofs);
     width = w;
     height = h;
@@ -31,5 +30,4 @@ void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)
     corners[Corner::BottomRight] = {x + width, y};
     corners[Corner::TopLeft] = {x, y + height};
     corners[Corner::TopRight] = {x + width, y + height};
-    addToWorld();
 }

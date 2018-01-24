@@ -8,13 +8,6 @@ ColliderComponent::~ColliderComponent()
     {
         phs->remove(this);
     }
-    if (auto w = world.lock(); w)
-    {
-        for (auto& corner : corners)
-        {
-            w->erase({corner, this});
-        }
-    }
 }
 
 void ColliderComponent::start()
@@ -36,7 +29,6 @@ void ColliderComponent::enable()
 
 void ColliderComponent::disable()
 {
-    removeFromWorld();
     physicsSystem.lock()->remove(this);
     Component::disable();
 }
@@ -60,24 +52,9 @@ void ColliderComponent::updatePosition()
 
 void ColliderComponent::updateCornersByDeltaPos()
 {
-    auto wrld = world.lock();
-    if (!wrld)
-    {
-        disable();
-        return;
-    }
     for (auto& i : corners)
     {
-        auto from = IPhysicsSystem::World::Node{i, this};
-        auto to = IPhysicsSystem::World::Node{i + deltaPos, this};
-
-        if (!wrld->move(from, to))
-        {
-            removeFromWorld();
-            addToWorld();
-        }
-
-        i = to.pos;
+        i = i + deltaPos;
     }
 }
 
@@ -87,15 +64,6 @@ void ColliderComponent::addToWorld()
     for (auto& i : corners)
     {
         wrld->insert({i, this});
-    }
-}
-
-void ColliderComponent::removeFromWorld()
-{
-    auto wrld = world.lock();
-    for (auto& i : corners)
-    {
-        wrld->erase({i, this});
     }
 }
 
@@ -109,7 +77,7 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
 void ColliderComponent::checkCollisions()
 {
     auto box = asBoundingBox();
-    auto points = world.lock()->queryRange(box);
+    auto points = world.lock()->queryRange(std::move(box));
     auto currentlyTouching = TouchContainer{};
     if (points.empty())
     {

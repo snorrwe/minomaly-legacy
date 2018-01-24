@@ -10,9 +10,9 @@ public:
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->onCollision().subscribe([&](auto const& collisionData) {
-            auto vx = std::rand() % 100 - 50;
-            auto vy = std::rand() % 100 - 50;
-            body->setVelocity(Mino::Vector2<float>{vx, vy}.normalized() * 150.0f);
+            auto v =
+                collisionData.second.getPositionDelta() - collisionData.first.getPositionDelta();
+            body->setVelocity(v.normalized() * 150.0f);
         });
 
         body = gameObject->getComponent<Mino::PhysicsComponent>();

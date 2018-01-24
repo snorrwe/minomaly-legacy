@@ -7,11 +7,13 @@ void PhysicsSystem::update()
     for (auto& i : colliders)
     {
         i->updatePosition();
+        i->addToWorld();
     }
     for (auto& i : colliders)
     {
         i->checkCollisions();
     }
+    world->clear();
 }
 
 void PhysicsSystem::add(Collider* coll)
@@ -29,4 +31,9 @@ void PhysicsSystem::remove(Collider* coll)
     {
         colliders.erase(it);
     }
+}
+
+void PhysicsSystem::setWorldBox(BoundingBox const& box)
+{
+    world = std::make_shared<World>(box, nullptr, 128);
 }

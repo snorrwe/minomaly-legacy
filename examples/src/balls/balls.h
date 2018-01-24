@@ -2,15 +2,14 @@
 #include "ball.h"
 #include "mino.h"
 #include <array>
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <stdexcept>
 #include <vector>
 
-const size_t SCREEN_WIDTH = 640;
-const size_t SCREEN_HEIGHT = 480;
+const size_t SCREEN_WIDTH = 1366;
+const size_t SCREEN_HEIGHT = 768;
 
 class Program : public Mino::Scene
 {

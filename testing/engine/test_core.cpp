@@ -88,6 +88,7 @@ public:
     MOCK_METHOD0(getWorld, std::shared_ptr<Quadtree<Collider>>());
     MOCK_METHOD1(add, void(Collider*));
     MOCK_METHOD1(remove, void(Collider*));
+    MOCK_METHOD1(setWorldBox, void(BoundingBox const&));
 };
 
 class FakeProgram : public Scene
