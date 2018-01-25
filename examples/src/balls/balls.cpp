@@ -30,7 +30,7 @@ void Program::start()
     rng.seed(std::random_device()());
     std::uniform_int_distribution<std::mt19937::result_type> dist6(
         1, SCREEN_WIDTH > SCREEN_HEIGHT ? SCREEN_WIDTH : SCREEN_HEIGHT);
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 1500; ++i)
     {
         auto x = dist6(rng) % (SCREEN_WIDTH - 50) + 50.0f;
         auto y = dist6(rng) % (SCREEN_HEIGHT - 50) + 50.0f;
