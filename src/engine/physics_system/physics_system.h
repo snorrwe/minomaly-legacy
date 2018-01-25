@@ -1,15 +1,12 @@
 #pragma once
 #include "collider.h"
 #include "quadtree.h"
+#include "services.h"
 #include "transform.h"
 #include "vector2.h"
 #include <algorithm>
 #include <memory>
 #include <vector>
-
-// TODO: work service
-#include <future>
-#include <thread>
 
 namespace Mino
 {
@@ -35,7 +32,14 @@ class PhysicsSystem : public IPhysicsSystem
 public:
     const size_t WORLD_CAPACITY = 64;
 
-    static std::shared_ptr<PhysicsSystem> create() { return std::make_shared<PhysicsSystem>(); }
+    static std::shared_ptr<PhysicsSystem> create()
+    {
+        auto workService = std::static_pointer_cast<WorkService>(Services::get<IWorkService>());
+        return std::make_shared<PhysicsSystem>(workService);
+    }
+
+    PhysicsSystem(std::shared_ptr<WorkService> workService) : workService(std::move(workService)) {}
+    virtual ~PhysicsSystem() {}
 
     virtual void update();
     virtual void add(Collider*);
@@ -47,7 +51,8 @@ public:
 protected:
     std::shared_ptr<World> world =
         std::make_shared<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr, WORLD_CAPACITY);
-    std::vector<Collider*> colliders;
+    std::vector<Collider*> colliders = {};
+    std::shared_ptr<WorkService> workService = nullptr;
 };
 
 } // namespace Mino

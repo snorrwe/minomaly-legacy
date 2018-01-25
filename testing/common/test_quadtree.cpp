@@ -30,7 +30,7 @@ TEST_F(QuadtreeTests, CanInsert)
 
 TEST_F(QuadtreeTests, CanInsertMultipleElements)
 {
-    for (int i = 0; i < 15000; ++i)
+    for (int i = 0; i < 5000; ++i)
     {
         auto node = Quadtree::Node(i, i % 20);
         ASSERT_TRUE(tree.insert(node));
@@ -119,8 +119,4 @@ TEST_F(QuadtreeTests, CanFindNodesInRange)
     {
         EXPECT_TRUE(std::find(result.begin(), result.end(), *i) != result.end());
     }
-    /*for (auto i = nodesOutRange.begin(); i != nodesOutRange.end(); ++i)
-    {
-        EXPECT_TRUE(std::find(result.begin(), result.end(), *i) == result.end());
-    }*/
 }

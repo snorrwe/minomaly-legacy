@@ -12,18 +12,17 @@ void PhysicsSystem::update()
     auto handles = std::vector<std::future<std::vector<World::Node>>>{};
     for (auto& collider : colliders)
     {
-        handles.push_back(
-            std::async(std::launch::async, [collider]() { return collider->checkCollisions(); }));
-    }
-    for (auto& handle : handles)
-    {
-        handle.wait();
+        handles.push_back(workService->requestWork<std::vector<World::Node>>(
+            [collider]() { return collider->checkCollisions(); }));
     }
     auto handleIt = handles.begin();
     for (auto& collider : colliders)
     {
-        collider->handleCollisions(std::move((handleIt++)->get()));
+        handleIt->wait();
+        collider->handleCollisions(std::move(handleIt->get()));
+        ++handleIt;
     }
+
     world->clear();
 }
 
