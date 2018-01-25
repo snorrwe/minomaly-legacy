@@ -93,7 +93,7 @@ private:
     void worker()
     {
         auto lock = UniqueLock{*this};
-        while (true)
+        while (!done)
         {
             if (!queue.empty())
             {
@@ -103,10 +103,6 @@ private:
                 lock.unlock();
                 item->execute();
                 lock.lock();
-            }
-            else if (done)
-            {
-                break;
             }
             else
             {
