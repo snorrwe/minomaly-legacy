@@ -11,8 +11,8 @@ public:
 TEST_F(TestBoundingBox, TestContainsPoint)
 {
     auto box = BoundingBox{{0, 0}, 5};
-    auto point1 = Vector2<float>{2.5, 3.4};
-    auto point2 = Vector2<float>{65, 87};
+    auto point1 = Vector2<float>{2.5f, 3.4f};
+    auto point2 = Vector2<float>{65.0f, 87.0f};
 
     ASSERT_TRUE(box.containsPoint(point1));
     ASSERT_FALSE(box.containsPoint(point2));

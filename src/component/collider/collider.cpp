@@ -43,28 +43,14 @@ void ColliderComponent::updatePosition()
 {
     auto& currentPos = transform->absolute().position;
     deltaPos = currentPos - lastPos;
-    if (deltaPos)
-    {
-        updateCornersByDeltaPos();
-    }
+    updateCornersByPosition(currentPos);
     lastPos = currentPos;
-}
-
-void ColliderComponent::updateCornersByDeltaPos()
-{
-    for (auto& i : corners)
-    {
-        i = i + deltaPos;
-    }
 }
 
 void ColliderComponent::addToWorld()
 {
     auto wrld = world.lock();
-    for (auto& i : corners)
-    {
-        wrld->insert({i, this});
-    }
+    wrld->insert({asBoundingBox().getCenter(), this});
 }
 
 Observable<CollisionData>& ColliderComponent::onCollision() { return *onCollisionSubject; }
@@ -74,10 +60,21 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
     return *onCollisionResolutionSubject;
 }
 
-void ColliderComponent::checkCollisions()
+std::vector<typename ColliderComponent::World::Node> ColliderComponent::checkCollisions() const
 {
+    auto result = std::vector<World::Node>{};
+    result.reserve(5);
     auto box = asBoundingBox();
-    auto points = world.lock()->queryRange(std::move(box));
+    world.lock()->queryRange(box, [&](const auto& i) {
+        if (i.item != this && i.item->asBoundingBox().intersects(box)) result.push_back(i);
+    });
+    return result;
+}
+
+void ColliderComponent::handleCollisions(
+    std::vector<typename ColliderComponent::World::Node> const& points)
+{
+
     auto currentlyTouching = TouchContainer{};
     if (points.empty())
     {
@@ -85,13 +82,6 @@ void ColliderComponent::checkCollisions()
         touching.clear();
         return;
     }
-
-    std::sort(points.begin(), points.end(),
-              [](auto const& lhs, auto const& rhs) { return lhs.item < rhs.item; });
-    points.erase(std::unique(points.begin(), points.end(),
-                             [](auto const& lhs, auto const& rhs) { return lhs.item == rhs.item; }),
-                 points.end());
-    removeSelf(points);
 
     for (auto& i : points)
     {
@@ -103,7 +93,6 @@ void ColliderComponent::checkCollisions()
     }
 
     handleResolvedCollisions(currentlyTouching);
-    touching = std::move(currentlyTouching);
 }
 
 void ColliderComponent::handleResolvedCollisions(TouchContainer& currentlyTouching)
@@ -116,11 +105,17 @@ void ColliderComponent::handleResolvedCollisions(TouchContainer& currentlyTouchi
     {
         onCollisionResolutionSubject->next({*this, *collider});
     }
+    touching = std::move(currentlyTouching);
 }
 
-void ColliderComponent::removeSelf(std::vector<World::Node>& points)
+void ColliderComponent::removeSelf(std::vector<World::Node>& points) const
 {
     auto it =
         std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
-    if (it != points.end()) points.erase(it);
+    while (it != points.end())
+    {
+        points.erase(it);
+        it = std::find_if(points.begin(), points.end(),
+                          [&](auto const& i) { return i.item == this; });
+    }
 }

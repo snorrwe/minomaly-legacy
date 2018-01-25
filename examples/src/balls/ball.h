@@ -19,8 +19,8 @@ public:
         body->addCollider(*eggCollider);
         body->setMaterial({2.0f});
 
-        auto vx = std::rand() % 100 - 50;
-        auto vy = std::rand() % 100 - 50;
+        auto vx = std::rand() % 100 - 50.0f;
+        auto vy = std::rand() % 100 - 50.0f;
         body->setVelocity(Mino::Vector2<float>{vx, vy}.normalized() * 150.0f);
     }
 

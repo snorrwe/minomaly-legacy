@@ -19,8 +19,6 @@ public:
         BottomRight = 3
     };
 
-    virtual void start();
-
     float getWidth() const { return width; }
     float getHeight() const { return height; }
     void set(float w, float h, Vector2<float> offset = {0, 0});
@@ -28,9 +26,12 @@ public:
     virtual BoundingBox asBoundingBox() const;
 
 protected:
+    virtual void updateCornersByPosition(Vector2<float> const&);
+
     Vector2<float> offset = {0, 0};
     float width = 0;
     float height = 0;
+    BoundingBox box = {{0, 0}, 0, 0};
 };
 
 } // namespace Mino

@@ -45,18 +45,19 @@ public:
 
     virtual BoundingBox asBoundingBox() const = 0;
 
-    virtual void checkCollisions();
+    std::vector<World::Node> checkCollisions() const;
+    void handleCollisions(std::vector<World::Node> const& points);
     virtual void addToWorld();
 
     void setLayers(uint32_t l) { layers = l; }
-    uint32_t getLayers() { return layers; }
+    uint32_t getLayers() const { return layers; }
 
     Vector2<float> getPositionDelta() const { return deltaPos; }
     TouchContainer const& getTouchingColliders() const { return touching; }
     bool touchingAny() const { return !touching.empty(); }
 
 protected:
-    void updateCornersByDeltaPos();
+    virtual void updateCornersByPosition(Vector2<float> const&) = 0;
 
     uint32_t layers = 0x1;
     Transform::TransformRef transform;
@@ -67,7 +68,7 @@ protected:
     std::vector<Vector2<float>> corners = {};
 
 private:
-    void removeSelf(std::vector<World::Node>&);
+    void removeSelf(std::vector<World::Node>&) const;
     void handleResolvedCollisions(TouchContainer& currentlyTouching);
 
     TouchContainer touching = {};

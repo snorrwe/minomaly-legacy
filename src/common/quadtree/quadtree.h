@@ -38,9 +38,10 @@ public:
     using Points = std::vector<Node>;
 
     Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr,
-             const size_t capacity = 16, size_t depth = 0)
+             const size_t capacity = 4, size_t depth = 0)
         : boundary(boundary), parent(parent), capacity(capacity), depth(depth)
     {
+        points.reserve(capacity);
     }
     Quadtree(Quadtree const&) = default;
     Quadtree(Quadtree&&) = default;
@@ -55,8 +56,9 @@ public:
     bool erase(Node const& v);
     void clear();
 
-    std::vector<Node> queryRange(BoundingBox const& range);
-    void queryRange(BoundingBox const& range, std::vector<Node>& result);
+    std::vector<Node> queryRange(BoundingBox const& range) const;
+    void queryRange(BoundingBox const& range, std::vector<Node>& result) const;
+    void queryRange(BoundingBox const& range, std::function<void(Node const&)>) const;
 
 protected:
     bool query(Node const& v, std::function<bool(Quadtree&)> callback);
@@ -86,26 +88,30 @@ template <class T> bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)
 {
     if (!boundary.containsPoint(v.pos)) return false;
 
+    if (northWest)
+    {
+        if (northWest->insert(v)) return true;
+        if (northEast->insert(v)) return true;
+        if (southWest->insert(v)) return true;
+        if (southEast->insert(v)) return true;
+    }
+
     if (points.size() < capacity)
     {
         points.push_back(v);
-        return true;
     }
-
-    if (northWest == nullptr) subdivide();
-
-    if (northWest->insert(v)) return true;
-    if (northEast->insert(v)) return true;
-    if (southWest->insert(v)) return true;
-    if (southEast->insert(v)) return true;
-
-    throw std::runtime_error("Point cannot be inserted. This should never happen!");
+    else
+    {
+        subdivide();
+        insert(v);
+    }
+    return true;
 }
 
 template <class T> void Quadtree<T>::subdivide()
 {
-    auto subDimension = boundary.getWidth() * 0.5001f;
-    auto center = boundary.getCenter();
+    const auto subDimension = boundary.getWidth() * 0.5001f;
+    const auto center = boundary.getCenter();
     const auto d = depth + 1;
     northWest = std::make_unique<Quadtree>(
         BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), this,
@@ -195,22 +201,21 @@ bool Quadtree<T>::query(typename Quadtree<T>::Node const& node,
 }
 
 template <class T>
-std::vector<typename Quadtree<T>::Node> Quadtree<T>::queryRange(BoundingBox const& range)
+std::vector<typename Quadtree<T>::Node> Quadtree<T>::queryRange(BoundingBox const& range) const
 {
     auto result = std::vector<Node>{};
-    result.reserve(capacity * 128);
+    result.reserve(128);
     queryRange(range, result);
     return result;
 }
 
 template <class T>
 void Quadtree<T>::queryRange(BoundingBox const& range,
-                             std::vector<typename Quadtree<T>::Node>& result)
+                             std::vector<typename Quadtree<T>::Node>& result) const
 {
     if (!boundary.intersects(range)) return;
 
-    std::copy_if(points.begin(), points.end(), std::back_inserter(result),
-                 [&](auto const& i) { return range.containsPoint(i.pos); });
+    queryRange(range, [&result](auto const& i) { result.push_back(i); });
 
     if (northWest)
     {
@@ -218,6 +223,26 @@ void Quadtree<T>::queryRange(BoundingBox const& range,
         northEast->queryRange(range, result);
         southWest->queryRange(range, result);
         southEast->queryRange(range, result);
+    }
+}
+
+template <class T>
+void Quadtree<T>::queryRange(BoundingBox const& range,
+                             std::function<void(typename Quadtree<T>::Node const&)> callback) const
+{
+    if (!boundary.intersects(range)) return;
+
+    for (auto& point : points)
+    {
+        callback(point);
+    }
+
+    if (northWest)
+    {
+        northWest->queryRange(range, callback);
+        northEast->queryRange(range, callback);
+        southWest->queryRange(range, callback);
+        southEast->queryRange(range, callback);
     }
 }
 
