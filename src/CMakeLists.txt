@@ -52,6 +52,7 @@ set(_COMPONENT_INCLUDES component
 set(_SERVICE_INCLUDES services
                       services/time_service
                       services/services
+                      services/work_service
                       services/log_service)
 
 include_directories(${_COMMON_INCLUDES})

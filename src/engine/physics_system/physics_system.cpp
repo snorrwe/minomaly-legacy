@@ -4,14 +4,26 @@ using namespace Mino;
 
 void PhysicsSystem::update()
 {
-    for (auto& i : colliders)
+    for (auto& collider : colliders)
     {
-        i->updatePosition();
+        collider->updatePosition();
+        collider->addToWorld();
     }
-    for (auto& i : colliders)
+    auto handles = std::vector<std::future<std::vector<World::Node>>>{};
+    for (auto& collider : colliders)
     {
-        i->checkCollisions();
+        handles.push_back(workService->requestWork<std::vector<World::Node>>(
+            [collider]() { return collider->checkCollisions(); }));
     }
+    auto handleIt = handles.begin();
+    for (auto& collider : colliders)
+    {
+        handleIt->wait();
+        collider->handleCollisions(std::move(handleIt->get()));
+        ++handleIt;
+    }
+
+    world->clear();
 }
 
 void PhysicsSystem::add(Collider* coll)
@@ -29,4 +41,9 @@ void PhysicsSystem::remove(Collider* coll)
     {
         colliders.erase(it);
     }
+}
+
+void PhysicsSystem::setWorldBox(BoundingBox const& box)
+{
+    world = std::make_shared<World>(box, nullptr, WORLD_CAPACITY);
 }

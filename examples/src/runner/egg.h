@@ -15,9 +15,9 @@ class EggComponent : public Mino::Component
 public:
     virtual void start()
     {
-        body = gameObject->getComponent<Mino::PhysicsComponent>();
         time = Mino::Services::get<Mino::ITimeService>();
         transform = gameObject->getTransform();
+        body = gameObject->getComponent<Mino::PhysicsComponent>();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);

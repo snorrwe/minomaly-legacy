@@ -20,10 +20,6 @@
 					"shell_cmd": "cmake --build . --target ALL_BUILD"
 				},
 				{
-					"name": "INSTALL",
-					"shell_cmd": "cmake --build . --target INSTALL"
-				},
-				{
 					"name": "RUN_TESTS",
 					"shell_cmd": "cmake --build . --target RUN_TESTS"
 				},
@@ -46,6 +42,18 @@
 				{
 					"name": "examples/src/audio_play/RUN_TESTS",
 					"shell_cmd": "cmake --build . --target examples/src/audio_play/RUN_TESTS"
+				},
+				{
+					"name": "examples/src/balls/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target examples/src/balls/ALL_BUILD"
+				},
+				{
+					"name": "examples/src/balls/balls",
+					"shell_cmd": "cmake --build . --target examples/src/balls/balls"
+				},
+				{
+					"name": "examples/src/balls/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target examples/src/balls/RUN_TESTS"
 				},
 				{
 					"name": "examples/src/collision_demo/ALL_BUILD",
@@ -252,8 +260,16 @@
 					"shell_cmd": "cmake --build . --target testing/ALL_BUILD"
 				},
 				{
+					"name": "testing/gmock",
+					"shell_cmd": "cmake --build . --target testing/gmock"
+				},
+				{
 					"name": "testing/googletest",
 					"shell_cmd": "cmake --build . --target testing/googletest"
+				},
+				{
+					"name": "testing/gtest",
+					"shell_cmd": "cmake --build . --target testing/gtest"
 				},
 				{
 					"name": "testing/INSTALL",
@@ -306,6 +322,58 @@
 				{
 					"name": "testing/lib/googletest/googlemock/gtest/INSTALL",
 					"shell_cmd": "cmake --build . --target testing/lib/googletest/googlemock/gtest/INSTALL"
+				},
+				{
+					"name": "testing/lib/gtest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/gtest/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/INSTALL"
+				},
+				{
+					"name": "testing/lib/gtest/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/RUN_TESTS"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gmock",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gmock"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gmock_main",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gmock_main"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/INSTALL"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/RUN_TESTS"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gtest/ALL_BUILD",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gtest/ALL_BUILD"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gtest/gtest",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gtest/gtest"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gtest/gtest_main",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gtest/gtest_main"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gtest/INSTALL",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gtest/INSTALL"
+				},
+				{
+					"name": "testing/lib/gtest/googlemock/gtest/RUN_TESTS",
+					"shell_cmd": "cmake --build . --target testing/lib/gtest/googlemock/gtest/RUN_TESTS"
 				}
 			],
 			"working_dir": "${project_path}/build"

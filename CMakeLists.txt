@@ -121,7 +121,7 @@ if(examples)
 
     #[[ Copy DLLs ]]
 
-    COPY_SDL_DLLS(${name})
+    # COPY_SDL_DLLS(${name})
 
   ENDMACRO()
 

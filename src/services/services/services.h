@@ -2,6 +2,7 @@
 #include "log_service.h"
 #include "p_service.h"
 #include "time_service.h"
+#include "work_service.h"
 #include <map>
 #include <memory>
 
