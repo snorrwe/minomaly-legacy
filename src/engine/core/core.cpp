@@ -19,7 +19,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
     sub = input->onQuit([&](auto const&) { active = false; });
 }
 
-EngineCore::~EngineCore() {}
+EngineCore::~EngineCore() { scene.reset(); }
 
 void EngineCore::run()
 {

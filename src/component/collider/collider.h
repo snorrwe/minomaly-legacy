@@ -63,8 +63,8 @@ protected:
     Transform::TransformRef transform;
     Vector2<float> lastPos = {0, 0};
     Vector2<float> deltaPos = {0, 0};
-    std::weak_ptr<IPhysicsSystem> physicsSystem;
-    std::weak_ptr<World> world;
+    IPhysicsSystem* physicsSystem;
+    World* world;
     std::vector<Vector2<float>> corners = {};
 
 private:
