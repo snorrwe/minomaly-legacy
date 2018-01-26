@@ -2,12 +2,6 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<EngineCore> core) : Scene(core)
-{
-    renderer = engine->getRenderer();
-    input = engine->getInput();
-}
-
 Program::~Program()
 {
     for (auto i = subs.begin(); i != subs.end(); ++i)
@@ -18,6 +12,9 @@ Program::~Program()
 
 void Program::start()
 {
+    renderer = engine->getRenderer();
+    input = engine->getInput();
+
     const auto OFFSET = 300;
 
     engine->getPhysicsSystem()->setWorldBox({{SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f},

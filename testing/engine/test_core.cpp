@@ -91,10 +91,9 @@ public:
     MOCK_METHOD1(setWorldBox, void(BoundingBox const&));
 };
 
-class FakeProgram : public Scene
+class FakeProgram : public Application
 {
 public:
-    FakeProgram(std::shared_ptr<EngineCore> engine) : Scene(engine) {}
     virtual ~FakeProgram() {}
 
     virtual void start() { starts++; }
@@ -133,11 +132,11 @@ protected:
         mockPhysics = std::make_shared<NiceMock<MockPhysics>>();
         mockAudioSystem = std::make_shared<NiceMock<MockAudioSystem>>();
         mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
-        engine = std::make_shared<EngineCore>(mockSubsystems, mockInput, mockWindow, mockRenderer,
-                                              mockAudioSystem, mockPhysics, mockLogService,
-                                              mockTimeSystem);
-        fakeProgram = std::make_shared<FakeProgram>(engine);
-        engine->setScene(fakeProgram);
+        fakeProgram = std::make_shared<FakeProgram>();
+        engine = std::make_shared<EngineCore>(mockSubsystems, mockInput, mockWindow, fakeProgram,
+                                              mockRenderer, mockAudioSystem, mockPhysics,
+                                              mockLogService, mockTimeSystem);
+        fakeProgram->setEngineCore(engine.get());
     }
 
     /*Acutal*/

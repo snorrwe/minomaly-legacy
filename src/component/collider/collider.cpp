@@ -8,7 +8,7 @@ void ColliderComponent::start()
 {
     transform = gameObject->getTransform();
     lastPos = transform->absolute().position;
-    physicsSystem = gameObject->getScene()->getEngineCore()->getPhysicsSystem().get();
+    physicsSystem = gameObject->getApplication()->getEngineCore()->getPhysicsSystem().get();
     world = physicsSystem->getWorld().get();
     physicsSystem->add(this);
     addToWorld();

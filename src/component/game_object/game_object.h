@@ -12,7 +12,7 @@ namespace Mino
 {
 
 class Component;
-class Scene;
+class Application;
 
 class GameObject
 {
@@ -22,7 +22,7 @@ public:
 
     GameObject() = default;
     GameObject(Transform::TransformRef const& parentTransform);
-    GameObject(Transform::TransformRef const& parentTransform, Scene* scene);
+    GameObject(Transform::TransformRef const& parentTransform, Application* application);
     GameObject(GameObject const& go) = delete;
     GameObject(GameObject&& go) = default;
     virtual ~GameObject();
@@ -44,7 +44,7 @@ public:
 
     GameObject* getParent() { return parent; }
 
-    Scene* getScene() const { return scene; }
+    Application* getApplication() const { return application; }
 
 protected:
     ComponentContainer components = {};
@@ -52,7 +52,7 @@ protected:
     ChildrenContainer children = {};
     Transform::TransformRef transform = nullptr;
     size_t enabled = 0;
-    Scene* scene = nullptr;
+    Application* application = nullptr;
 };
 
 template <typename TComponent> TComponent* GameObject::addComponent()

@@ -23,7 +23,7 @@ set(_ENGINE_INCLUDES engine
                      engine/camera
                      engine/sdl_subsystems
                      engine/physics_system
-                     engine/scene
+                     engine/application
                      engine/audio_system)
 
 set(_COMMON_INCLUDES common
@@ -64,7 +64,7 @@ add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp
                             ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
                             ${PROJECT_SOURCE_DIR}/engine/render_system/render_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
-                            ${PROJECT_SOURCE_DIR}/engine/scene/scene.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/application/application.cpp
                             ${PROJECT_SOURCE_DIR}/engine/physics_system/physics_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/audio_system/audio_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/sdl_subsystems/sdl_subsystems.cpp

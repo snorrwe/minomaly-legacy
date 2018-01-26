@@ -4,12 +4,14 @@ using namespace Mino;
 
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
-                       std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audio,
+                       std::shared_ptr<Application> app, std::shared_ptr<IRenderSystem> renderer,
+                       std::shared_ptr<IAudioSystem> audio,
                        std::shared_ptr<IPhysicsSystem> physicsSystem,
                        std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
     : subsystems(subsystems),
       input(input),
       window(window),
+      application(app),
       renderer(renderer),
       audioSystem(audio),
       physicsSystem(physicsSystem),
@@ -19,7 +21,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
     sub = input->onQuit([&](auto const&) { active = false; });
 }
 
-EngineCore::~EngineCore() { scene.reset(); }
+EngineCore::~EngineCore() { application.reset(); }
 
 void EngineCore::run()
 {
@@ -46,7 +48,7 @@ void EngineCore::run(bool)
     Milli lag{0.0};
 
     time->update(lastUpdate);
-    scene->start();
+    application->start();
     while (active)
     {
         auto now = std::chrono::system_clock::now();
@@ -69,8 +71,8 @@ void EngineCore::run(bool)
 void EngineCore::update()
 {
     time->update(lastUpdate);
-    scene->update();
-    scene->updateGameObjects();
+    application->update();
+    application->updateGameObjects();
 }
 
 void EngineCore::stop() { active = false; }
@@ -88,7 +90,8 @@ std::vector<SdlStatus> EngineCore::subsystemStatus(std::vector<SdlSubSystemType>
 void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
 
 std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t screenWidth,
-                                                 size_t screenHeight)
+                                                 size_t screenHeight,
+                                                 std::shared_ptr<Application> const& app)
 {
     auto logService = Services::get<ILogService>();
     auto time = Services::get<ITimeService>();
@@ -103,6 +106,6 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t
     auto renderer = RenderSystem::create(*window);
     auto physics = PhysicsSystem::create();
 
-    return std::make_shared<EngineCore>(subsystems, inp, window, renderer, audio, physics,
+    return std::make_shared<EngineCore>(subsystems, inp, window, app, renderer, audio, physics,
                                         logService, time);
 }

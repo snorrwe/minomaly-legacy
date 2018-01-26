@@ -32,7 +32,7 @@ template <typename TRender> std::unique_ptr<TRender> RenderComponent::create(Gam
 {
     static_assert(std::is_convertible<TRender*, RenderComponent*>::value);
 
-    auto renderSystem = gameObject->getScene()->getEngineCore()->getRenderer();
+    auto renderSystem = gameObject->getApplication()->getEngineCore()->getRenderer();
     auto result = renderSystem->createRenderer<TRender>();
     result->gameObject = gameObject;
     result->renderSystem = renderSystem;

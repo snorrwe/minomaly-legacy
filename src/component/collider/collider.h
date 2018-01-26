@@ -1,11 +1,11 @@
 #pragma once
+#include "application.h"
 #include "bounding_box.h"
 #include "component.h"
 #include "observer.h"
 #include "physics_component.h"
 #include "physics_system.h"
 #include "quadtree.h"
-#include "scene.h"
 #include "transform.h"
 #include "vector2.h"
 #include <algorithm>

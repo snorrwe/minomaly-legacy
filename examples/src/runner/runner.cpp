@@ -2,13 +2,6 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<EngineCore> core) : Scene(core)
-{
-    renderer = engine->getRenderer();
-    input = engine->getInput();
-    time = engine->getTime();
-}
-
 Program::~Program()
 {
     for (auto i = subs.begin(); i != subs.end(); ++i)
@@ -29,6 +22,9 @@ public:
 
 void Program::start()
 {
+    renderer = engine->getRenderer();
+    input = engine->getInput();
+    time = engine->getTime();
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
     auto bar = createGameObject<SpriteRenderComponent, BoxColliderComponent>(

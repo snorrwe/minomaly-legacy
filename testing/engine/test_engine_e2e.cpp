@@ -14,11 +14,9 @@ class FakeE2EComponent : public Component
 public:
 };
 
-class FakeProgram : public Scene
+class FakeProgram : public Application
 {
 public:
-    FakeProgram(std::shared_ptr<IEngineCore> engine) : Scene(engine) {}
-
     virtual void start() {}
 
     void createHierarchy()
@@ -80,6 +78,6 @@ TEST_F(TestEngineE2E, CanCreateActual)
 TEST_F(TestEngineE2E, CanCreateAndCleanUpGameObjects)
 {
     auto engine = EngineCore::create<FakeProgram>("...", 0, 0);
-    std::static_pointer_cast<FakeProgram>(engine->getScene())->createHierarchy();
+    std::static_pointer_cast<FakeProgram>(engine->getApplication())->createHierarchy();
     engine->run();
 }
