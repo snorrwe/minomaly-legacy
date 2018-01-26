@@ -86,6 +86,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
 add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/services/services.cpp
+                              ${PROJECT_SOURCE_DIR}/services/work_service/work_service.cpp
                               ${PROJECT_SOURCE_DIR}/services/log_service/log_service.cpp)
 
 set_property(TARGET ${_MINO_ENGINE} PROPERTY CMAKE_CXX_STANDARD 17)

@@ -1,6 +1,5 @@
 #pragma once
 #include "p_service.h"
-
 #include <condition_variable>
 #include <functional>
 #include <future>
@@ -40,13 +39,7 @@ public:
 
 struct Threads : std::vector<std::thread>
 {
-    void join()
-    {
-        for (auto i = begin(); i != end(); ++i)
-        {
-            i->join();
-        }
-    }
+    void join();
 };
 
 class WorkService : public IWorkService, std::mutex, std::condition_variable
@@ -57,63 +50,34 @@ public:
 
     static std::shared_ptr<WorkService> create() { return std::make_shared<WorkService>(); }
 
-    WorkService(uint8_t concurrency = std::thread::hardware_concurrency())
-    {
-        if (!concurrency) throw std::invalid_argument("Concurrency must be greater than 0!");
+    WorkService(uint8_t concurrency = std::thread::hardware_concurrency());
 
-        for (auto i = 0; i < concurrency; ++i)
-        {
-            threads.emplace_back(&WorkService::worker, this);
-        }
-    }
-
-    virtual ~WorkService()
-    {
-        done = true;
-        notify_all();
-        threads.join();
-    }
+    virtual ~WorkService();
 
     WorkService(WorkService const&) = delete;
     WorkService(WorkService&&) = delete;
     WorkService& operator=(WorkService const&) = delete;
     WorkService& operator=(WorkService&&) = delete;
 
-    template <typename TReturn> std::future<TReturn> requestWork(std::function<TReturn()> job)
-    {
-        auto lock = UniqueLock{*this};
-        auto addedJob = std::make_unique<Job<TReturn>>(job);
-        auto result = addedJob->promise.get_future();
-        queue.push(std::move(addedJob));
-        notify_one();
-        return result;
-    }
+    template <typename TReturn> std::future<TReturn> requestWork(std::function<TReturn()> job);
 
 private:
-    void worker()
-    {
-        auto lock = UniqueLock{*this};
-        while (!done)
-        {
-            if (!queue.empty())
-            {
-                auto item = std::move(queue.front());
-                queue.pop();
-                notify_one();
-                lock.unlock();
-                item->execute();
-                lock.lock();
-            }
-            else
-            {
-                wait(lock);
-            }
-        }
-    }
+    void worker();
 
     bool done = false;
     Threads threads = {};
     Queue queue = {};
 };
+
+template <typename TReturn>
+std::future<TReturn> WorkService::requestWork(std::function<TReturn()> job)
+{
+    auto lock = UniqueLock{*this};
+    auto addedJob = std::make_unique<Job<TReturn>>(job);
+    auto result = addedJob->promise.get_future();
+    queue.push(std::move(addedJob));
+    notify_one();
+    return result;
+}
 
 } // namespace Mino
