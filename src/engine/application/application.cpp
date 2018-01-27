@@ -1,4 +1,3 @@
-#pragma once
 #include "application.h"
 
 using namespace Mino;
@@ -6,7 +5,7 @@ using namespace Mino;
 Application::~Application()
 {
     auto gameObjectsToDelete = GameObjectContainer{std::move(gameObjects)};
-    gameObjects = std::move(GameObjectContainer{});
+    gameObjects =GameObjectContainer{};
 }
 
 GameObject* Application::createEmptyGameObject()

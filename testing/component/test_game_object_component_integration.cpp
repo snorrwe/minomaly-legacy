@@ -33,7 +33,7 @@ template <> std::unique_ptr<FakeComponent> Component::create<FakeComponent>()
 TEST_F(GameObjectTests, CanAddComponentWithNoError)
 {
     auto go = GameObject();
-    auto result = go.addComponent<FakeComponent>();
+     go.addComponent<FakeComponent>();
 }
 
 TEST_F(GameObjectTests, CanFindComponentByType)
@@ -59,7 +59,7 @@ TEST_F(GameObjectTests, ReturnsNullPtrIfNotFound)
     };
 
     auto go = GameObject();
-    auto actual = go.addComponent<FakeComponent>();
+    go.addComponent<FakeComponent>();
     auto expected = go.getComponent<FakeComponent2>();
 
     if (expected)
@@ -71,7 +71,7 @@ TEST_F(GameObjectTests, ReturnsNullPtrIfNotFound)
 TEST_F(GameObjectTests, CanOverwriteCreate)
 {
     auto go = GameObject();
-    auto actual = go.addComponent<FakeComponent>();
+     go.addComponent<FakeComponent>();
 
     ASSERT_TRUE(called);
 }

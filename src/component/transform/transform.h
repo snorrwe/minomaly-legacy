@@ -38,17 +38,17 @@ public:
     };
 
     Transform() = default;
-    Transform(Transform const&) = default;
+    Transform(Transform const&) = delete;
     Transform(Transform&&) = default;
     Transform(TransformRef const& parent) : parent(parent) {}
     virtual ~Transform() {}
 
-    Transform& operator=(Transform const&) = default;
+    Transform& operator=(Transform const&) = delete;
     Transform& operator=(Transform&&) = default;
 
-    virtual TransformRef addChild(TransformRef const& child = nullptr);
+    virtual TransformRef addChild(TransformRef&& child = nullptr);
     virtual void removeChild(TransformRef const& child);
-    size_t childCount() { return children.enabled(); }
+    size_t childCount() { return children->enabled(); }
 
     void updateChildren();
     void updateAsRoot();
@@ -63,12 +63,12 @@ public:
     RotationData const& getRotation() const { return localTransform.rotation; }
     void setRotation(RotationData const& value);
 
-    TransformData const& absolute() { return absoluteTransform; }
+    TransformData const& absolute() const { return absoluteTransform; }
 
 protected:
     TransformRef::WeakRef parent = nullptr;
     TransformRef::WeakRef self = nullptr;
-    ChildrenContainer children = {};
+    std::unique_ptr<ChildrenContainer> children = std::make_unique<ChildrenContainer>();
 
     TransformData localTransform = {};
     TransformData absoluteTransform = {};

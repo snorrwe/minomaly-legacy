@@ -13,16 +13,16 @@ TransformRef Transform::getRoot()
     return result;
 }
 
-TransformRef Transform::addChild(TransformRef const& child)
+TransformRef Transform::addChild(TransformRef&& child)
 {
-    auto result = children.enable();
+    auto result = children->enable();
     result->self = result;
     result->parent = self;
     if (child)
     {
-        result->children = child->children;
-        result->localTransform = child->localTransform;
-        result->absoluteTransform = child->absoluteTransform;
+        result->children = std::move(child->children);
+        result->localTransform = std::move(child->localTransform);
+        result->absoluteTransform = std::move(child->absoluteTransform);
     }
     result->updateByParent(*this);
     return result;
@@ -39,8 +39,9 @@ void Transform::setRotation(RotationData const& value) { localTransform.rotation
 
 void Transform::updateChildren()
 {
-    children.iterateActive([&](auto& tr) { tr.updateByParent(*this); });
-    children.iterateActive([&](auto& tr) { tr.updateChildren(); });
+    if (!children) return; // TODO: this shouldn't happen
+    children->iterateActive([&](auto& tr) { tr.updateByParent(*this); });
+    children->iterateActive([&](auto& tr) { tr.updateChildren(); });
 }
 
 void Transform::updateAsRoot()

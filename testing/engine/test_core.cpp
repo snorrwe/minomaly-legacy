@@ -109,8 +109,8 @@ public:
 
     void reset(size_t quitAfter = 1)
     {
-        size_t updates = 0;
-        size_t starts = 0;
+         updates = 0;
+        starts = 0;
         this->quitAfter = quitAfter;
     }
 

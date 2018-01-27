@@ -79,7 +79,7 @@ void GameObject::addChild(GameObject& go)
 {
     if (std::find(children.begin(), children.end(), &go) == children.end())
     {
-        go.transform = transform->addChild(go.transform);
+        go.transform = transform->addChild(std::move(go.transform));
         children.push_back(&go);
         go.parent = this;
     }

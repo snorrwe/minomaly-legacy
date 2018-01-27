@@ -45,10 +45,15 @@ void Program::start()
     egg->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
     egg->getTransform()->setPosition({50, 0.0});
 
-    auto childEgg = createGameObject<Child>();
-    egg->addChild(*childEgg);
-    childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    childEgg->getTransform()->setPosition({10, 30});
+    auto currentChild = egg;
+    for (auto i = 0; i < 5; ++i)
+    {
+        auto childEgg = createGameObject<Child>();
+        currentChild->addChild(*childEgg);
+        childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
+        childEgg->getTransform()->setPosition({10 * i, 30});
+        currentChild = childEgg;
+    }
 }
 
 void Program::update()

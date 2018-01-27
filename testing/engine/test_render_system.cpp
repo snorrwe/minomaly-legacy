@@ -27,7 +27,7 @@ public:
         renderer = std::make_shared<RenderSystem>(nullptr);
         for (int i = 0; i < 5; ++i)
         {
-            mockRenderers.push_back(std::move(renderer->createRenderer<MockRenderComponent>()));
+            mockRenderers.push_back(renderer->createRenderer<MockRenderComponent>());
         }
     }
 

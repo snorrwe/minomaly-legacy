@@ -31,7 +31,7 @@ public:
     GameObject& operator=(GameObject&& go) = default;
 
     Transform::TransformRef& getTransform() { return transform; }
-    Transform::TransformRef const& getTransform() const { return transform; }
+    Transform::TransformRef const& getTransform() const { return getTransform(); }
 
     template <typename TComponent> TComponent* addComponent();
     template <typename TComponent> TComponent* getComponent() const;
@@ -42,7 +42,7 @@ public:
     virtual void addChild(GameObject&);
     virtual void removeChild(GameObject&);
 
-    GameObject* getParent() { return parent; }
+    GameObject* getParent() const { return parent; }
 
     Application* getApplication() const { return application; }
 

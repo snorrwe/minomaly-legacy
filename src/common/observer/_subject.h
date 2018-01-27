@@ -8,6 +8,8 @@ namespace Mino
 template <typename T> class Subject : public Observable<T>
 {
 public:
+	using Observable<T>::subscriptions;
+
     Subject() = default;
     Subject(Subject<T> const&) = delete;
     Subject(Subject<T>&&) = delete;
