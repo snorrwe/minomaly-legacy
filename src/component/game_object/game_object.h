@@ -31,7 +31,7 @@ public:
     GameObject& operator=(GameObject&& go) = default;
 
     Transform::TransformRef& getTransform() { return transform; }
-    Transform::TransformRef const& getTransform() const { return getTransform(); }
+    Transform::TransformRef const& getTransform() const { return transform; }
 
     template <typename TComponent> TComponent* addComponent();
     template <typename TComponent> TComponent* getComponent() const;
