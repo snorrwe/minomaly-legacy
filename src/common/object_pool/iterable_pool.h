@@ -34,8 +34,8 @@ public:
 
     T& get(size_t id) { return pool[refs[id]]; }
 
-    void iterateActive(std::function<void(T&)> callback);
-    void iterateAll(std::function<void(T&)> callback);
+    void foreachActive(std::function<void(T&)> callback);
+    void foreach(std::function<void(T&)> callback);
 
 protected:
     void add();
@@ -73,7 +73,6 @@ template <class T> void IterablePool<T>::add()
 template <class T> typename IterablePool<T>::Reference IterablePool<T>::enable()
 {
     if (next >= pool.size()) add();
-
     return IterablePool<T>::Reference(next++, this);
 }
 
@@ -102,7 +101,7 @@ template <class T> void IterablePool<T>::swapItems(size_t index1, size_t index2)
     refs[index1] = index2;
 }
 
-template <class T> void IterablePool<T>::iterateActive(std::function<void(T&)> callback)
+template <class T> void IterablePool<T>::foreachActive(std::function<void(T&)> callback)
 {
     auto end = pool.begin() + next;
     for (auto i = pool.begin(); i != end; ++i)
@@ -111,7 +110,7 @@ template <class T> void IterablePool<T>::iterateActive(std::function<void(T&)> c
     }
 }
 
-template <class T> void IterablePool<T>::iterateAll(std::function<void(T&)> callback)
+template <class T> void IterablePool<T>::foreach(std::function<void(T&)> callback)
 {
     for (auto& i : pool)
     {

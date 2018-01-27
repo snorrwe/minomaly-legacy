@@ -59,7 +59,7 @@ TEST_F(ObjectPoolTests, CanIterate)
         references.push_back(pool->enable());
     }
     FakeType::calls = 0;
-    pool->iterateActive([](auto& i) { i.update(); });
+    pool->foreachActive([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, 5);
 }
@@ -70,7 +70,7 @@ TEST_F(ObjectPoolTests, CanAccessReferencedItems)
         pool->enable(), pool->enable(), pool->enable(), pool->enable(), pool->enable(),
     };
 
-    pool->iterateActive([](auto& i) { i.update(); });
+    pool->foreachActive([](auto& i) { i.update(); });
     ASSERT_EQ(FakeType::calls, 5);
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
     {
@@ -85,7 +85,7 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
         pool->enable(), pool->enable(), pool->enable(), pool->enable(), pool->enable(),
     };
     myItems[2].disable();
-    pool->iterateActive([](auto& i) { i.update(); });
+    pool->foreachActive([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, 4);
     ASSERT_EQ((*myItems[2]).thisCalls, 0);
@@ -105,7 +105,7 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
         i->disable();
     }
 
-    pool->iterateAll([](auto& i) { i.update(); });
+    pool->foreach([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, poolSize);
     for (auto i = myItems.begin(); i != myItems.end(); ++i)

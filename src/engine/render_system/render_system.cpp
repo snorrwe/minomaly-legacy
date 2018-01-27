@@ -45,7 +45,7 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
 void RenderSystem::update()
 {
     clear();
-    cameras.iterateActive([&](auto& camera) {
+    cameras.foreachActive([&](auto& camera) {
         setViewport(&camera.getViewport());
         auto last = renderComponentRefs.begin() + enabledRenderers;
         for (auto i = renderComponentRefs.begin(); i != last; ++i)

@@ -40,8 +40,8 @@ void Transform::setRotation(RotationData const& value) { localTransform.rotation
 void Transform::updateChildren()
 {
     if (!children) return; // TODO: this shouldn't happen
-    children->iterateActive([&](auto& tr) { tr.updateByParent(*this); });
-    children->iterateActive([&](auto& tr) { tr.updateChildren(); });
+    children->foreachActive([&](auto& tr) { tr.updateByParent(*this); });
+    children->foreachActive([&](auto& tr) { tr.updateChildren(); });
 }
 
 void Transform::updateAsRoot()
