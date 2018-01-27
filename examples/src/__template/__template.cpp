@@ -2,12 +2,6 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<EngineCore> core) : Scene(core)
-{
-    renderer = engine->getRenderer();
-    input = engine->getInput();
-}
-
 Program::~Program()
 {
     for (auto i = subs.begin(); i != subs.end(); ++i)
@@ -18,6 +12,8 @@ Program::~Program()
 
 void Program::start()
 {
+    renderer = engine->getRenderer();
+    input = engine->getInput();
     subs = Subscriptions{input->onKeyDown([&](auto const& e) {
         if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();
     })};

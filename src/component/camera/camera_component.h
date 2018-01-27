@@ -12,11 +12,7 @@ public:
     using CameraRef = Camera::CameraReference;
 
     CameraRef getCamera() { return camera; }
-    void setCamera(CameraRef value)
-    {
-        camera = value;
-        camera->setTransform(gameObject->getTransform());
-    }
+    void setCamera(CameraRef value);
 
 private:
     CameraRef camera;

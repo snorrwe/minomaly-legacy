@@ -15,22 +15,36 @@ install:
   - git submodule init 
   - git submodule update
   
+  # All external dependencies are installed in C:\projects\deps    
+  - mkdir C:\projects\deps    
+  - cd C:\projects\deps   
+    
+  # Install Ninja   
+  - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip"   
+  - appveyor DownloadFile %NINJA_URL% -FileName ninja.zip   
+  - 7z x ninja.zip -oC:\projects\deps\ninja > nul   
+  - set PATH=C:\projects\deps\ninja;%PATH%    
+  - ninja --version
   - cmake --version
+
+  # Setup the path to Clang-cl   
+  - set PATH="C:\Program Files\LLVM\bin";%PATH%   
+  - clang-cl -v
 
 before_build:
   - del "C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0" /F /Q # Hack: Delete unsupported SDK
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-  - cd C:\projects\minomaly
 
 build_script:
+  - cd C:\projects\minomaly
   - mkdir build
   - cd build
-  - cmake .. -G"Visual Studio 15 2017" -Dexamples=OFF
+  - set CC=clang-cl
+  - cmake .. -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl -Dexamples=OFF
   - cmake --build . --config %CONFIGURATION%
-  - cd ..
 
 test_script:
-  - cd bin\%CONFIGURATION%
+  - cd C:\projects\minomaly\bin
     # Run MinoTests
   - MinoTest.exe
 

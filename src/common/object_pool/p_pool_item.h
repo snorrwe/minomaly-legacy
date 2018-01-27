@@ -59,15 +59,14 @@ public:
     ManagedRef(size_t ref, IterablePool<T>* pool) : WeakRef(ref, pool) {}
     ManagedRef(ManagedRef const& mrf) : WeakRef(mrf), refs(mrf.refs)
     {
-        if (refs) ++*refs;
+        if (refs) ++(*refs);
     }
-    ManagedRef(ManagedRef&& mrf) : WeakRef(mrf), refs(std::move(mrf.refs))
-    {
-        if (refs) ++*refs;
-    }
+    ManagedRef(ManagedRef&& mrf) : WeakRef(mrf), refs(std::move(mrf.refs)) {}
     virtual ~ManagedRef()
     {
-        if (refs && --*refs == 0 && WeakRef::pool)
+        if (!refs || !WeakRef::pool) return;
+        --(*refs);
+        if (!*refs)
         {
             WeakRef::disable();
         }
@@ -84,7 +83,6 @@ public:
     ManagedRef& operator=(ManagedRef&& mrf)
     {
         refs = std::move(mrf.refs);
-        if (refs) ++*refs;
         WeakRef::operator=(std::move(mrf));
         return *this;
     }
@@ -94,6 +92,7 @@ public:
          Releases control of the managed object.
          Note: if there are copies of the Reference they will still own the item
      */
+        --*refs;
         refs = nullptr;
         return *this;
     }

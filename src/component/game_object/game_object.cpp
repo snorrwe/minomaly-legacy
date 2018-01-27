@@ -1,5 +1,5 @@
 #include "game_object.h"
-#include "scene.h" // TODO
+#include "application.h" // TODO
 
 using namespace Mino;
 using std::iter_swap;
@@ -8,19 +8,19 @@ GameObject::GameObject(Transform::TransformRef const& parentTransform) : transfo
 {
 }
 
-GameObject::GameObject(Transform::TransformRef const& parentTransform, Scene* scene)
-    : transform(parentTransform), scene(scene)
+GameObject::GameObject(Transform::TransformRef const& parentTransform, Application* application)
+    : transform(parentTransform), application(application)
 {
 }
 
 GameObject::~GameObject()
 {
-    if (scene)
+    if (application)
     {
         for (auto child : children)
         {
             child->parent = nullptr;
-            scene->destroyGameObject(child);
+            application->destroyGameObject(child);
         }
     }
     if (parent)
@@ -79,7 +79,7 @@ void GameObject::addChild(GameObject& go)
 {
     if (std::find(children.begin(), children.end(), &go) == children.end())
     {
-        go.transform = transform->addChild(go.transform);
+        go.transform = transform->addChild(std::move(go.transform));
         children.push_back(&go);
         go.parent = this;
     }
@@ -93,6 +93,6 @@ void GameObject::removeChild(GameObject& go)
         transform->removeChild(go.transform);
         go.parent = nullptr;
         children.erase(it);
-        if (scene) go.transform = scene->getRootTransform();
+        if (application) go.transform = application->getRootTransform();
     }
 }

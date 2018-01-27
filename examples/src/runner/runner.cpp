@@ -2,13 +2,6 @@
 
 using namespace Mino;
 
-Program::Program(std::shared_ptr<EngineCore> core) : Scene(core)
-{
-    renderer = engine->getRenderer();
-    input = engine->getInput();
-    time = engine->getTime();
-}
-
 Program::~Program()
 {
     for (auto i = subs.begin(); i != subs.end(); ++i)
@@ -29,6 +22,9 @@ public:
 
 void Program::start()
 {
+    renderer = engine->getRenderer();
+    input = engine->getInput();
+    time = engine->getTime();
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
     auto bar = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
@@ -49,10 +45,15 @@ void Program::start()
     egg->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
     egg->getTransform()->setPosition({50, 0.0});
 
-    auto childEgg = createGameObject<Child>();
-    egg->addChild(*childEgg);
-    childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
-    childEgg->getTransform()->setPosition({10, 30});
+    auto currentChild = egg;
+    for (auto i = 0; i < 5; ++i)
+    {
+        auto childEgg = createGameObject<Child>();
+        currentChild->addChild(*childEgg);
+        childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
+        childEgg->getTransform()->setPosition({10 * i, 30});
+        currentChild = childEgg;
+    }
 }
 
 void Program::update()

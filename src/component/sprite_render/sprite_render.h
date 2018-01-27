@@ -1,7 +1,7 @@
 #pragma once
+#include "application.h"
 #include "component.h"
 #include "renderer.h"
-#include "scene.h"
 #include "texture.h"
 #include <iostream>
 #include <memory>

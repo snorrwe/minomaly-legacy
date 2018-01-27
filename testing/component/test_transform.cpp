@@ -17,6 +17,15 @@ TEST_F(TransformTests, CanCreateWithoutParent) {}
 
 TEST_F(TransformTests, CanAddChild) { auto child = tr->addChild(); }
 
+TEST_F(TransformTests, CanAddMultipleLayersOfChildren)
+{
+    auto child1 = tr->addChild();
+    auto child2 = child1->addChild();
+    auto child3 = child2->addChild();
+
+    SUCCEED();
+}
+
 TEST_F(TransformTests, RemovingChildReducesTheChildcount)
 {
 

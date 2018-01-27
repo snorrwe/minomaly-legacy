@@ -1,5 +1,5 @@
+#include "application.h"
 #include "component.h"
-#include "scene.h"
 #include "sdl_subsystems.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -17,20 +17,18 @@ public:
     MOCK_CONST_METHOD0(getInput, std::shared_ptr<IInputSystem>());
     MOCK_CONST_METHOD0(getRenderer, std::shared_ptr<IRenderSystem>());
     MOCK_CONST_METHOD0(getAudio, std::shared_ptr<IAudioSystem>());
-    MOCK_CONST_METHOD0(getScene, std::shared_ptr<Scene>());
+    MOCK_CONST_METHOD0(getApplication, std::shared_ptr<Application>());
     MOCK_CONST_METHOD0(getPhysicsSystem, std::shared_ptr<IPhysicsSystem>());
     MOCK_CONST_METHOD0(getTime, std::shared_ptr<ITimeService>());
-    MOCK_METHOD1(setScene, void(std::shared_ptr<Scene> scene));
     MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));
     MOCK_CONST_METHOD1(subsystemStatus,
                        std::vector<SdlStatus>(std::vector<SdlSubSystemType> const&));
     MOCK_METHOD1(setTargetFps, void(float f));
 };
 
-class FakeScene : public Scene
+class FakeScene : public Application
 {
 public:
-    FakeScene(std::shared_ptr<IEngineCore> engine) : Scene(engine) {}
     ~FakeScene() {}
     void update() {}
 };
@@ -38,11 +36,14 @@ public:
 class SceneTests : public ::testing::Test
 {
 public:
-    SceneTests() : scene(std::make_shared<MockEngineCore>()) {}
+    void SetUp()
+    {
+        mockEngineCore = std::make_shared<MockEngineCore>();
+        application.setEngineCore(mockEngineCore.get());
+    }
 
-    void SetUp() {}
-
-    FakeScene scene;
+    FakeScene application = {};
+    std::shared_ptr<MockEngineCore> mockEngineCore = nullptr;
 };
 
 class FakeComponent1 : public Component
@@ -63,14 +64,15 @@ class FakeComponent4 : public Component
 
 TEST_F(SceneTests, CanCreateGameObjectCorrectly)
 {
-    auto go = scene.createGameObject<>();
-    ASSERT_EQ(go->getScene(), &scene);
+    auto go = application.createGameObject<>();
+    ASSERT_EQ(go->getApplication(), &application);
 }
 
 TEST_F(SceneTests, CanCreateGameObjectWithComponents)
 {
     auto gameObject =
-        scene.createGameObject<FakeComponent1, FakeComponent2, FakeComponent3, FakeComponent4>();
+        application
+            .createGameObject<FakeComponent1, FakeComponent2, FakeComponent3, FakeComponent4>();
 
     ASSERT_TRUE(gameObject->getComponent<FakeComponent1>());
     ASSERT_TRUE(gameObject->getComponent<FakeComponent2>());

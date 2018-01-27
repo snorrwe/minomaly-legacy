@@ -2,34 +2,28 @@
 
 using namespace Mino;
 
-ColliderComponent::~ColliderComponent()
-{
-    if (auto phs = physicsSystem.lock(); phs)
-    {
-        phs->remove(this);
-    }
-}
+ColliderComponent::~ColliderComponent() { physicsSystem->remove(this); }
 
 void ColliderComponent::start()
 {
     transform = gameObject->getTransform();
     lastPos = transform->absolute().position;
-    physicsSystem = gameObject->getScene()->getEngineCore()->getPhysicsSystem();
-    world = physicsSystem.lock()->getWorld();
+    physicsSystem = gameObject->getApplication()->getEngineCore()->getPhysicsSystem().get();
+    world = physicsSystem->getWorld().get();
+    physicsSystem->add(this);
     addToWorld();
-    physicsSystem.lock()->add(this);
 }
 
 void ColliderComponent::enable()
 {
     addToWorld();
-    physicsSystem.lock()->add(this);
+    physicsSystem->add(this);
     Component::enable();
 }
 
 void ColliderComponent::disable()
 {
-    physicsSystem.lock()->remove(this);
+    physicsSystem->remove(this);
     Component::disable();
 }
 
@@ -47,11 +41,7 @@ void ColliderComponent::updatePosition()
     lastPos = currentPos;
 }
 
-void ColliderComponent::addToWorld()
-{
-    auto wrld = world.lock();
-    wrld->insert({asBoundingBox().getCenter(), this});
-}
+void ColliderComponent::addToWorld() { world->insert({asBoundingBox().getCenter(), this}); }
 
 Observable<CollisionData>& ColliderComponent::onCollision() { return *onCollisionSubject; }
 
@@ -65,7 +55,7 @@ std::vector<typename ColliderComponent::World::Node> ColliderComponent::checkCol
     auto result = std::vector<World::Node>{};
     result.reserve(5);
     auto box = asBoundingBox();
-    world.lock()->queryRange(box, [&](const auto& i) {
+    world->queryRange(box, [&](const auto& i) {
         if (i.item != this && i.item->asBoundingBox().intersects(box)) result.push_back(i);
     });
     return result;

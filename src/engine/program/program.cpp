@@ -1,21 +1,21 @@
 #pragma once
-#include "scene.h"
+#include "program.h"
 
 using namespace Mino;
 
-Scene::~Scene()
+Program::~Program()
 {
     auto gameObjectsToDelete = GameObjectContainer{std::move(gameObjects)};
     gameObjects = std::move(GameObjectContainer{});
 }
 
-GameObject* Scene::createEmptyGameObject()
+GameObject* Program::createEmptyGameObject()
 {
     gameObjects.emplace_back(std::make_unique<GameObject>(rootTransform->addChild(), this));
     return gameObjects.back().get();
 }
 
-void Scene::destroyGameObject(GameObject* go)
+void Program::destroyGameObject(GameObject* go)
 {
     auto it = std::find_if(gameObjects.begin(), gameObjects.end(),
                            [&](auto& g) { return g.get() == go; });
@@ -25,7 +25,7 @@ void Scene::destroyGameObject(GameObject* go)
     }
 }
 
-void Scene::updateGameObjects()
+void Program::updateGameObjects()
 {
     for (auto& i : gameObjects)
     {
@@ -34,9 +34,9 @@ void Scene::updateGameObjects()
     rootTransform->updateAsRoot();
 }
 
-template <> void Scene::addComponents<>(GameObject& go) {}
+template <> void Program::addComponents<>(GameObject& go) {}
 
-void Scene::initMainCamera(IRenderSystem const& renderer, float screenHeight)
+void Program::initMainCamera(IRenderSystem const& renderer, float screenHeight)
 {
     auto camera = createGameObject<>({0.0, screenHeight});
     camera->addComponent<CameraComponent>()->setCamera(renderer.getMainCamera());
