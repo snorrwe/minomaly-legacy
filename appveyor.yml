@@ -34,17 +34,16 @@ install:
 before_build:
   - del "C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0" /F /Q # Hack: Delete unsupported SDK
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-  - cd C:\projects\minomaly
 
 build_script:
+  - cd C:\projects\minomaly
   - mkdir build
   - cd build
-  - cmake .. -GNinja -Dexamples=OFF -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
+  - cmake .. -GNinja -DCMAKE_CC_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl -Dexamples=OFF
   - cmake --build . --config %CONFIGURATION%
-  - cd ..
 
 test_script:
-  - cd bin
+  - cd C:\projects\minomaly\bin
     # Run MinoTests
   - MinoTest.exe
 
