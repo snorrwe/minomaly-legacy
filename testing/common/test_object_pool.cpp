@@ -36,7 +36,7 @@ public:
 
     void someCallbackExpectingFake(FakeType const& f) {}
 
-    Pool pool = Pool{};
+    std::unique_ptr<Pool> pool = std::make_unique<Pool>();
 };
 
 TEST_F(ObjectPoolTests, CanCreate) {}
@@ -45,21 +45,21 @@ TEST_F(ObjectPoolTests, CanCreateItems)
 {
     for (int i = 0; i < 5; ++i)
     {
-        pool.enable();
+        pool->enable();
     }
 }
 
-TEST_F(ObjectPoolTests, CanCreateItem) { auto ref = pool.enable(); }
+TEST_F(ObjectPoolTests, CanCreateItem) { auto ref = pool->enable(); }
 
 TEST_F(ObjectPoolTests, CanIterate)
 {
     std::vector<Pool::Reference> references;
     for (int i = 0; i < 5; ++i)
     {
-        references.push_back(pool.enable());
+        references.push_back(pool->enable());
     }
     FakeType::calls = 0;
-    pool.iterateActive([](auto& i) { i.update(); });
+    pool->iterateActive([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, 5);
 }
@@ -67,10 +67,10 @@ TEST_F(ObjectPoolTests, CanIterate)
 TEST_F(ObjectPoolTests, CanAccessReferencedItems)
 {
     std::vector<Pool::Reference> myItems{
-        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
+        pool->enable(), pool->enable(), pool->enable(), pool->enable(), pool->enable(),
     };
 
-    pool.iterateActive([](auto& i) { i.update(); });
+    pool->iterateActive([](auto& i) { i.update(); });
     ASSERT_EQ(FakeType::calls, 5);
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
     {
@@ -82,10 +82,10 @@ TEST_F(ObjectPoolTests, Method_iterateActive_DoesntIterateOnInactive)
 {
 
     std::vector<Pool::Reference> myItems{
-        pool.enable(), pool.enable(), pool.enable(), pool.enable(), pool.enable(),
+        pool->enable(), pool->enable(), pool->enable(), pool->enable(), pool->enable(),
     };
     myItems[2].disable();
-    pool.iterateActive([](auto& i) { i.update(); });
+    pool->iterateActive([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, 4);
     ASSERT_EQ((*myItems[2]).thisCalls, 0);
@@ -97,7 +97,7 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
     std::vector<Pool::Reference> myItems{};
     for (int i = 0; i < poolSize; ++i)
     {
-        myItems.push_back(pool.enable());
+        myItems.push_back(pool->enable());
     }
 
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
@@ -105,7 +105,7 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
         i->disable();
     }
 
-    pool.iterateAll([](auto& i) { i.update(); });
+    pool->iterateAll([](auto& i) { i.update(); });
 
     ASSERT_EQ(FakeType::calls, poolSize);
     for (auto i = myItems.begin(); i != myItems.end(); ++i)
@@ -116,13 +116,13 @@ TEST_F(ObjectPoolTests, Method_iterate_iteratesOnInactiveToo)
 
 TEST_F(ObjectPoolTests, ReferencesShouldConvertToUnderlyingTypeImplicitly)
 {
-    auto ref = pool.enable();
+    auto ref = pool->enable();
     someCallbackExpectingFake(*ref);
 }
 
 TEST_F(ObjectPoolTests, CanReenableAlreadyUsedItem)
 {
-    auto ref1 = pool.enable();
+    auto ref1 = pool->enable();
 
     ref1.disable();
     ref1.enable();
