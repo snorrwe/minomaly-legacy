@@ -101,7 +101,7 @@ private:
     bool active = false;
     TimePoint lastUpdate;
     TimePoint lastFixedUpdate;
-    Milli targetMsPerUpdate = Milli{OneSecInMs / 60.0};
+    Milli targetMsPerUpdate = Milli{OneSecInMs / 128.0};
 
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
