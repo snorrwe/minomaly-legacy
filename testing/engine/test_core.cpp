@@ -85,10 +85,10 @@ class MockPhysics : public IPhysicsSystem
 {
 public:
     MOCK_METHOD0(update, void());
-    MOCK_METHOD0(getWorld, std::shared_ptr<Quadtree<Collider>>());
     MOCK_METHOD1(add, void(Collider*));
     MOCK_METHOD1(remove, void(Collider*));
     MOCK_METHOD1(setWorldBox, void(BoundingBox const&));
+    MOCK_METHOD0(getWorld, Quadtree<Collider>*());
 };
 
 class FakeProgram : public Application
@@ -109,7 +109,7 @@ public:
 
     void reset(size_t quitAfter = 1)
     {
-         updates = 0;
+        updates = 0;
         starts = 0;
         this->quitAfter = quitAfter;
     }
