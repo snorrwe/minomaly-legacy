@@ -12,7 +12,26 @@ enum class State
 
 class EggComponent : public Mino::Component
 {
+    using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
+    using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
+
+    Mino::PhysicsComponent* body;
+    std::shared_ptr<Mino::ITimeService> time;
+    Mino::Transform::TransformRef transform;
+    Mino::BoxColliderComponent* bottomCollider;
+    Animations animations = {};
+    MediaContainer images = {};
+
+    Mino::Vector2<float> velocity = {0, 0};
+    const float gravity = 50.0;
+    State state = State::Grounded;
+    float airTime = 1000.0;
+
 public:
+    std::shared_ptr<Mino::IInputSystem> input;
+    int bottom;
+    float height;
+
     virtual void start()
     {
         time = Mino::Services::get<Mino::ITimeService>();
@@ -27,6 +46,30 @@ public:
         bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
         bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
+
+        auto renderer = gameObject->getApplication()->getEngineCore()->getRenderer();
+        auto eggPic = renderer->loadTexture("assets/runner/egg.png");
+        auto greenEggPic = renderer->loadTexture("assets/runner/green_egg.png");
+        images.push_back(eggPic);
+        images.push_back(greenEggPic);
+
+        animations = {
+            Mino::SpriteAnimationData::Animation{
+                {
+                    /** Frames:
+                     *   animation transformations (use default),
+                     *   target transform (this transform),
+                     *   duration in seconds,
+                     *   texture
+                     */
+                    {{}, transform, 0.5f, eggPic.get()},      // Frame 0
+                    {{}, transform, 0.5f, greenEggPic.get()}, // Frame 1
+                },
+                Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
+            },
+        };
+
+        gameObject->getComponent<Mino::SpriteAnimatorComponent>()->startAnimation(animations[0]);
     }
 
     virtual void update()
@@ -88,10 +131,6 @@ public:
         body->setVelocity(velocity);
     }
 
-    std::shared_ptr<Mino::IInputSystem> input;
-    int bottom;
-    float height;
-
 private:
     void reportState()
     {
@@ -108,14 +147,4 @@ private:
             break;
         }
     }
-
-    Mino::PhysicsComponent* body;
-    std::shared_ptr<Mino::ITimeService> time;
-    Mino::Transform::TransformRef transform;
-    Mino::BoxColliderComponent* bottomCollider;
-
-    Mino::Vector2<float> velocity = {0, 0};
-    const float gravity = 50.0;
-    State state = State::Grounded;
-    float airTime = 1000.0;
 };

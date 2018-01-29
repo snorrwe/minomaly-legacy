@@ -36,18 +36,17 @@ void Program::start()
     barCollider->set(30, 120);
     barCollider->setLayers(0x1 | 0x2);
 
-    auto egg = createGameObject<SpriteRendererComponent, BoxColliderComponent, PhysicsComponent,
-                                EggComponent>({0, 0});
+    auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
+                                BoxColliderComponent, PhysicsComponent, EggComponent>({0, 0});
     auto eggPic = renderer->loadTexture("assets/runner/egg.png");
     images.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
-    egg->getComponent<SpriteRendererComponent>()->setTexture(eggPic.get());
     egg->getTransform()->setPosition({50, 0.0});
 
     auto currentChild = egg;
-    for (auto i = 0; i < 5; ++i)
+    for (auto i = 0; i < 0 /*5*/; ++i)
     {
         auto childEgg = createGameObject<Child>();
         currentChild->addChild(*childEgg);

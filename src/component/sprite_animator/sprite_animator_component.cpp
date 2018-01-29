@@ -19,23 +19,25 @@ void SpriteAnimatorComponent::update()
     currentRunTime += time->deltaTime();
     if (currentRunTime < frame.duration) return;
 
-    auto nextFrame = currentFrame + 1;
-    if (nextFrame < current->frames.size())
+    currentRunTime = 0.0f;
+    ++currentFrame;
+    if (currentFrame >= current->frames.size())
     {
-        applyFrame(current->frames[nextFrame]);
-        return;
+        if (current->flags & Animation::AnimationFlags::Loop)
+        {
+            reset();
+        }
+        else if (auto nextAnimation = current->next(); nextAnimation)
+        {
+            startAnimation(*nextAnimation);
+            return;
+        }
+        else
+        {
+            reset();
+        }
     }
-
-    if (current->flags | Animation::AnimationFlags::Loop)
-    {
-        currentFrame = 0;
-        currentRunTime = 0.0f;
-    }
-    else
-    {
-        auto nextAnimation = current->next();
-        startAnimation(*nextAnimation);
-    }
+    applyFrame(current->frames[currentFrame]);
 }
 
 void SpriteAnimatorComponent::startAnimation(Animation& animation)
@@ -43,9 +45,12 @@ void SpriteAnimatorComponent::startAnimation(Animation& animation)
     current = &animation;
     currentFrame = 0;
     currentRunTime = 0.0f;
+    applyFrame(animation.frames[0]);
 }
 
 void SpriteAnimatorComponent::applyFrame(Frame& frame)
 { /*TODO: transform*/
     renderer->setTexture(frame.texture);
 }
+
+void SpriteAnimatorComponent::reset() { currentFrame = 0; }

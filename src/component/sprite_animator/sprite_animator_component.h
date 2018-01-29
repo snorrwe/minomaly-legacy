@@ -16,10 +16,10 @@ namespace SpriteAnimationData
 
 struct Frame
 {
-    Transform::TransformData transform;
+    Transform::TransformData transform = {};
     Transform::TransformRef affected = nullptr;
-    float duration;
-    Texture* texture;
+    float duration = 0.0;
+    Texture* texture = nullptr;
 };
 
 struct Animation
@@ -28,9 +28,9 @@ struct Animation
     {
         Loop = 1,
     };
-    std::vector<Frame> frames;
-    std::function<Animation*()> next = []() { return nullptr; };
+    std::vector<Frame> frames = {};
     uint8_t flags = 0;
+    std::function<Animation*()> next = []() { return nullptr; };
 };
 
 } // namespace SpriteAnimationData
@@ -53,6 +53,7 @@ public:
 
 private:
     void applyFrame(Frame& frame);
+    void reset();
 };
 
 } // namespace Mino
