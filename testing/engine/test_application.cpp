@@ -19,6 +19,7 @@ public:
     MOCK_CONST_METHOD0(getAudio, IAudioSystem*());
     MOCK_CONST_METHOD0(getApplication, Application*());
     MOCK_CONST_METHOD0(getPhysicsSystem, IPhysicsSystem*());
+    MOCK_CONST_METHOD0(getAssets, IAssetSystem*());
     MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));
     MOCK_CONST_METHOD1(subsystemStatus,
                        std::vector<SdlStatus>(std::vector<SdlSubSystemType> const&));

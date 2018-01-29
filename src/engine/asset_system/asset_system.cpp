@@ -2,10 +2,14 @@
 
 using namespace Mino;
 
-std::shared_ptr<Texture> AssetSystem::loadTexture(std::string const& name, bool flag,
-                                                  Color const& colorKey)
+std::shared_ptr<AssetSystem> AssetSystem::create(IRenderSystem* renderer)
 {
-    return Texture::loadTexture(name, *renderer, flag, colorKey);
+    return std::make_shared<AssetSystem>(renderer);
+}
+
+std::shared_ptr<Texture> AssetSystem::loadTexture(std::string const& name)
+{
+    return Texture::loadTexture(name, *renderer);
 }
 
 std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font const& font,
@@ -15,8 +19,7 @@ std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font con
 }
 
 typename AssetSystem::TSpriteSheet AssetSystem::loadSpritesheet(std::string const& name,
-                                                                std::vector<SDL_Rect> const& rects,
-                                                                bool flag, Color const& colorKey)
+                                                                std::vector<SDL_Rect> const& rects)
 {
-    return Texture::loadSpritesheet(name, *renderer, rects, flag, colorKey);
+    return Texture::loadSpritesheet(name, *renderer, rects);
 }

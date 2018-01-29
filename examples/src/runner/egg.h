@@ -47,12 +47,11 @@ public:
         bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
 
-        auto renderer = gameObject->getApplication()->getEngineCore()->getRenderer();
-        auto eggPic = renderer->loadTexture("assets/runner/egg.png");
-        auto greenEggPic = renderer->loadTexture("assets/runner/green_egg.png");
-        images.push_back(eggPic);
-        images.push_back(greenEggPic);
-
+        images = gameObject->getApplication()->getEngineCore()->getAssets()->loadSpritesheet(
+            "assets/runner/egg.png", {
+                                         {0, 0, 30, 30},
+                                         {30, 0, 30, 30},
+                                     });
         animations = {
             Mino::SpriteAnimationData::Animation{
                 {
@@ -62,8 +61,8 @@ public:
                      *   duration in seconds,
                      *   texture
                      */
-                    {{}, transform, 0.5f, eggPic.get()},      // Frame 0
-                    {{}, transform, 0.5f, greenEggPic.get()}, // Frame 1
+                    {{}, transform, 0.5f, images[0].get()}, // Frame 0
+                    {{}, transform, 0.5f, images[1].get()}, // Frame 1
                 },
                 Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
             },

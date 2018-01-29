@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "application.h"
+#include "asset_system.h"
 #include "audio_system.h"
 #include "camera_component.h"
 #include "input.h"
@@ -27,6 +28,7 @@ class IWindowSystem;
 class IRenderSystem;
 class IPhysicsSystem;
 class Application;
+class IAssetSystem;
 
 class IEngineCore
 {
@@ -46,6 +48,7 @@ public:
     virtual IAudioSystem* getAudio() const = 0;
     virtual Application* getApplication() const = 0;
     virtual IPhysicsSystem* getPhysicsSystem() const = 0;
+    virtual IAssetSystem* getAssets() const = 0;
 
     virtual void setTargetFps(float f) = 0;
 
@@ -63,7 +66,7 @@ public:
     EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
                std::shared_ptr<IWindowSystem> window, std::shared_ptr<Application> app,
                std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audioSystem,
-               std::shared_ptr<IPhysicsSystem> physicsSystem,
+               std::shared_ptr<IPhysicsSystem> physicsSystem, std::shared_ptr<IAssetSystem> assets,
                std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time);
     EngineCore(EngineCore const&) = delete;
     EngineCore(EngineCore&&) = delete;
@@ -81,6 +84,7 @@ public:
     virtual IAudioSystem* getAudio() const { return audioSystem.get(); }
     virtual Application* getApplication() const { return application.get(); }
     virtual IPhysicsSystem* getPhysicsSystem() const { return physicsSystem.get(); }
+    virtual IAssetSystem* getAssets() const { return assets.get(); }
 
     virtual void setTargetFps(float f);
 
@@ -108,6 +112,7 @@ private:
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
     std::shared_ptr<IPhysicsSystem> physicsSystem;
+    std::shared_ptr<IAssetSystem> assets;
     std::shared_ptr<ILogService> logService;
     std::shared_ptr<ITimeService> time;
     ISubscription sub;
