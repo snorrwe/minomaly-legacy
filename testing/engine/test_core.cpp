@@ -99,7 +99,7 @@ public:
     MOCK_METHOD1(loadTexture, std::shared_ptr<Texture>(std::string const& name));
     MOCK_METHOD3(loadText,
                  std::shared_ptr<Texture>(std::string const& text, Font const& font, Color const&));
-    MOCK_METHOD2(loadSpritesheet,
+    MOCK_METHOD2(loadSpriteSheet,
                  TSpriteSheet(std::string const& name, std::vector<SDL_Rect> const& rects));
 };
 

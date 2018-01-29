@@ -47,7 +47,7 @@ public:
         bottomCollider->set(28, 32, {1.0f, -2.0f});
         bottomCollider->setLayers(0x2);
 
-        images = gameObject->getApplication()->getEngineCore()->getAssets()->loadSpritesheet(
+        images = gameObject->getApplication()->getEngineCore()->getAssets()->loadSpriteSheet(
             "assets/runner/egg.png", {
                                          {0, 0, 30, 30},
                                          {30, 0, 30, 30},

@@ -18,8 +18,8 @@ std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font con
     return Texture::loadText(text, *renderer, font, color);
 }
 
-typename AssetSystem::TSpriteSheet AssetSystem::loadSpritesheet(std::string const& name,
+typename AssetSystem::TSpriteSheet AssetSystem::loadSpriteSheet(std::string const& name,
                                                                 std::vector<SDL_Rect> const& rects)
 {
-    return Texture::loadSpritesheet(name, *renderer, rects);
+    return Texture::loadSpriteSheet(name, *renderer, rects);
 }
