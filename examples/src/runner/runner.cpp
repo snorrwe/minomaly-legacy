@@ -24,7 +24,7 @@ void Program::start()
 {
     renderer = engine->getRenderer();
     input = engine->getInput();
-    time = engine->getTime();
+    time = Services::get<ITimeService>().get();
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
     auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(

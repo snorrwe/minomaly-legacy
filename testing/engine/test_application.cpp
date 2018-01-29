@@ -13,13 +13,12 @@ class MockEngineCore : public IEngineCore
 public:
     MOCK_METHOD0(run, void());
     MOCK_METHOD0(stop, void());
-    MOCK_CONST_METHOD0(getWindow, std::shared_ptr<IWindowSystem>());
-    MOCK_CONST_METHOD0(getInput, std::shared_ptr<IInputSystem>());
-    MOCK_CONST_METHOD0(getRenderer, std::shared_ptr<IRenderSystem>());
-    MOCK_CONST_METHOD0(getAudio, std::shared_ptr<IAudioSystem>());
-    MOCK_CONST_METHOD0(getApplication, std::shared_ptr<Application>());
-    MOCK_CONST_METHOD0(getPhysicsSystem, std::shared_ptr<IPhysicsSystem>());
-    MOCK_CONST_METHOD0(getTime, std::shared_ptr<ITimeService>());
+    MOCK_CONST_METHOD0(getWindow, IWindowSystem*());
+    MOCK_CONST_METHOD0(getInput, IInputSystem*());
+    MOCK_CONST_METHOD0(getRenderer, IRenderSystem*());
+    MOCK_CONST_METHOD0(getAudio, IAudioSystem*());
+    MOCK_CONST_METHOD0(getApplication, Application*());
+    MOCK_CONST_METHOD0(getPhysicsSystem, IPhysicsSystem*());
     MOCK_CONST_METHOD1(subsystemStatus, SdlStatus(SdlSubSystemType));
     MOCK_CONST_METHOD1(subsystemStatus,
                        std::vector<SdlStatus>(std::vector<SdlSubSystemType> const&));

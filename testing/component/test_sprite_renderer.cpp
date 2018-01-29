@@ -22,12 +22,12 @@ public:
 class SpriteRendererTests : public ::testing::Test
 {
 public:
+protected:
+    std::shared_ptr<MockRenderSystem> system = std::make_shared<MockRenderSystem>();
 };
 
 TEST_F(SpriteRendererTests, CanBeCreatedByRenderSystem)
 {
-    auto system = std::make_shared<MockRenderSystem>();
-
     auto result = system->createRenderer<SpriteRendererComponent>();
 
     ASSERT_TRUE(result);

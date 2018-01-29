@@ -16,7 +16,7 @@ class EggComponent : public Mino::Component
     using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
 
     Mino::PhysicsComponent* body;
-    std::shared_ptr<Mino::ITimeService> time;
+    Mino::ITimeService* time;
     Mino::Transform::TransformRef transform;
     Mino::BoxColliderComponent* bottomCollider;
     Animations animations = {};
@@ -28,13 +28,13 @@ class EggComponent : public Mino::Component
     float airTime = 1000.0;
 
 public:
-    std::shared_ptr<Mino::IInputSystem> input;
+    Mino::IInputSystem* input;
     int bottom;
     float height;
 
     virtual void start()
     {
-        time = Mino::Services::get<Mino::ITimeService>();
+        time = Mino::Services::get<Mino::ITimeService>().get();
         transform = gameObject->getTransform();
         body = gameObject->getComponent<Mino::PhysicsComponent>();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();

@@ -40,13 +40,12 @@ public:
     virtual void run() = 0;
     virtual void stop() = 0;
 
-    virtual std::shared_ptr<IWindowSystem> getWindow() const = 0;
-    virtual std::shared_ptr<IInputSystem> getInput() const = 0;
-    virtual std::shared_ptr<IRenderSystem> getRenderer() const = 0;
-    virtual std::shared_ptr<IAudioSystem> getAudio() const = 0;
-    virtual std::shared_ptr<Application> getApplication() const = 0;
-    virtual std::shared_ptr<ITimeService> getTime() const = 0;
-    virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const = 0;
+    virtual IWindowSystem* getWindow() const = 0;
+    virtual IInputSystem* getInput() const = 0;
+    virtual IRenderSystem* getRenderer() const = 0;
+    virtual IAudioSystem* getAudio() const = 0;
+    virtual Application* getApplication() const = 0;
+    virtual IPhysicsSystem* getPhysicsSystem() const = 0;
 
     virtual void setTargetFps(float f) = 0;
 
@@ -76,13 +75,12 @@ public:
     virtual void run();
     virtual void stop();
 
-    virtual std::shared_ptr<IWindowSystem> getWindow() const { return window; }
-    virtual std::shared_ptr<IInputSystem> getInput() const { return input; }
-    virtual std::shared_ptr<IRenderSystem> getRenderer() const { return renderer; }
-    virtual std::shared_ptr<IAudioSystem> getAudio() const { return audioSystem; }
-    virtual std::shared_ptr<ITimeService> getTime() const { return time; };
-    virtual std::shared_ptr<Application> getApplication() const { return application; }
-    virtual std::shared_ptr<IPhysicsSystem> getPhysicsSystem() const { return physicsSystem; }
+    virtual IWindowSystem* getWindow() const { return window.get(); }
+    virtual IInputSystem* getInput() const { return input.get(); }
+    virtual IRenderSystem* getRenderer() const { return renderer.get(); }
+    virtual IAudioSystem* getAudio() const { return audioSystem.get(); }
+    virtual Application* getApplication() const { return application.get(); }
+    virtual IPhysicsSystem* getPhysicsSystem() const { return physicsSystem.get(); }
 
     virtual void setTargetFps(float f);
 

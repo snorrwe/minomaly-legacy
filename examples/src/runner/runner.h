@@ -17,9 +17,9 @@ class Program : public Mino::Application
     using Subscriptions = std::array<Mino::ISubscription, 1>;
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
 
-    std::shared_ptr<Mino::IInputSystem> input;
-    std::shared_ptr<Mino::IRenderSystem> renderer;
-    std::shared_ptr<Mino::ITimeService> time;
+    Mino::IInputSystem* input;
+    Mino::IRenderSystem* renderer;
+    Mino::ITimeService* time;
     Subscriptions subs;
     MediaContainer images;
 
@@ -28,6 +28,4 @@ public:
 
     virtual void update();
     virtual void start();
-
-private:
 };

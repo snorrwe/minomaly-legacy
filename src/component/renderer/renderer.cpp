@@ -4,20 +4,17 @@ using namespace Mino;
 
 void RenderComponent::enable()
 {
-    renderSystem.lock()->enableRenderer(this);
+    renderSystem->enableRenderer(this);
     Component::enable();
 }
 
 void RenderComponent::disable()
 {
-    renderSystem.lock()->disableRenderer(this);
+    renderSystem->disableRenderer(this);
     Component::disable();
 }
 
 RenderComponent::~RenderComponent()
 {
-    if (auto rendersys = renderSystem.lock(); rendersys)
-    {
-        rendersys->removeRenderer(this);
-    }
+    if (renderSystem) renderSystem->removeRenderer(this);
 }
