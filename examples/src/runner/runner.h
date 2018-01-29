@@ -18,7 +18,7 @@ public:
     using Subscriptions = std::array<Mino::ISubscription, 1>;
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
 
-    ~Program();
+    virtual ~Program();
 
     virtual void update();
     virtual void start();

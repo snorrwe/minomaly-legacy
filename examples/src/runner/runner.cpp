@@ -27,22 +27,23 @@ void Program::start()
     time = engine->getTime();
     auto renderer = engine->getRenderer();
     subs = Subscriptions{};
-    auto bar = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
+    auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(
         {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
-    bar->getComponent<SpriteRenderComponent>()->setTexture(
-        renderer->loadTexture("assets/runner/bar.png"));
+    images.push_back(renderer->loadTexture("assets/runner/bar.png"));
+    bar->getComponent<SpriteRendererComponent>()->setTexture(images.back().get());
     auto barCollider = bar->getComponent<BoxColliderComponent>();
     barCollider->set(30, 120);
     barCollider->setLayers(0x1 | 0x2);
 
-    auto egg = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
+    auto egg = createGameObject<SpriteRendererComponent, BoxColliderComponent, PhysicsComponent,
                                 EggComponent>({0, 0});
     auto eggPic = renderer->loadTexture("assets/runner/egg.png");
+    images.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
-    egg->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
+    egg->getComponent<SpriteRendererComponent>()->setTexture(eggPic.get());
     egg->getTransform()->setPosition({50, 0.0});
 
     auto currentChild = egg;
@@ -50,7 +51,7 @@ void Program::start()
     {
         auto childEgg = createGameObject<Child>();
         currentChild->addChild(*childEgg);
-        childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
+        childEgg->addComponent<SpriteRendererComponent>()->setTexture(eggPic.get());
         childEgg->getTransform()->setPosition({10 * i, 30});
         currentChild = childEgg;
     }
