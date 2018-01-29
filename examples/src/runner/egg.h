@@ -56,11 +56,12 @@ public:
             Mino::SpriteAnimationData::Animation{
                 {
                     /** Frames:
-                     *   animation transformations (use default),
-                     *   target transform (this transform),
-                     *   duration in seconds,
-                     *   texture
+                     *   (1) animation transformations (use default),
+                     *   (2) target transform (this transform),
+                     *   (3) duration in seconds,
+                     *   (4) texture
                      */
+                    /*(1) (2)       (3)     (4)*/
                     {{}, transform, 0.5f, images[0].get()}, // Frame 0
                     {{}, transform, 0.5f, images[1].get()}, // Frame 1
                 },
