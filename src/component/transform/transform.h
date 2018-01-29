@@ -71,7 +71,7 @@ protected:
     std::unique_ptr<ChildrenContainer> children = std::make_unique<ChildrenContainer>();
 
     TransformData localTransform = {};
-    TransformData absoluteTransform = {};
+    TransformData absoluteTransform = {}; // TODO: replace absoluteTransform with a Matrix
 
 private:
     void updateByParent(Transform const& parent);

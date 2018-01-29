@@ -37,7 +37,7 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
 void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
                           RotationData const& rotation)
 {
-    auto center = static_cast<SDL_Point>(rotation.center);
+    SDL_Point center{rotation.center.x(), rotation.center.y()};
     SDL_RenderCopyEx(renderer, texture.getRaw(), srcrect, dstrect, rotation.angle, &center,
                      rotation.flip);
 }

@@ -1,32 +1,14 @@
 #pragma once
 #include "SDL.h"
+#include "vector2.h"
 
 namespace Mino::RenderData
 {
-struct Vector2
-{
-    Vector2() = default;
-    Vector2(int x, int y) : x(x), y(y) {}
-    Vector2(Vector2 const&) = default;
-    Vector2(Vector2&&) = default;
-
-    Vector2& operator=(Vector2 const&) = default;
-    Vector2& operator=(Vector2&&) = default;
-
-    operator SDL_Point() const
-    {
-        auto result = SDL_Point();
-        result.x = x;
-        result.y = y;
-        return result;
-    }
-
-    int x = 0;
-    int y = 0;
-};
+using Vector2 = Vector2<int>;
 
 struct RotationData
 {
+
     RotationData() = default;
     RotationData(float angle, SDL_RendererFlip flip, Vector2 center)
         : angle(angle), flip(flip), center(center)
@@ -40,6 +22,16 @@ struct RotationData
 
     float angle = 0.0;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    Vector2 center = Vector2();
+    Vector2 center = {};
+
+    RotationData operator+(RotationData const& rd) const
+    {
+        auto result = RotationData{};
+        result.angle = angle + rd.angle;
+        result.center = center + rd.center;
+        result.flip = static_cast<SDL_RendererFlip>(flip | rd.flip);
+        return result;
+    }
 };
+
 } // namespace Mino::RenderData
