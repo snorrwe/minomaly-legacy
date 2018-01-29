@@ -21,10 +21,11 @@ public:
     virtual ~IPhysicsSystem() {}
 
     virtual void update() = 0;
-    virtual std::shared_ptr<World> getWorld() = 0;
     virtual void add(Collider*) = 0;
     virtual void remove(Collider*) = 0;
     virtual void setWorldBox(BoundingBox const& box) = 0;
+
+    virtual World* getWorld() = 0;
 };
 
 class PhysicsSystem : public IPhysicsSystem
@@ -46,11 +47,11 @@ public:
     virtual void remove(Collider*);
     virtual void setWorldBox(BoundingBox const& box);
 
-    virtual std::shared_ptr<World> getWorld() { return world; }
+    virtual World* getWorld() { return world.get(); }
 
 protected:
-    std::shared_ptr<World> world =
-        std::make_shared<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr, WORLD_CAPACITY);
+    std::unique_ptr<World> world =
+        std::make_unique<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr, WORLD_CAPACITY);
     std::vector<Collider*> colliders = {};
     std::shared_ptr<WorkService> workService = nullptr;
 };
