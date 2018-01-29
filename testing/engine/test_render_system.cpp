@@ -16,7 +16,7 @@ public:
     MOCK_METHOD0(start, void());
     MOCK_METHOD0(update, void());
 
-    void setRenderSystem(std::weak_ptr<IRenderSystem> r) { renderSystem = r; }
+    void setRenderSystem(IRenderSystem* r) { renderSystem = r; }
 };
 
 class RenderSystemTests : public ::testing::Test
@@ -28,10 +28,15 @@ public:
         for (int i = 0; i < 5; ++i)
         {
             mockRenderers.push_back(renderer->createRenderer<MockRenderComponent>());
+            mockRenderers.back()->setRenderSystem(renderer.get());
         }
     }
 
-    void TearDown() { renderer = nullptr; }
+    void TearDown()
+    {
+        mockRenderers.clear();
+        renderer = nullptr;
+    }
 
 protected:
     std::shared_ptr<RenderSystem> renderer;

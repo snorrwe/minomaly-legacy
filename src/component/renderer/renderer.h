@@ -25,7 +25,7 @@ public:
     virtual void disable();
 
 protected:
-    std::weak_ptr<IRenderSystem> renderSystem;
+    IRenderSystem* renderSystem;
 };
 
 template <typename TRender> std::unique_ptr<TRender> RenderComponent::create(GameObject* gameObject)

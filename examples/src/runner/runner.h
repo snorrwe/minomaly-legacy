@@ -13,20 +13,19 @@ const size_t SCREEN_HEIGHT = 480;
 
 class Program : public Mino::Application
 {
-public:
     using RotationData = Mino::RenderData::RotationData;
     using Subscriptions = std::array<Mino::ISubscription, 1>;
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
 
-    ~Program();
+    Mino::IInputSystem* input;
+    Mino::IRenderSystem* renderer;
+    Mino::ITimeService* time;
+    Subscriptions subs;
+    MediaContainer images;
+
+public:
+    virtual ~Program();
 
     virtual void update();
     virtual void start();
-
-private:
-    std::shared_ptr<Mino::IInputSystem> input;
-    std::shared_ptr<Mino::IRenderSystem> renderer;
-    std::shared_ptr<Mino::ITimeService> time;
-    Subscriptions subs;
-    MediaContainer images;
 };

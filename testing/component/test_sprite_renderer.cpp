@@ -1,5 +1,5 @@
 #include "render_system.h"
-#include "sprite_render.h"
+#include "sprite_renderer.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -22,13 +22,13 @@ public:
 class SpriteRendererTests : public ::testing::Test
 {
 public:
+protected:
+    std::shared_ptr<MockRenderSystem> system = std::make_shared<MockRenderSystem>();
 };
 
 TEST_F(SpriteRendererTests, CanBeCreatedByRenderSystem)
 {
-    auto system = std::make_shared<MockRenderSystem>();
-
-    auto result = system->createRenderer<SpriteRenderComponent>();
+    auto result = system->createRenderer<SpriteRendererComponent>();
 
     ASSERT_TRUE(result);
 }

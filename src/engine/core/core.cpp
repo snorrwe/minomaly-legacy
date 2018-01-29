@@ -7,6 +7,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<Application> app, std::shared_ptr<IRenderSystem> renderer,
                        std::shared_ptr<IAudioSystem> audio,
                        std::shared_ptr<IPhysicsSystem> physicsSystem,
+                       std::shared_ptr<IAssetSystem> assets,
                        std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
     : subsystems(subsystems),
       input(input),
@@ -15,6 +16,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
       renderer(renderer),
       audioSystem(audio),
       physicsSystem(physicsSystem),
+      assets(assets),
       logService(logService),
       time(time)
 {
@@ -105,7 +107,8 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t
         SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
     auto physics = PhysicsSystem::create();
+    auto assets = AssetSystem::create(renderer.get());
 
     return std::make_shared<EngineCore>(subsystems, inp, window, app, renderer, audio, physics,
-                                        logService, time);
+                                        assets, logService, time);
 }

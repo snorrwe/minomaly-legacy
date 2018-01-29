@@ -46,7 +46,7 @@ std::shared_ptr<Texture> Texture::fromSurface(std::shared_ptr<Surface> surface,
     return result;
 }
 
-Texture::TSpriteSheet Texture::loadSpritesheet(std::string const& name, IRenderSystem& renderer,
+Texture::TSpriteSheet Texture::loadSpriteSheet(std::string const& name, IRenderSystem& renderer,
                                                std::vector<SDL_Rect> const& rects, bool flag,
                                                Color const& colorKey)
 {
@@ -76,7 +76,7 @@ void Texture::render(Vector2 const& pos) const
 void Texture::render(Vector2 const& pos,
                      std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)> renderfn) const
 {
-    SDL_Rect renderQuad = {pos.x, pos.y, width, height};
+    SDL_Rect renderQuad = {pos.x(), pos.y(), width, height};
     renderfn(*this, srcrect.get(), &renderQuad);
 }
 

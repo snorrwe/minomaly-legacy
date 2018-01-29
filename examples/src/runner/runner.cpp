@@ -22,35 +22,34 @@ public:
 
 void Program::start()
 {
-    renderer = engine->getRenderer();
     input = engine->getInput();
-    time = engine->getTime();
-    auto renderer = engine->getRenderer();
+    time = Services::get<ITimeService>().get();
     subs = Subscriptions{};
-    auto bar = createGameObject<SpriteRenderComponent, BoxColliderComponent>(
+    auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(
         {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
-    bar->getComponent<SpriteRenderComponent>()->setTexture(
-        renderer->loadTexture("assets/runner/bar.png"));
+    images.push_back(engine->getAssets()->loadTexture("assets/runner/bar.png"));
+    bar->getComponent<SpriteRendererComponent>()->setTexture(images.back().get());
     auto barCollider = bar->getComponent<BoxColliderComponent>();
     barCollider->set(30, 120);
     barCollider->setLayers(0x1 | 0x2);
 
-    auto egg = createGameObject<SpriteRenderComponent, BoxColliderComponent, PhysicsComponent,
-                                EggComponent>({0, 0});
-    auto eggPic = renderer->loadTexture("assets/runner/egg.png");
+    auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
+                                BoxColliderComponent, PhysicsComponent, EggComponent>({0, 0});
+    auto eggPic =
+        engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})[0];
+    images.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
-    egg->getComponent<SpriteRenderComponent>()->setTexture(eggPic);
     egg->getTransform()->setPosition({50, 0.0});
 
     auto currentChild = egg;
-    for (auto i = 0; i < 5; ++i)
+    for (auto i = 0; i < 0 /*5*/; ++i)
     {
         auto childEgg = createGameObject<Child>();
         currentChild->addChild(*childEgg);
-        childEgg->addComponent<SpriteRenderComponent>()->setTexture(eggPic);
+        childEgg->addComponent<SpriteRendererComponent>()->setTexture(eggPic.get());
         childEgg->getTransform()->setPosition({10 * i, 30});
         currentChild = childEgg;
     }

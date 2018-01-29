@@ -119,7 +119,7 @@ TEST_F(TestEngineE2EPhysics, CanCreate) { EXPECT_TRUE(engine); }
 
 TEST_F(TestEngineE2EPhysics, BallsDoNotEscapeTheBox)
 {
-    auto app = std::static_pointer_cast<BallsTestApp>(engine->getApplication());
+    auto app = static_cast<BallsTestApp*>(engine->getApplication());
     app->elapsedMs = 0.0f;
     engine->run();
 

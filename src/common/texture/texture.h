@@ -34,11 +34,11 @@ public:
                                                 bool flag = false, Color const& colorKey = Color());
     static std::shared_ptr<Texture> loadText(std::string const& text, IRenderSystem& renderer,
                                              Font const& font, Color const& color = Color());
-    static std::shared_ptr<Texture> fromSurface(std::shared_ptr<Surface> surface,
-                                                IRenderSystem& renderer);
-    static TSpriteSheet loadSpritesheet(std::string const& name, IRenderSystem& renderer,
+    static TSpriteSheet loadSpriteSheet(std::string const& name, IRenderSystem& renderer,
                                         std::vector<SDL_Rect> const& rects, bool flag = false,
                                         Color const& colorKey = Color());
+    static std::shared_ptr<Texture> fromSurface(std::shared_ptr<Surface> surface,
+                                                IRenderSystem& renderer);
 
     Texture(std::shared_ptr<ManagedTexture> texture, int width, int height,
             IRenderSystem& renderer);

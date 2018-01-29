@@ -91,6 +91,18 @@ public:
     MOCK_METHOD0(getWorld, Quadtree<Collider>*());
 };
 
+class MockAssets : public IAssetSystem
+{
+public:
+    // using IAssetSystem::TSpriteSheet;
+
+    MOCK_METHOD1(loadTexture, std::shared_ptr<Texture>(std::string const& name));
+    MOCK_METHOD3(loadText,
+                 std::shared_ptr<Texture>(std::string const& text, Font const& font, Color const&));
+    MOCK_METHOD2(loadSpriteSheet,
+                 TSpriteSheet(std::string const& name, std::vector<SDL_Rect> const& rects));
+};
+
 class FakeProgram : public Application
 {
 public:
@@ -133,9 +145,10 @@ protected:
         mockAudioSystem = std::make_shared<NiceMock<MockAudioSystem>>();
         mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
         fakeProgram = std::make_shared<FakeProgram>();
+        mockAssets = std::make_shared<MockAssets>();
         engine = std::make_shared<EngineCore>(mockSubsystems, mockInput, mockWindow, fakeProgram,
                                               mockRenderer, mockAudioSystem, mockPhysics,
-                                              mockLogService, mockTimeSystem);
+                                              mockAssets, mockLogService, mockTimeSystem);
         fakeProgram->setEngineCore(engine.get());
     }
 
@@ -151,6 +164,7 @@ protected:
     std::shared_ptr<MockPhysics> mockPhysics;
     std::shared_ptr<MockAudioSystem> mockAudioSystem;
     std::shared_ptr<MockTimeSystem> mockTimeSystem;
+    std::shared_ptr<MockAssets> mockAssets;
 };
 
 TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }

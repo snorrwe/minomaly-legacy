@@ -9,7 +9,7 @@
 namespace Mino
 {
 
-class SpriteRenderComponent : public RenderComponent
+class SpriteRendererComponent : public RenderComponent
 {
 public:
     virtual void start();
@@ -17,17 +17,17 @@ public:
     virtual void render(Transform::TransformRef camera = nullptr);
 
     void clearTexture();
-    void setTexture(std::shared_ptr<Texture> t);
-    std::shared_ptr<Texture> getTexture() { return texture; }
+    void setTexture(Texture* t);
+    Texture* getTexture() { return texture; }
 
 protected:
     int height = 0;
     Transform::TransformRef transform = nullptr;
-    std::shared_ptr<Texture> texture = nullptr;
+    Texture* texture = nullptr;
 };
 
 template <>
-std::unique_ptr<SpriteRenderComponent>
-Component::create<SpriteRenderComponent>(GameObject* gameObject);
+std::unique_ptr<SpriteRendererComponent>
+Component::create<SpriteRendererComponent>(GameObject* gameObject);
 
 } // namespace Mino
