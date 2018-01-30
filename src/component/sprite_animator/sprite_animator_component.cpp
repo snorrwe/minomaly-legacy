@@ -6,6 +6,7 @@ void SpriteAnimatorComponent::start()
 {
     time = Services::get<ITimeService>().get();
     renderer = gameObject->getComponent<SpriteRendererComponent>();
+    transform = gameObject->getTransform();
     assert(time);
     assert(renderer);
 }

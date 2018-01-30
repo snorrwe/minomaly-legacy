@@ -57,13 +57,12 @@ public:
                 {
                     /** Frames:
                      *   (1) animation transformations (use default),
-                     *   (2) target transform (this transform),
-                     *   (3) duration in seconds,
-                     *   (4) texture
+                     *   (2) duration in seconds,
+                     *   (3) texture
                      */
-                    /*(1) (2)       (3)     (4)*/
-                    {{}, transform, 0.5f, images[0].get()}, // Frame 0
-                    {{}, transform, 0.5f, images[1].get()}, // Frame 1
+                    /*(1)  (2)      (3)*/
+                    {{}, 0.5f, images[0].get()}, // Frame 0
+                    {{}, 0.2f, images[1].get()}, // Frame 1
                 },
                 Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
             },
