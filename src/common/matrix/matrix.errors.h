@@ -18,7 +18,7 @@ public:
     MatrixError& operator=(MatrixError const&) = default;
     MatrixError& operator=(MatrixError&&) = default;
 
-    virtual const char* what() { return message->c_str(); }
+    virtual const char* what() const noexcept { return message->c_str(); }
 
 protected:
     std::shared_ptr<std::string> message;

@@ -13,7 +13,7 @@ public:
 TEST_F(TestMatrices, SimpleCanAssignMembers)
 {
     auto m = Matrix{2, 3};
-    std::vector<std::vector<double>> matrix{{1, 2, 3}, {4, 5, 6}};
+    std::vector<std::vector<float>> matrix{{1, 2, 3}, {4, 5, 6}};
     for (int i = 0; i < 2; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -42,7 +42,7 @@ TEST_F(TestMatrices, DotReturnsCorrectDimensions)
 
 TEST_F(TestMatrices, CanInitialize)
 {
-    std::vector<std::vector<double>> m{{1, 2, 3}, {4, 5, 6}};
+    std::vector<std::vector<float>> m{{1, 2, 3}, {4, 5, 6}};
     auto matrix = Matrix(m);
     ASSERT_EQ(matrix.columns(), 2);
     ASSERT_EQ(matrix.rows(), 3);
@@ -119,7 +119,7 @@ TEST_F(TestMatrices, SimpleTransposeTest)
 {
     auto m = Matrix({{1, 2}});
     auto actual = Matrix::transpose(m);
-    std::vector<std::vector<double>> v{{1.0}, {2.0}};
+    std::vector<std::vector<float>> v{{1.0}, {2.0}};
     auto expected = Matrix(v);
     ASSERT_TRUE(actual == expected);
 }
@@ -183,7 +183,7 @@ TEST_F(TestMatrices, SimpleMapTest)
 {
     auto lhs = Matrix{{1, 2, 3, 4, 5, 6}, 2, 3};
     auto rhs = Matrix{{-1, -2, -3, -4, -5, -6}, 2, 3};
-    auto result = Matrix::map(lhs, rhs, [](double l, double r) { return l + r; });
+    auto result = Matrix::map(lhs, rhs, [](float l, float r) { return l + r; });
 
     EXPECT_EQ(result.columns(), 2);
     EXPECT_EQ(result.rows(), 3);
@@ -221,7 +221,7 @@ TEST_F(TestMatrices, SimpleDotPerformanceTest)
     auto m1 = Matrix::uniform(c1, r1, 1);
     auto m2 = Matrix::uniform(r1, r2, 1);
 
-    double average = 0.0;
+    float average = 0.0;
     int times = 5;
     for (int i = 0; i < times; ++i)
     {
@@ -230,7 +230,7 @@ TEST_F(TestMatrices, SimpleDotPerformanceTest)
         auto end = std::chrono::system_clock::now();
 
         auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        average += elapsedMs.count() / double(times);
+        average += elapsedMs.count() / float(times);
     }
 
     std::cout << "Average computational speed of dot products: [" << c1 << "×" << r1 << "] dot ["

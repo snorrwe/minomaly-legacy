@@ -10,7 +10,7 @@ project(${MASTER_NAME})
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR})
 set(SDL_TEXT_DIR ${PROJECT_SOURCE_DIR})
 
-set(SILENCED_WARNINGS "-Wno-pragma-pack -Wno-unused-command-line-argument -Wno-unknown-argument -Wno-deprecated-declarations -Wno-c++17-extensions")
+set(SILENCED_WARNINGS "-Wno-pragmas -Wno-unused-command-line-argument -Wno-unknown-argument -Wno-deprecated-declarations -Wno-c++17-extensions")
 
 set(CMAKE_C_FLAGS " ${SILENCED_WARNINGS}")
 set(GCC_FLAGS "-fcxx-exceptions ${SILENCED_WARNINGS}")

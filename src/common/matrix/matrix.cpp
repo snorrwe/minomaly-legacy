@@ -4,13 +4,13 @@ using namespace Mino;
 using namespace Mino::MatrixErrors;
 using Matrix = Mino::Matrix;
 
-Matrix Mino::operator*(double const& coeff, Matrix result) { return result *= coeff; }
+Matrix Mino::operator*(float const& coeff, Matrix result) { return result *= coeff; }
 
-Matrix Mino::operator*(Matrix result, double const& coeff) { return result *= coeff; }
+Matrix Mino::operator*(Matrix result, float const& coeff) { return result *= coeff; }
 
-std::vector<double> Matrix::invertValues(Matrix const& matrix)
+std::vector<float> Matrix::invertValues(Matrix const& matrix)
 {
-    std::vector<double> rightValues(matrix.size());
+    std::vector<float> rightValues(matrix.size());
     for (int i = 0; i != matrix.size(); ++i)
     {
         int y = i % matrix.rows();
@@ -62,7 +62,7 @@ std::ostream& Mino::operator<<(std::ostream& stream, Matrix const& matrix)
     return stream;
 }
 
-Matrix::Matrix(std::vector<std::vector<double>> const& matrix)
+Matrix::Matrix(std::vector<std::vector<float>> const& matrix)
     : _columns(matrix.size()), _rows(matrix[0].size()), values(_columns * _rows)
 {
     for (int i = 0; i < _columns; ++i)
@@ -79,7 +79,7 @@ Matrix::Matrix(int columns, int rows) : _columns(columns), _rows(rows), values(c
     values.shrink_to_fit();
 }
 
-Matrix::Matrix(std::vector<double> const& matrix, int columns, int rows)
+Matrix::Matrix(std::vector<float> const& matrix, int columns, int rows)
     : _columns(columns), _rows(rows), values(columns * rows)
 {
     if (matrix.size() != columns * rows)
@@ -104,19 +104,19 @@ Matrix::ColumnProxy Matrix::operator[](int n)
     return ColumnProxy(col, _rows, values);
 }
 
-void Matrix::set(int col, int row, double value)
+void Matrix::set(int col, int row, float value)
 {
     if (col > _columns || row > _rows) throw MatrixErrors::InvalidAccess(col, row);
     values[col * _rows + row] = value;
 }
 
-double& Matrix::get(int col, int row)
+float& Matrix::get(int col, int row)
 {
     if (col > _columns || row > _rows) throw MatrixErrors::InvalidAccess(col, row);
     return values[col * _rows + row];
 }
 
-double const& Matrix::get(int col, int row) const
+float const& Matrix::get(int col, int row) const
 {
     if (col > _columns || row > _rows) throw MatrixErrors::InvalidAccess(col, row);
     return values[col * _rows + row];
@@ -133,7 +133,7 @@ bool Matrix::operator==(Matrix const& rhs) const
     return true;
 }
 
-Matrix& Matrix::operator*=(double const& coeff)
+Matrix& Matrix::operator*=(float const& coeff)
 {
     for (auto i = begin(); i != end(); ++i)
     {
@@ -155,7 +155,7 @@ Matrix Matrix::transpose(Matrix const& matrix)
     return result;
 }
 
-Matrix Matrix::uniform(int columns, int rows, double value)
+Matrix Matrix::uniform(int columns, int rows, float value)
 {
     Matrix result(columns, rows);
     for (auto i = result.begin(); i != result.end(); ++i)
@@ -166,7 +166,7 @@ Matrix Matrix::uniform(int columns, int rows, double value)
 }
 
 Matrix Matrix::map(Matrix const& lhs, Matrix const& rhs,
-                   std::function<double(double, double)> callback)
+                   std::function<float(float, float)> callback)
 {
     if (lhs._columns != rhs._columns || lhs._rows != rhs._rows)
     {
@@ -186,7 +186,7 @@ Matrix Matrix::map(Matrix const& lhs, Matrix const& rhs,
 Matrix Matrix::hadamard(Matrix const& lhs, Matrix const& rhs)
 {
     Matrix::assertEqualSize(lhs, rhs, " hadamard ");
-    return Matrix::map(lhs, rhs, [](double l, double r) { return l * r; });
+    return Matrix::map(lhs, rhs, [](float l, float r) { return l * r; });
 }
 
 void Matrix::assertEqualSize(Matrix const& lhs, Matrix const& rhs, std::string const& message)
@@ -221,9 +221,9 @@ Matrix& Matrix::operator-=(Matrix const& matrix)
     return *this;
 }
 
-Matrix::ColumnProxy::operator std::vector<double>()
+Matrix::ColumnProxy::operator std::vector<float>()
 {
-    std::vector<double> result{};
+    std::vector<float> result{};
     for (int i = 0; i < _size; ++i)
     {
         result.push_back(values[i + begin]);
@@ -231,7 +231,7 @@ Matrix::ColumnProxy::operator std::vector<double>()
     return result;
 }
 
-double Matrix::length() const
+float Matrix::length() const
 {
     if (_columns == 0 && _rows == 0) return 0.0;
     if (_columns != 1 && _rows != 1)
@@ -239,7 +239,7 @@ double Matrix::length() const
         throw MatrixErrors::BadSize(
             "Length is only defined on vectors (Either the columns or rows has to be 1)");
     }
-    double sum = 0.0;
+    float sum = 0.0;
     for (auto i = this->begin(); i != this->end(); ++i)
     {
         sum += (*i) * (*i);
