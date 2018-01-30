@@ -68,9 +68,13 @@ template <typename TComponent> TComponent* GameObject::getComponent() const
 {
     for (auto& i : components)
     {
-        if (i && typeid(*i) == typeid(TComponent))
+        if (i)
         {
-            return static_cast<TComponent*>(i.get());
+
+            if (auto item = *i; typeid(item) == typeid(TComponent))
+            {
+                return static_cast<TComponent*>(i.get());
+            }
         }
     }
     return nullptr;

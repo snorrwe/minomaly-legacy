@@ -125,7 +125,6 @@ TEST_F(TestEngineE2EPhysics, BallsDoNotEscapeTheBox)
 
     for (auto& go : app->balls)
     {
-        auto ball = go->getComponent<BallComponent>();
         auto pos = go->getTransform()->absolute().position;
 
         EXPECT_GE(pos.x(), -OFFSET);
