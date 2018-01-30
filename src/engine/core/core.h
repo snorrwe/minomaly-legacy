@@ -33,8 +33,8 @@ class IAssetSystem;
 class IEngineCore
 {
 public:
-    typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-    typedef std::chrono::duration<float, std::milli> Milli;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+    using Milli = std::chrono::duration<float, std::milli>;
     const float OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
