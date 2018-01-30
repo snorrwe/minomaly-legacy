@@ -53,6 +53,7 @@ public:
         std::vector<float>& values;
     };
 
+    static Matrix unit(size_t size);
     static Matrix transpose(Matrix const& matrix);
     static Matrix uniform(int columns, int rows, float value = 1.0);
     static Matrix map(Matrix const& lhs, Matrix const& rhs,

@@ -214,26 +214,3 @@ TEST_F(TestMatrices, SimpleDotProductTest)
 
     EXPECT_EQ(result, Matrix({22, 28, 49, 64}, 2, 2));
 }
-
-TEST_F(TestMatrices, SimpleDotPerformanceTest)
-{
-    int c1 = 1, r1 = 876, r2 = 300;
-    auto m1 = Matrix::uniform(c1, r1, 1);
-    auto m2 = Matrix::uniform(r1, r2, 1);
-
-    float average = 0.0;
-    int times = 5;
-    for (int i = 0; i < times; ++i)
-    {
-        auto start = std::chrono::system_clock::now();
-        auto result = m1 * m2;
-        auto end = std::chrono::system_clock::now();
-
-        auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        average += elapsedMs.count() / float(times);
-    }
-
-    std::cout << "Average computational speed of dot products: [" << c1 << "×" << r1 << "] dot ["
-              << r1 << "×" << r2 << "] : " << average << "ms" << std::endl;
-    ASSERT_LE(average, 100);
-}

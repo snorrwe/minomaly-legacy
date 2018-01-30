@@ -165,6 +165,22 @@ Matrix Matrix::uniform(int columns, int rows, float value)
     return result;
 }
 
+Matrix Matrix::unit(size_t size)
+{
+    auto result = Matrix{size, size};
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+            if (i == j)
+            {
+                result[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
 Matrix Matrix::map(Matrix const& lhs, Matrix const& rhs,
                    std::function<float(float, float)> callback)
 {
@@ -186,7 +202,7 @@ Matrix Matrix::map(Matrix const& lhs, Matrix const& rhs,
 Matrix Matrix::hadamard(Matrix const& lhs, Matrix const& rhs)
 {
     Matrix::assertEqualSize(lhs, rhs, " hadamard ");
-    return Matrix::map(lhs, rhs, [](float l, float r) { return l * r; });
+    return Matrix::map(lhs, rhs, [](auto l, auto r) { return l * r; });
 }
 
 void Matrix::assertEqualSize(Matrix const& lhs, Matrix const& rhs, std::string const& message)
