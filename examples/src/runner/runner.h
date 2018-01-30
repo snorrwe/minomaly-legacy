@@ -18,7 +18,6 @@ class Program : public Mino::Application
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
 
     Mino::IInputSystem* input;
-    Mino::IRenderSystem* renderer;
     Mino::ITimeService* time;
     Subscriptions subs;
     MediaContainer images;
