@@ -64,15 +64,9 @@ TEST_F(TestEngineE2E, CanCreateActual)
         TODO: find a way to test the audio system on the CI
     */
     auto engine = EngineCore::create<FakeProgram>("...", 0, 0);
-    auto status = engine->subsystemStatus({
-        SdlSubSystemType::SDL,
-        SdlSubSystemType::SDL_image,
-        SdlSubSystemType::SDL_ttf,
-    });
-    for (auto i = status.begin(); i != status.end(); ++i)
-    {
-        ASSERT_EQ(*i, SdlStatus::Initialized);
-    }
+    EXPECT_EQ(engine->subsystemStatus(SdlSubSystemType::SDL), SdlStatus::Initialized);
+    EXPECT_EQ(engine->subsystemStatus(SdlSubSystemType::SDL_image), SdlStatus::Initialized);
+    EXPECT_EQ(engine->subsystemStatus(SdlSubSystemType::SDL_ttf), SdlStatus::Initialized);
 }
 
 TEST_F(TestEngineE2E, CanCreateAndCleanUpGameObjects)
