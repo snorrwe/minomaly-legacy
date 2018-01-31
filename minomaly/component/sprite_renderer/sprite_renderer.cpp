@@ -16,14 +16,26 @@ void SpriteRendererComponent::update()
     if (!texture && isEnabled()) disable();
 }
 
-void SpriteRendererComponent::render(Transform::TransformRef camera)
+void SpriteRendererComponent::render(Transform::TransformRef const& camera)
 {
-    auto offset = camera ? camera->absolute().position : Vector2<float>{0, 0};
     auto& absolute = transform->absolute();
-    auto position = absolute.position - offset;
+    auto position = absolute.position;
+
+    auto m = Matrix{{position.x(), position.y(), 1}, 1, 3} * [&]() { // TODO: Messes up scaling
+        const auto cx = camera->absolute().scale.x() * cos(camera->absolute().rotation.angle);
+        const auto sy = camera->absolute().scale.y() * sin(camera->absolute().rotation.angle);
+        return Matrix({cx, sy, -camera->absolute().position.x(), -sy, cx,
+                       -camera->absolute().position.y(), 0, 0, 1},
+                      3, 3);
+    }();
+    position = {m[0][0], m[0][1]};
+
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());
-    texture->render({{x, -y - height}, absolute.scale, absolute.rotation});
+    auto sx = absolute.scale.x() / (camera ? camera->absolute().scale.x() : 1.0f);
+    auto sy = absolute.scale.y() / (camera ? camera->absolute().scale.y() : 1.0f);
+    texture->render(
+        {{x, -y - (height * sy)}, {sx, sy}, camera->absolute().rotation - absolute.rotation});
 }
 
 void SpriteRendererComponent::setTexture(Texture* t)

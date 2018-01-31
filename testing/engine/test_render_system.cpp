@@ -12,7 +12,7 @@ using ::testing::_;
 class MockRenderComponent : public RenderComponent
 {
 public:
-    MOCK_METHOD1(render, void(Transform::TransformRef camera));
+    MOCK_METHOD1(render, void(Transform::TransformRef const& camera));
     MOCK_METHOD0(start, void());
     MOCK_METHOD0(update, void());
 

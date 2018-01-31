@@ -19,7 +19,7 @@ public:
 
     virtual ~RenderComponent();
 
-    virtual void render(Transform::TransformRef camera = nullptr) = 0;
+    virtual void render(Transform::TransformRef const& camera) = 0;
 
     virtual void enable();
     virtual void disable();

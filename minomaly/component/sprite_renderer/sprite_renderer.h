@@ -14,7 +14,7 @@ class SpriteRendererComponent : public RenderComponent
 public:
     virtual void start();
     virtual void update();
-    virtual void render(Transform::TransformRef camera = nullptr);
+    virtual void render(Transform::TransformRef const& camera);
 
     void clearTexture();
     void setTexture(Texture* t);
