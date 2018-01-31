@@ -5,7 +5,7 @@
 #include "asset_system.h"
 #include "audio_system.h"
 #include "camera_component.h"
-#include "input.h"
+#include "input_system.h"
 #include "log_service.h"
 #include "observer.h"
 #include "physics_system.h"

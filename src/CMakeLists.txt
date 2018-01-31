@@ -17,7 +17,7 @@ include_directories(${SDL2_MIXER_DIR}/include)
 
 set(_ENGINE_INCLUDES engine
                      engine/window 
-                     engine/input 
+                     engine/input_system 
                      engine/render_system 
                      engine/core 
                      engine/camera
@@ -64,7 +64,7 @@ include_directories(${_COMPONENT_INCLUDES})
 include_directories(${_SERVICE_INCLUDES})
 
 add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp 
-                            ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/input_system/input_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/render_system/render_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
                             ${PROJECT_SOURCE_DIR}/engine/application/application.cpp
