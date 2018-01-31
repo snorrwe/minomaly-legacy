@@ -35,7 +35,7 @@ void Program::start()
     barCollider->setLayers(0x1 | 0x2);
 
     auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
-                                BoxColliderComponent, PhysicsComponent, EggComponent>({0, 0});
+                                BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
     auto eggPic =
         engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})[0];
     images.push_back(eggPic);

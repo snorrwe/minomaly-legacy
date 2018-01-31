@@ -16,7 +16,7 @@
 namespace Mino
 {
 
-class PhysicsComponent;
+class Rigidbody;
 class IPhysicsSystem;
 class ColliderComponent;
 

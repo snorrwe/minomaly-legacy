@@ -27,7 +27,7 @@ public:
             body->setVelocity(v.normalized() * velocity);
         });
 
-        body = gameObject->getComponent<Mino::PhysicsComponent>();
+        body = gameObject->getComponent<Mino::Rigidbody>();
         body->addCollider(*eggCollider);
         body->setMaterial({1.0f});
 
@@ -36,7 +36,7 @@ public:
         body->setVelocity(Mino::Vector2<float>{vx, vy}.normalized() * velocity);
     }
 
-    Mino::PhysicsComponent* body;
+    Mino::Rigidbody* body;
     const float velocity = 250.0f;
 };
 
@@ -84,7 +84,7 @@ void BallsTestApp::start()
         auto x = dist6(rng) % (BOX_WIDTH - PADDING) + PADDING;
         auto y = dist6(rng) % (BOX_HEIGHT - PADDING) + PADDING;
 
-        auto ball = createGameObject<BoxColliderComponent, PhysicsComponent, BallComponent>({x, y});
+        auto ball = createGameObject<BoxColliderComponent, Rigidbody, BallComponent>({x, y});
         balls.push_back(ball);
     }
 

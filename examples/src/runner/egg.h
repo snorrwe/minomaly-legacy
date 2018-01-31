@@ -15,7 +15,7 @@ class EggComponent : public Mino::Component
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
     using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
 
-    Mino::PhysicsComponent* body;
+    Mino::Rigidbody* body;
     Mino::ITimeService* time;
     Mino::Transform::TransformRef transform;
     Mino::BoxColliderComponent* bottomCollider;
@@ -37,7 +37,7 @@ public:
     {
         time = Mino::Services::get<Mino::ITimeService>().get();
         transform = gameObject->getTransform();
-        body = gameObject->getComponent<Mino::PhysicsComponent>();
+        body = gameObject->getComponent<Mino::Rigidbody>();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);

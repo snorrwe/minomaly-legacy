@@ -29,13 +29,13 @@ public:
         fakeTime = std::make_shared<FakeTime>();
         Services::overrideService<ITimeService>(fakeTime);
         gameObject = std::make_unique<GameObject>(transforms.enable());
-        physics = gameObject->addComponent<PhysicsComponent>();
+        physics = gameObject->addComponent<Rigidbody>();
         physics->start();
     }
 
 protected:
     std::unique_ptr<GameObject> gameObject;
-    PhysicsComponent* physics;
+    Rigidbody* physics;
     std::shared_ptr<FakeTime> fakeTime;
     Transform::ChildrenContainer transforms;
 };
