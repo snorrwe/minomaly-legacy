@@ -70,6 +70,7 @@ public:
     void setRotation(RotationData const& value);
 
     TransformData const& absolute() const { return absoluteTransform; }
+    Matrix transformMatrix();
 
 protected:
     TransformRef::WeakRef parent = nullptr;

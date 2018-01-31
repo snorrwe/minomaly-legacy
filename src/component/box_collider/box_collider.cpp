@@ -7,7 +7,8 @@ BoundingBox BoxColliderComponent::asBoundingBox() const { return box; }
 void BoxColliderComponent::updateCornersByPosition(Vector2<float> const& position)
 {
     auto center = position + Vector2<float>{width * 0.5f, height * 0.5f} + offset;
-    box = {std::move(center), width, height};
+    box = {std::move(center), width * transform->absolute().scale.x(),
+           height * transform->absolute().scale.y()};
 }
 
 void BoxColliderComponent::set(float w, float h, Vector2<float> ofs)

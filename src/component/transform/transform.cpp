@@ -70,3 +70,12 @@ Matrix Transform::transformMatrix(TransformData const& data)
     const auto sy = sin(data.rotation.angle) * data.scale.y();
     return Matrix({cx, -sy, data.position.x(), sy, cx, data.position.y(), 0, 0, 1}, 3, 3);
 }
+
+Matrix Transform::transformMatrix()
+{
+    const auto cx = cos(absoluteTransform.rotation.angle) * absoluteTransform.scale.x();
+    const auto sy = sin(absoluteTransform.rotation.angle) * absoluteTransform.scale.y();
+    return Matrix(
+        {cx, -sy, absoluteTransform.position.x(), sy, cx, absoluteTransform.position.y(), 0, 0, 1},
+        3, 3);
+}
