@@ -60,10 +60,10 @@ examples/
 lib/----------  # external dependencies
 
 minomaly/
-    common/     # common, not directly engine related stuff
+    common/     # common, shared code
     component/  # components
-    engine/     # engine code goes here
-    services/   # shared services go here
+    engine/     # engine systems
+    services/   # shared services
 
 testing/-----   # test code goes here
 ```
