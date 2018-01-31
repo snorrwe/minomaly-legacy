@@ -1,4 +1,4 @@
-#include "physics_component.h"
+#include "rigidbody.h"
 
 using namespace Mino;
 
@@ -17,7 +17,7 @@ void PhysicsComponent::update()
     lastPosition = position;
 }
 
-void PhysicsComponent::addCollider(ColliderComponent &coll)
+void PhysicsComponent::addCollider(ColliderComponent& coll)
 {
     subs.push_back(
         {&coll, coll.onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});

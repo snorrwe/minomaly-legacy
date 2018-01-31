@@ -1,5 +1,5 @@
 #include "game_object.h"
-#include "physics_component.h"
+#include "rigidbody.h"
 #include "services.h"
 #include "time_service.h"
 #include "transform.h"
@@ -21,7 +21,7 @@ public:
     }
 };
 
-class PhysicsComponentTests : public ::testing::Test
+class TestRigidbody : public ::testing::Test
 {
 public:
     void SetUp()
@@ -40,9 +40,9 @@ protected:
     Transform::ChildrenContainer transforms;
 };
 
-TEST_F(PhysicsComponentTests, CanCreate) {}
+TEST_F(TestRigidbody, CanCreate) {}
 
-TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
+TEST_F(TestRigidbody, MovesGameObjectOnUpdate)
 {
     auto lastPosition = gameObject->getTransform()->getPosition();
     physics->setVelocity({1, 1});
