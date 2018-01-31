@@ -1,5 +1,5 @@
 #include "game_object.h"
-#include "physics_component.h"
+#include "rigidbody.h"
 #include "services.h"
 #include "time_service.h"
 #include "transform.h"
@@ -21,7 +21,7 @@ public:
     }
 };
 
-class PhysicsComponentTests : public ::testing::Test
+class TestRigidbody : public ::testing::Test
 {
 public:
     void SetUp()
@@ -29,20 +29,20 @@ public:
         fakeTime = std::make_shared<FakeTime>();
         Services::overrideService<ITimeService>(fakeTime);
         gameObject = std::make_unique<GameObject>(transforms.enable());
-        physics = gameObject->addComponent<PhysicsComponent>();
+        physics = gameObject->addComponent<Rigidbody>();
         physics->start();
     }
 
 protected:
     std::unique_ptr<GameObject> gameObject;
-    PhysicsComponent* physics;
+    Rigidbody* physics;
     std::shared_ptr<FakeTime> fakeTime;
     Transform::ChildrenContainer transforms;
 };
 
-TEST_F(PhysicsComponentTests, CanCreate) {}
+TEST_F(TestRigidbody, CanCreate) {}
 
-TEST_F(PhysicsComponentTests, MovesGameObjectOnUpdate)
+TEST_F(TestRigidbody, MovesGameObjectOnUpdate)
 {
     auto lastPosition = gameObject->getTransform()->getPosition();
     physics->setVelocity({1, 1});

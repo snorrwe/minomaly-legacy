@@ -92,7 +92,7 @@ ENDMACRO()
 
 #[[ Engine ]]
 
-add_subdirectory(src)
+add_subdirectory(minomaly)
 
 #[[ Example projects ]]
 

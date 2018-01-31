@@ -25,7 +25,7 @@ class WindowSystem;
 class IRenderSystem
 {
 public:
-    friend class EngineCore;
+    //friend class EngineCore;
 
     using RenderComponentReferences = std::vector<RenderComponent*>;
     using CameraReferences = Camera::CameraReferences;
@@ -39,7 +39,7 @@ public:
                         SDL_Rect* dstrect = nullptr) = 0;
     virtual void render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
                         RotationData const& rotation) = 0;
-    virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool flag = false,
+    virtual std::shared_ptr<Texture> loadTexture(std::string const& name, bool enableColorKeying = false,
                                                  Color const* color = nullptr) = 0;
     virtual void setViewport(SDL_Rect* viewport) = 0;
     virtual void update() = 0;

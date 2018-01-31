@@ -35,7 +35,7 @@ void Program::start()
     barCollider->setLayers(0x1 | 0x2);
 
     auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
-                                BoxColliderComponent, PhysicsComponent, EggComponent>({0, 0});
+                                BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
     auto eggPic =
         engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})[0];
     images.push_back(eggPic);
@@ -53,6 +53,8 @@ void Program::start()
         childEgg->getTransform()->setPosition({10 * i, 30});
         currentChild = childEgg;
     }
+
+    // getMainCamera()->getTransform()->setScale({0.5f, 0.5f});
 }
 
 void Program::update()
@@ -74,6 +76,14 @@ void Program::update()
     if (input->isDown(SDLK_s))
     {
         velocity = {velocity.x(), velocity.y() - sv};
+    }
+    if (input->isDown(SDLK_e))
+    {
+        getMainCamera()->getTransform()->rotation().angle += time->deltaTime() * 2;
+    }
+    if (input->isDown(SDLK_q))
+    {
+        getMainCamera()->getTransform()->rotation().angle -= time->deltaTime() * 2;
     }
     velocity = velocity * time->deltaTime();
 

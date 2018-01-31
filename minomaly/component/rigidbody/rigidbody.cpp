@@ -1,14 +1,14 @@
-#include "physics_component.h"
+#include "rigidbody.h"
 
 using namespace Mino;
 
-void PhysicsComponent::start()
+void Rigidbody::start()
 {
     transform = gameObject->getTransform();
     time = Services::get<ITimeService>();
 }
 
-void PhysicsComponent::update()
+void Rigidbody::update()
 {
     auto deltaTime = time->deltaTime();
     auto position = transform->getPosition();
@@ -17,13 +17,13 @@ void PhysicsComponent::update()
     lastPosition = position;
 }
 
-void PhysicsComponent::addCollider(ColliderComponent &coll)
+void Rigidbody::addCollider(ColliderComponent& coll)
 {
     subs.push_back(
         {&coll, coll.onCollision().subscribe([&](auto const& cd) { resolveCollision(cd); })});
 }
 
-void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
+void Rigidbody::resolveCollision(CollisionData const& collistionData)
 {
     auto box1 = collistionData.first.asBoundingBox();
     auto box2 = collistionData.second.asBoundingBox();
@@ -55,7 +55,7 @@ void PhysicsComponent::resolveCollision(CollisionData const& collistionData)
     transform->setPosition(transform->getPosition() + Vector2<float>{x, y});
 }
 
-void PhysicsComponent::setVelocity(Vector2<float> const& v)
+void Rigidbody::setVelocity(Vector2<float> const& v)
 {
     velocity = v;
     auto norm = v.normalized();

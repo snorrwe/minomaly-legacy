@@ -55,7 +55,7 @@ void Transform::updateAsRoot()
 void Transform::updateByParent(TransformData const& parent)
 {
     auto parentMatrix = transformMatrix(parent);
-    auto position = Matrix({{localTransform.position.x(), localTransform.position.y(), 1.0f}});
+    auto position = Matrix({localTransform.position.x(), localTransform.position.y(), 1.0f}, 1, 3);
 
     auto positionMatrix = Matrix::dot(position, parentMatrix);
     absoluteTransform.position = {positionMatrix[0][0], positionMatrix[0][1]};

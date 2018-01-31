@@ -16,7 +16,7 @@ namespace Mino
 class ColliderComponent;
 struct CollisionData;
 
-class PhysicsComponent : public Component
+class Rigidbody : public Component
 {
 public:
     struct ColliderRef
@@ -30,7 +30,7 @@ public:
         float restitution = 1.0f;
     };
 
-    virtual ~PhysicsComponent() {}
+    virtual ~Rigidbody() {}
 
     virtual void start();
     virtual void update();

@@ -32,6 +32,15 @@ struct RotationData
         result.flip = static_cast<SDL_RendererFlip>(flip | rd.flip);
         return result;
     }
+
+    RotationData operator-(RotationData const& rd) const
+    {
+        auto result = RotationData{};
+        result.angle = angle - rd.angle;
+        result.center = center - rd.center;
+        result.flip = static_cast<SDL_RendererFlip>(flip | rd.flip);
+        return result;
+    }
 };
 
 } // namespace Mino::RenderData

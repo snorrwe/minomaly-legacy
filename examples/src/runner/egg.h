@@ -15,7 +15,7 @@ class EggComponent : public Mino::Component
     using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
     using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
 
-    Mino::PhysicsComponent* body;
+    Mino::Rigidbody* body;
     Mino::ITimeService* time;
     Mino::Transform::TransformRef transform;
     Mino::BoxColliderComponent* bottomCollider;
@@ -37,7 +37,7 @@ public:
     {
         time = Mino::Services::get<Mino::ITimeService>().get();
         transform = gameObject->getTransform();
-        body = gameObject->getComponent<Mino::PhysicsComponent>();
+        body = gameObject->getComponent<Mino::Rigidbody>();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
         eggCollider->setLayers(0x1);
@@ -130,6 +130,7 @@ public:
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
 
+        /*
         transform->rotation().angle += time->deltaTime();
         const auto PI = 3.1415f;
         if (transform->rotation().angle > 2 * PI) transform->rotation().angle = 0.0f;
@@ -138,18 +139,18 @@ public:
 
         if (shrink)
         {
-            if (scale.x() > 0)
+            if (scale.x() > 0.5f)
                 scale = scale - Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
             else
                 shrink = false;
         }
         else
         {
-            if (scale.x() < 1.0)
+            if (scale.x() < 2.0f)
                 scale = scale + Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
             else
                 shrink = true;
-        }
+        }*/
     }
 
 private:

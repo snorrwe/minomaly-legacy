@@ -38,8 +38,8 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
                           RotationData const& rotation)
 {
     SDL_Point center{rotation.center.x(), rotation.center.y()};
-    SDL_RenderCopyEx(renderer, texture.getRaw(), srcrect, dstrect, rotation.angle, &center,
-                     rotation.flip);
+    SDL_RenderCopyEx(renderer, texture.getRaw(), srcrect, dstrect, rotation.angle * 57.2958,
+                     &center, rotation.flip);
 }
 
 void RenderSystem::update()

@@ -17,7 +17,7 @@ include_directories(${SDL2_MIXER_DIR}/include)
 
 set(_ENGINE_INCLUDES engine
                      engine/window 
-                     engine/input 
+                     engine/input_system 
                      engine/render_system 
                      engine/core 
                      engine/camera
@@ -45,7 +45,7 @@ set(_COMPONENT_INCLUDES component
                         component/transform
                         component/renderer
                         component/game_object
-                        component/physics
+                        component/rigidbody
                         component/collider
                         component/camera
                         component/box_collider
@@ -64,7 +64,7 @@ include_directories(${_COMPONENT_INCLUDES})
 include_directories(${_SERVICE_INCLUDES})
 
 add_library(${_MINO_ENGINE} ${PROJECT_SOURCE_DIR}/engine/window/window.cpp 
-                            ${PROJECT_SOURCE_DIR}/engine/input/input.cpp
+                            ${PROJECT_SOURCE_DIR}/engine/input_system/input_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/render_system/render_system.cpp
                             ${PROJECT_SOURCE_DIR}/engine/camera/camera.cpp
                             ${PROJECT_SOURCE_DIR}/engine/application/application.cpp
@@ -88,7 +88,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/camera/camera_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/collider/collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/box_collider/box_collider.cpp
-                               ${PROJECT_SOURCE_DIR}/component/physics/physics_component.cpp
+                               ${PROJECT_SOURCE_DIR}/component/rigidbody/rigidbody.cpp
                                ${PROJECT_SOURCE_DIR}/component/transform/transform.cpp)
 
 add_library(${_MINO_SERVICES} ${PROJECT_SOURCE_DIR}/services/services/services.cpp

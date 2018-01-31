@@ -59,9 +59,11 @@ examples/
 
 lib/----------  # external dependencies
 
-src/
-    common/     # common, not directly engine related stuff
-    engine/     # engine code goes here
+minomaly/
+    common/     # common, shared code
+    component/  # components
+    engine/     # engine systems
+    services/   # shared services
 
 testing/-----   # test code goes here
 ```
