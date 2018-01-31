@@ -131,6 +131,8 @@ public:
         body->setVelocity(velocity);
 
         transform->rotation().angle += time->deltaTime();
+        const auto PI = 3.1415f;
+        if (transform->rotation().angle > 2 * PI) transform->rotation().angle = 0.0f;
 
         auto& scale = transform->scale();
 
