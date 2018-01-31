@@ -45,7 +45,7 @@ void Program::start()
     egg->getTransform()->setPosition({50, 0.0});
 
     auto currentChild = egg;
-    for (auto i = 0; i < 0 /*5*/; ++i)
+    for (auto i = 0; i < 5; ++i)
     {
         auto childEgg = createGameObject<Child>();
         currentChild->addChild(*childEgg);

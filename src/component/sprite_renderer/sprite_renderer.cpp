@@ -19,10 +19,11 @@ void SpriteRendererComponent::update()
 void SpriteRendererComponent::render(Transform::TransformRef camera)
 {
     auto offset = camera ? camera->absolute().position : Vector2<float>{0, 0};
-    auto position = transform->absolute().position - offset;
+    auto& absolute = transform->absolute();
+    auto position = absolute.position - offset;
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());
-    texture->render({x, -y - height});
+    texture->render({{x, -y - height}, absolute.scale, absolute.rotation});
 }
 
 void SpriteRendererComponent::setTexture(Texture* t)

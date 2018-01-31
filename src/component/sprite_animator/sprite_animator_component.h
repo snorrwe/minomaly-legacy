@@ -17,7 +17,6 @@ namespace SpriteAnimationData
 struct Frame
 {
     Transform::TransformData transform = {};
-    Transform::TransformRef affected = nullptr;
     float duration = 0.0;
     Texture* texture = nullptr;
 };
@@ -45,6 +44,7 @@ class SpriteAnimatorComponent : public Component
     SpriteRendererComponent* renderer;
     float currentRunTime = 0.0f;
     size_t currentFrame = 0;
+    Transform::TransformRef transform;
 
 public:
     virtual void start();

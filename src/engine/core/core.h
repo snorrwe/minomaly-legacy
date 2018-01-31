@@ -33,8 +33,8 @@ class IAssetSystem;
 class IEngineCore
 {
 public:
-    typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-    typedef std::chrono::duration<float, std::milli> Milli;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+    using Milli = std::chrono::duration<float, std::milli>;
     const float OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
@@ -53,7 +53,6 @@ public:
     virtual void setTargetFps(float f) = 0;
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType) const = 0;
-    virtual std::vector<SdlStatus> subsystemStatus(std::vector<SdlSubSystemType> const&) const = 0;
 };
 
 class EngineCore : public IEngineCore
@@ -89,8 +88,6 @@ public:
     virtual void setTargetFps(float f);
 
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
-    virtual std::vector<SdlStatus>
-    subsystemStatus(std::vector<SdlSubSystemType> const& types) const;
 
 private:
     static std::shared_ptr<EngineCore> initCore(std::string const& name, size_t screenWidth,

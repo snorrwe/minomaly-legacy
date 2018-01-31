@@ -26,6 +26,7 @@ class EggComponent : public Mino::Component
     const float gravity = 50.0;
     State state = State::Grounded;
     float airTime = 1000.0;
+    bool shrink = true;
 
 public:
     Mino::IInputSystem* input;
@@ -57,13 +58,12 @@ public:
                 {
                     /** Frames:
                      *   (1) animation transformations (use default),
-                     *   (2) target transform (this transform),
-                     *   (3) duration in seconds,
-                     *   (4) texture
+                     *   (2) duration in seconds,
+                     *   (3) texture
                      */
-                    /*(1) (2)       (3)     (4)*/
-                    {{}, transform, 0.5f, images[0].get()}, // Frame 0
-                    {{}, transform, 0.5f, images[1].get()}, // Frame 1
+                    /*(1)  (2)      (3)*/
+                    {{}, 0.5f, images[0].get()}, // Frame 0
+                    {{}, 0.2f, images[1].get()}, // Frame 1
                 },
                 Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
             },
@@ -129,6 +129,27 @@ public:
         }
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
+
+        transform->rotation().angle += time->deltaTime();
+        const auto PI = 3.1415f;
+        if (transform->rotation().angle > 2 * PI) transform->rotation().angle = 0.0f;
+
+        auto& scale = transform->scale();
+
+        if (shrink)
+        {
+            if (scale.x() > 0)
+                scale = scale - Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
+            else
+                shrink = false;
+        }
+        else
+        {
+            if (scale.x() < 1.0)
+                scale = scale + Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
+            else
+                shrink = true;
+        }
     }
 
 private:

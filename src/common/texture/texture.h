@@ -8,6 +8,7 @@
 #include "render_system.h"
 #include "renderdata.h"
 #include "surface.h"
+#include "transform.h"
 #include <array>
 #include <functional>
 #include <iostream>
@@ -57,7 +58,7 @@ public:
     int getHeight() { return height; }
 
     void render(Vector2 const& pos) const;
-    void render(Vector2 const& pos, RotationData const& rotation) const;
+    void render(Transform::TransformData const&) const;
     void render(Vector2 const& pos,
                 std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)>) const;
     void color(Color const& color);

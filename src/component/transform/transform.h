@@ -1,10 +1,12 @@
 #pragma once
 #include "iterable_pool.h"
+#include "matrix.h"
 #include "renderdata.h"
 #include "vector2.h"
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <math.h>
 #include <memory>
 #include <stdexcept>
 #include <tuple>
@@ -59,11 +61,16 @@ public:
     Vector const& getPosition() const { return localTransform.position; }
     void setPosition(Vector const& value);
 
+    Vector& scale() { return localTransform.scale; }
+    Vector const& getScale() const { return localTransform.scale; }
+    void setScale(Vector const& value);
+
     RotationData& rotation() { return localTransform.rotation; }
     RotationData const& getRotation() const { return localTransform.rotation; }
     void setRotation(RotationData const& value);
 
     TransformData const& absolute() const { return absoluteTransform; }
+    Matrix transformMatrix();
 
 protected:
     TransformRef::WeakRef parent = nullptr;
@@ -71,10 +78,12 @@ protected:
     std::unique_ptr<ChildrenContainer> children = std::make_unique<ChildrenContainer>();
 
     TransformData localTransform = {};
-    TransformData absoluteTransform = {}; // TODO: replace absoluteTransform with a Matrix
+    TransformData absoluteTransform = {};
 
 private:
-    void updateByParent(Transform const& parent);
+    Matrix transformMatrix(TransformData const& parent);
+
+    void updateByParent(TransformData const&);
 };
 
 } // namespace Mino

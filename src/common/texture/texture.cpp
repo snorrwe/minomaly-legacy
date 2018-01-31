@@ -76,14 +76,17 @@ void Texture::render(Vector2 const& pos) const
 void Texture::render(Vector2 const& pos,
                      std::function<void(Texture const&, SDL_Rect*, SDL_Rect*)> renderfn) const
 {
-    SDL_Rect renderQuad = {pos.x(), pos.y(), width, height};
+    auto renderQuad = SDL_Rect{pos.x(), pos.y(), width, height};
     renderfn(*this, srcrect.get(), &renderQuad);
 }
 
-void Texture::render(Vector2 const& pos, RotationData const& rotation) const
+void Texture::render(Transform::TransformData const& transformData) const
 {
-    render(pos, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
-        renderer.render(t, srcrect, dstrect, rotation);
+    auto position = Vector2{transformData.position.x(), transformData.position.y()};
+    render(position, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
+        *dstrect = {dstrect->x, dstrect->y, dstrect->w * transformData.scale.x(),
+                    dstrect->h * transformData.scale.y()};
+        renderer.render(t, srcrect, dstrect, transformData.rotation);
     });
 }
 

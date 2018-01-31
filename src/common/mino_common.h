@@ -2,6 +2,7 @@
 #include "audio.h"
 #include "color.h"
 #include "font.h"
+#include "matrix.h"
 #include "observer.h"
 #include "quadtree.h"
 #include "rect.h"

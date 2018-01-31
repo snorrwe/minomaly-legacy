@@ -66,11 +66,13 @@ template <typename TComponent> TComponent* GameObject::addComponent()
 
 template <typename TComponent> TComponent* GameObject::getComponent() const
 {
-    for (auto& i : components)
+    for (auto& component : components)
     {
-        if (i && typeid(*i) == typeid(TComponent))
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
+        if (component && typeid(*component) == typeid(TComponent))
         {
-            return static_cast<TComponent*>(i.get());
+            return static_cast<TComponent*>(component.get());
         }
     }
     return nullptr;
