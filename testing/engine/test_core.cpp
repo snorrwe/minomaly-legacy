@@ -94,13 +94,13 @@ public:
 class MockAssets : public IAssetSystem
 {
 public:
-    // using IAssetSystem::TSpriteSheet;
-
     MOCK_METHOD1(loadTexture, std::shared_ptr<Texture>(std::string const& name));
     MOCK_METHOD3(loadText,
                  std::shared_ptr<Texture>(std::string const& text, Font const& font, Color const&));
     MOCK_METHOD2(loadSpriteSheet,
-                 TSpriteSheet(std::string const& name, std::vector<SDL_Rect> const& rects));
+                 std::shared_ptr<TSpriteSheet>(std::string const& name,
+                                               std::vector<SDL_Rect> const& rects));
+    MOCK_METHOD0(collectGarbage, void());
 };
 
 class FakeProgram : public Application

@@ -32,8 +32,8 @@ void SpriteRendererComponent::render(Transform::TransformRef const& camera)
     auto y = static_cast<int>(position.y());
     auto sx = absolute.scale.x() / (camera ? camera->absolute().scale.x() : 1.0f);
     auto sy = absolute.scale.y() / (camera ? camera->absolute().scale.y() : 1.0f);
-    texture->render(
-        {{x, -y - (height * sy)}, {sx, sy}, camera->absolute().rotation - absolute.rotation});
+    auto rotation = camera->absolute().rotation - absolute.rotation;
+    texture->render({{x, -y - (height * sy)}, {sx, sy}, rotation});
 }
 
 void SpriteRendererComponent::setTexture(Texture* t)
@@ -41,6 +41,7 @@ void SpriteRendererComponent::setTexture(Texture* t)
     if (!t) return;
     texture = t;
     height = t->getHeight();
+    width = t->getWidth();
 }
 
 void SpriteRendererComponent::clearTexture()

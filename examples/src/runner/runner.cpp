@@ -28,8 +28,9 @@ void Program::start()
     auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(
         {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
-    images.push_back(engine->getAssets()->loadTexture("assets/runner/bar.png"));
-    bar->getComponent<SpriteRendererComponent>()->setTexture(images.back().get());
+    auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
+    images.push_back(barImage);
+    bar->getComponent<SpriteRendererComponent>()->setTexture(barImage.get());
     auto barCollider = bar->getComponent<BoxColliderComponent>();
     barCollider->set(30, 120);
     barCollider->setLayers(0x1 | 0x2);
@@ -43,7 +44,7 @@ void Program::start()
         cameraTransform->position() + Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f};
 
     auto eggPic =
-        engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})[0];
+        engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})->at(0);
     images.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;

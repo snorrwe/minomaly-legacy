@@ -21,6 +21,7 @@ public:
 
 protected:
     int height = 0;
+    int width = 0;
     Texture* texture = nullptr;
 };
 

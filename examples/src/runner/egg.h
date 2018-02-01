@@ -12,7 +12,7 @@ enum class State
 
 class EggComponent : public Mino::Component
 {
-    using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
+    using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
     using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
 
     Mino::Rigidbody* body;
@@ -62,8 +62,8 @@ public:
                      *   (3) texture
                      */
                     /*(1)  (2)      (3)*/
-                    {{}, 0.5f, images[0].get()}, // Frame 0
-                    {{}, 0.2f, images[1].get()}, // Frame 1
+                    {{}, 0.5f, images->at(0).get()}, // Frame 0
+                    {{}, 0.2f, images->at(1).get()}, // Frame 1
                 },
                 Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
             },

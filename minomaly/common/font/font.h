@@ -1,13 +1,14 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_ttf.h"
+#include "asset.h"
 #include <iostream>
 #include <memory>
 #include <string>
 
 namespace Mino
 {
-class Font
+class Font : public Asset
 {
 public:
     static std::shared_ptr<Font> load(std::string const& path, int pts);

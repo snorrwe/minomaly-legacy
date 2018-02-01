@@ -37,6 +37,7 @@ set(_COMMON_INCLUDES common
                      common/font
                      common/quadtree
                      common/bounding_box
+                     common/asset
                      common/matrix
                      common/object_pool
                      common/vector2)
