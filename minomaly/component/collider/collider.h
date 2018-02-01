@@ -60,7 +60,6 @@ protected:
     virtual void updateCornersByPosition(Vector2<float> const&) = 0;
 
     uint32_t layers = 0x1;
-    Transform::TransformRef transform;
     Vector2<float> lastPos = {0, 0};
     Vector2<float> deltaPos = {0, 0};
     IPhysicsSystem* physicsSystem;

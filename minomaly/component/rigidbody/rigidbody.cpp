@@ -2,11 +2,7 @@
 
 using namespace Mino;
 
-void Rigidbody::start()
-{
-    transform = gameObject->getTransform();
-    time = Services::get<ITimeService>();
-}
+void Rigidbody::start() { time = Services::get<ITimeService>(); }
 
 void Rigidbody::update()
 {

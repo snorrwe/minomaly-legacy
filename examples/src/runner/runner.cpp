@@ -36,6 +36,10 @@ void Program::start()
 
     auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
                                 BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
+    egg->addChild(*getMainCamera());
+    getMainCamera()->getTransform()->position() =
+        getMainCamera()->getTransform()->position() +
+        Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f};
     auto eggPic =
         engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})[0];
     images.push_back(eggPic);

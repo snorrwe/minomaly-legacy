@@ -12,7 +12,6 @@ namespace Mino
 class SpriteRendererComponent : public RenderComponent
 {
 public:
-    virtual void start();
     virtual void update();
     virtual void render(Transform::TransformRef const& camera);
 
@@ -22,12 +21,11 @@ public:
 
 protected:
     int height = 0;
-    Transform::TransformRef transform = nullptr;
     Texture* texture = nullptr;
 };
 
 template <>
 std::unique_ptr<SpriteRendererComponent>
-Component::create<SpriteRendererComponent>(GameObject* gameObject);
+Component::create<SpriteRendererComponent>(GameObject& gameObject);
 
 } // namespace Mino
