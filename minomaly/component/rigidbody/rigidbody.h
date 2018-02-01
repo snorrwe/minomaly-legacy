@@ -42,12 +42,11 @@ public:
     Material const& getMaterial() const { return material; }
     void setMaterial(Material const& value) { material = value; }
 
-    void addCollider(ColliderComponent &coll);
+    void addCollider(ColliderComponent& coll);
 
 private:
     void resolveCollision(CollisionData const& collistionData);
 
-    Transform::TransformRef transform = nullptr;
     std::shared_ptr<ITimeService> time = nullptr;
     Vector2<float> normalDirection = {0, 0};
     Vector2<float> velocity = {0, 0};

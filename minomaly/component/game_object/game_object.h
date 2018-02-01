@@ -57,7 +57,7 @@ protected:
 
 template <typename TComponent> TComponent* GameObject::addComponent()
 {
-    auto component = Component::create<TComponent>(this);
+    auto component = Component::create<TComponent>(*this);
     auto result = component.get();
     components.insert(components.begin() + enabled, std::move(component));
     ++enabled;

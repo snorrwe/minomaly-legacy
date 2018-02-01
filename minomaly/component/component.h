@@ -1,5 +1,6 @@
 #pragma once
 #include "game_object.h"
+#include "transform.h"
 #include <memory>
 #include <type_traits>
 
@@ -13,7 +14,7 @@ class Component
 {
 public:
     template <typename TComponent>
-    static std::unique_ptr<TComponent> create(GameObject* gameObject);
+    static std::unique_ptr<TComponent> create(GameObject& gameObject);
 
     virtual ~Component() {}
 
@@ -25,19 +26,23 @@ public:
 
     bool isEnabled() { return enabled; }
 
+    virtual void setTransform(Transform::TransformRef const& value) { transform = value; }
+
 protected:
     template <typename TComponent> static std::unique_ptr<TComponent> create();
 
     GameObject* gameObject = nullptr;
+    Transform::TransformRef transform = nullptr;
     bool enabled = true;
 };
 
-template <typename TComponent> std::unique_ptr<TComponent> Component::create(GameObject* gameObject)
+template <typename TComponent> std::unique_ptr<TComponent> Component::create(GameObject& gameObject)
 {
     static_assert(std::is_convertible<TComponent*, Component*>::value,
                   "Components must derive from Component!");
     auto result = create<TComponent>();
-    result->gameObject = gameObject;
+    result->gameObject = &gameObject;
+    result->setTransform(gameObject.getTransform());
     result->start();
     return std::move(result);
 }

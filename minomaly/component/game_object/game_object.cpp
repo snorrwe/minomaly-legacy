@@ -82,6 +82,10 @@ void GameObject::addChild(GameObject& go)
         go.transform = transform->addChild(std::move(go.transform));
         children.push_back(&go);
         go.parent = this;
+        for (auto& component : go.components)
+        {
+            component->setTransform(go.transform);
+        }
     }
 }
 
@@ -93,6 +97,13 @@ void GameObject::removeChild(GameObject& go)
         transform->removeChild(go.transform);
         go.parent = nullptr;
         children.erase(it);
-        if (application) go.transform = application->getRootTransform();
+        if (application)
+            go.transform = application->getRootTransform();
+        else
+            go.transform = nullptr;
+        for (auto& component : go.components)
+        {
+            component->setTransform(go.transform);
+        }
     }
 }

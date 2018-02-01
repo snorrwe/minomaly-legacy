@@ -13,6 +13,7 @@ public:
 
     CameraRef getCamera() { return camera; }
     void setCamera(CameraRef value);
+    virtual void setTransform(Transform::TransformRef const& value);
 
 private:
     CameraRef camera;

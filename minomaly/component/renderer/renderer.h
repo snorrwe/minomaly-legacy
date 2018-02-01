@@ -15,7 +15,7 @@ class GameObject;
 class RenderComponent : public Component
 {
 public:
-    template <typename TRender> static std::unique_ptr<TRender> create(GameObject* gameObject);
+    template <typename TRender> static std::unique_ptr<TRender> create(GameObject& gameObject);
 
     virtual ~RenderComponent();
 
@@ -28,13 +28,14 @@ protected:
     IRenderSystem* renderSystem;
 };
 
-template <typename TRender> std::unique_ptr<TRender> RenderComponent::create(GameObject* gameObject)
+template <typename TRender> std::unique_ptr<TRender> RenderComponent::create(GameObject& gameObject)
 {
     static_assert(std::is_convertible<TRender*, RenderComponent*>::value);
 
-    auto renderSystem = gameObject->getApplication()->getEngineCore()->getRenderer();
+    auto renderSystem = gameObject.getApplication()->getEngineCore()->getRenderer();
     auto result = renderSystem->createRenderer<TRender>();
-    result->gameObject = gameObject;
+    result->gameObject = &gameObject;
+    result->setTransform(gameObject.getTransform());
     result->renderSystem = renderSystem;
     result->start();
     return std::move(result);

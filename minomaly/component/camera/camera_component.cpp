@@ -4,6 +4,12 @@ using namespace Mino;
 
 void CameraComponent::setCamera(CameraRef value)
 {
-    camera = value;
-    camera->setTransform(gameObject->getTransform());
+    camera = std::move(value);
+    camera->setTransform(transform);
+}
+
+void CameraComponent::setTransform(Transform::TransformRef const& value)
+{
+    Component::setTransform(value);
+    if (camera) camera->setTransform(transform);
 }

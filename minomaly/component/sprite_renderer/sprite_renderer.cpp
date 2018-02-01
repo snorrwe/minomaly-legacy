@@ -4,12 +4,10 @@ using namespace Mino;
 
 template <>
 std::unique_ptr<SpriteRendererComponent>
-Component::create<SpriteRendererComponent>(GameObject* gameObject)
+Component::create<SpriteRendererComponent>(GameObject& gameObject)
 {
     return RenderComponent::create<SpriteRendererComponent>(gameObject);
 }
-
-void SpriteRendererComponent::start() { transform = gameObject->getTransform(); }
 
 void SpriteRendererComponent::update()
 {

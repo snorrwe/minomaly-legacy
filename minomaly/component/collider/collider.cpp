@@ -6,7 +6,6 @@ ColliderComponent::~ColliderComponent() { physicsSystem->remove(this); }
 
 void ColliderComponent::start()
 {
-    transform = gameObject->getTransform();
     lastPos = transform->absolute().position;
     physicsSystem = gameObject->getApplication()->getEngineCore()->getPhysicsSystem();
     world = physicsSystem->getWorld();
