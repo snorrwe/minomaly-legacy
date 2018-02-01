@@ -33,6 +33,8 @@ public:
         physics->start();
     }
 
+    void TearDown() { gameObject.reset(); }
+
 protected:
     std::unique_ptr<GameObject> gameObject;
     Rigidbody* physics;
