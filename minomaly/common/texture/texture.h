@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "asset.h"
 #include "camera.h"
 #include "color.h"
 #include "font.h"
@@ -22,11 +23,16 @@ namespace Mino
 
 class IRenderSystem;
 class ICamera;
+class Texture;
 
-class Texture
+struct SpriteSheet : public Asset, std::vector<std::shared_ptr<Texture>>
+{
+};
+
+class Texture : public Asset
 {
 public:
-    using TSpriteSheet = std::vector<std::shared_ptr<Texture>>;
+    using TSpriteSheet = std::shared_ptr<SpriteSheet>;
     using RotationData = RenderData::RotationData;
     using Vector2 = RenderData::Vector2;
     using ManagedTexture = Private::ManagedTexture;

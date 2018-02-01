@@ -51,11 +51,11 @@ Texture::TSpriteSheet Texture::loadSpriteSheet(std::string const& name, IRenderS
                                                Color const& colorKey)
 {
     auto texture = loadTexture(name, renderer, flag, colorKey);
-    auto result = TSpriteSheet();
+    auto result = std::make_shared<SpriteSheet>();
     for (auto i = rects.begin(); i != rects.end(); ++i)
     {
-        result.push_back(std::make_shared<Texture>(*texture));
-        result.back()->setSrcrect(std::make_shared<SDL_Rect>(*i));
+        result->push_back(std::make_shared<Texture>(*texture));
+        result->back()->setSrcrect(std::make_shared<SDL_Rect>(*i));
     }
     return result;
 }

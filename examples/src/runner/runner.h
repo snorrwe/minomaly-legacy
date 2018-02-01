@@ -15,7 +15,7 @@ class Program : public Mino::Application
 {
     using RotationData = Mino::RenderData::RotationData;
     using Subscriptions = std::array<Mino::ISubscription, 1>;
-    using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
+    using MediaContainer = std::vector<std::shared_ptr<Mino::Asset>>;
 
     Mino::IInputSystem* input;
     Mino::ITimeService* time;

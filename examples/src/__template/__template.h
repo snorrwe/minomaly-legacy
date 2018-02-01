@@ -14,7 +14,7 @@ class Program : public Mino::Application
 {
     using RotationData = Mino::RenderData::RotationData;
     using Subscriptions = std::array<Mino::ISubscription, 1>;
-    using MediaContainer = std::vector<std::shared_ptr<Mino::Texture>>;
+    using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
 
     Mino::IInputSystem* input;
     Mino::IRenderSystem* renderer;
