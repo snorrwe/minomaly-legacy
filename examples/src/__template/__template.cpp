@@ -12,7 +12,6 @@ Program::~Program()
 
 void Program::start()
 {
-    renderer = engine->getRenderer();
     input = engine->getInput();
     subs = Subscriptions{input->onKeyDown([&](auto const& e) {
         if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();

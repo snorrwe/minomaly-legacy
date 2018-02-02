@@ -100,7 +100,9 @@ public:
     MOCK_METHOD2(loadSpriteSheet,
                  std::shared_ptr<TSpriteSheet>(std::string const& name,
                                                std::vector<SDL_Rect> const& rects));
+    MOCK_METHOD2(loadFont, std::shared_ptr<Font>(std::string const& path, int pts));
     MOCK_METHOD0(collectGarbage, void());
+    MOCK_METHOD0(clear, void());
 };
 
 class FakeProgram : public Application

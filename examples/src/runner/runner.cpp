@@ -84,14 +84,6 @@ void Program::update()
     {
         velocity = {velocity.x(), velocity.y() - sv};
     }
-    if (input->isDown(SDLK_e))
-    {
-        getMainCamera()->getTransform()->rotation().angle += time->deltaTime() * 2;
-    }
-    if (input->isDown(SDLK_q))
-    {
-        getMainCamera()->getTransform()->rotation().angle -= time->deltaTime() * 2;
-    }
     velocity = velocity * time->deltaTime();
 
     auto& cameraPos = getMainCamera()->getTransform()->position();

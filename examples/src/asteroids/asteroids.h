@@ -14,15 +14,12 @@ class Program : public Mino::Application
 {
     using RotationData = Mino::RenderData::RotationData;
     using Subscriptions = std::array<Mino::ISubscription, 1>;
-    using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
+    using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
+    using SpriteSheet = std::shared_ptr<Mino::SpriteSheet>;
 
-    Mino::IInputSystem* input;
-    Subscriptions subs;
-    MediaContainer images;
+    Animations animations = {};
+    SpriteSheet asteroidSheet;
 
 public:
-    virtual ~Program();
-
-    virtual void update();
     virtual void start();
 };
