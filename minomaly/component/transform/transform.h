@@ -79,11 +79,12 @@ protected:
 
     TransformData localTransform = {};
     TransformData absoluteTransform = {};
+    Matrix childToWorldMatrix = Matrix::unit(3);
 
 private:
     Matrix transformMatrix(TransformData const& parent);
 
-    void updateByParent(TransformData const&);
+    void updateByParent(TransformData const& parent, Matrix const& parentMatrix);
 };
 
 } // namespace Mino

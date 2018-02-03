@@ -8,18 +8,6 @@ Matrix Mino::operator*(float const& coeff, Matrix result) { return result *= coe
 
 Matrix Mino::operator*(Matrix result, float const& coeff) { return result *= coeff; }
 
-std::vector<float> Matrix::invertValues(Matrix const& matrix)
-{
-    std::vector<float> rightValues(matrix.size());
-    for (int i = 0; i != matrix.size(); ++i)
-    {
-        int y = i % matrix.rows();
-        int x = (i - y) / matrix.rows();
-        rightValues[y * matrix.columns() + x] = matrix.values[i];
-    }
-    return rightValues;
-}
-
 Matrix Mino::operator*(Matrix const& lhs, Matrix const& rhs)
 {
     if (lhs.rows() != rhs.columns())
@@ -27,7 +15,6 @@ Matrix Mino::operator*(Matrix const& lhs, Matrix const& rhs)
         throw MatrixErrors::InvalidMatrixPair(lhs.columns(), lhs.rows(), rhs.columns(), rhs.rows(),
                                               " dot ");
     }
-    auto rightValues = Matrix::invertValues(rhs);
     Matrix result(lhs.columns(), rhs.rows());
     for (int col = 0; col < result.columns(); ++col)
     {
@@ -36,7 +23,7 @@ Matrix Mino::operator*(Matrix const& lhs, Matrix const& rhs)
             auto& value = result.get(col, row);
             for (int k = 0; k < lhs.rows(); ++k)
             {
-                value += lhs.get(col, k) * rightValues[row * rhs.columns() + k];
+                value += lhs.get(col, k) * rhs.get(k, row);
             }
         }
     }
@@ -74,10 +61,7 @@ Matrix::Matrix(std::vector<std::vector<float>> const& matrix)
     }
 }
 
-Matrix::Matrix(int columns, int rows) : _columns(columns), _rows(rows), values(columns * rows)
-{
-    values.shrink_to_fit();
-}
+Matrix::Matrix(int columns, int rows) : _columns(columns), _rows(rows), values(columns * rows) {}
 
 Matrix::Matrix(std::vector<float> const& matrix, int columns, int rows)
     : _columns(columns), _rows(rows), values(columns * rows)
@@ -94,7 +78,6 @@ Matrix::Matrix(std::vector<float> const& matrix, int columns, int rows)
             set(i, j, matrix[index]);
         }
     }
-    values.shrink_to_fit();
 }
 
 Matrix::ColumnProxy Matrix::operator[](int n)

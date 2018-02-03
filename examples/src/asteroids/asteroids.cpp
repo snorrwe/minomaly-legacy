@@ -4,32 +4,26 @@ using namespace Mino;
 
 void Program::start()
 {
-    asteroidSheet = engine->getAssets()->loadSpriteSheet(
-        "assets/asteroids/animated_asteroid.png",
-        {
-            {0, 0, 70, 70},   {0, 70, 70, 70},   {70, 0, 70, 70},   {70, 70, 70, 70},
-            {140, 0, 70, 70}, {140, 70, 70, 70}, {210, 0, 70, 70},  {210, 70, 70, 70},
-            {280, 0, 70, 70}, {280, 70, 70, 70}, {350, 0, 70, 70},  {350, 70, 70, 70},
-            {420, 0, 70, 70}, {420, 70, 70, 70}, {490, 0, 70, 70},  {490, 70, 70, 70},
-            {560, 0, 70, 70}, {560, 70, 70, 70}, {630, 0, 70, 70},  {630, 70, 70, 70},
-            {700, 0, 70, 70}, {700, 70, 70, 70}, {770, 0, 70, 70},  {770, 70, 70, 70},
-            {840, 0, 70, 70}, {840, 70, 70, 70}, {910, 0, 70, 70},  {910, 70, 70, 70},
-            {980, 0, 70, 70}, {980, 70, 70, 70}, {1050, 0, 70, 70}, {1050, 70, 70, 70},
-        });
+    auto rng = std::mt19937{};
+    rng.seed(std::random_device()());
+    auto dist6 = std::uniform_int_distribution<std::mt19937::result_type>(0, WORLD_WIDTH);
+    auto getRandom = [&]() { return dist6(rng); };
 
-    auto asteroidFrames = std::vector<Mino::SpriteAnimationData::Frame>{};
-    for (auto& image : *asteroidSheet)
+    for (int i = 0; i < 500; ++i)
     {
-        asteroidFrames.push_back({{}, 1.0f / asteroidSheet->size(), image.get()});
+        auto x = getRandom();
+        auto y = getRandom();
+
+        auto asteroid = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
+                                         BoxColliderComponent, Rigidbody, AsteroidComponent>();
+        asteroid->getTransform()->setPosition({x, y});
+
+        auto vx = getRandom() / 1000.f;
+        auto vy = getRandom() / 1000.f;
+
+        auto velocity = Vector2<float>(vx, vy);
+        asteroid->getComponent<AsteroidComponent>()->setup(WORLD_WIDTH, velocity);
     }
-    animations = {
-        Mino::SpriteAnimationData::Animation{
-            asteroidFrames,
-            Mino::SpriteAnimationData::Animation::Loop,
-        },
-    };
-    auto asteroid = createGameObject<Rigidbody, BoxColliderComponent, SpriteRendererComponent,
-                                     SpriteAnimatorComponent>();
-    asteroid->getComponent<SpriteAnimatorComponent>()->startAnimation(animations[0]);
-    asteroid->getComponent<BoxColliderComponent>()->set(70.f, 70.f);
+
+    getEngineCore()->getPhysicsSystem()->setWorldBox({{0, 0}, 0, 0});
 }
