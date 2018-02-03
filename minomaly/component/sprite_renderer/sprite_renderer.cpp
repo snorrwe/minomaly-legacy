@@ -18,15 +18,14 @@ void SpriteRendererComponent::render(Transform::TransformRef const& camera)
 {
     auto& absolute = transform->absolute();
     auto position = absolute.position;
-
-    auto m = Matrix{{position.x(), position.y(), 1}, 1, 3} * [&]() { // TODO: Messes up scaling
+    auto cameraMatrix = [&]() { // TODO: Messes up scaling
         const auto cx = camera->absolute().scale.x() * cos(camera->absolute().rotation.angle);
         const auto sy = camera->absolute().scale.y() * sin(camera->absolute().rotation.angle);
-        return Matrix({cx, sy, -camera->absolute().position.x(), -sy, cx,
-                       -camera->absolute().position.y(), 0, 0, 1},
-                      3, 3);
+        return FixedMatrix<3, 3>({cx, sy, -camera->absolute().position.x(), -sy, cx,
+                                  -camera->absolute().position.y(), 0, 0, 1});
     }();
-    position = {m[0][0], m[0][1]};
+    auto m = FixedMatrix<1, 3>{{position.x(), position.y(), 1}} * cameraMatrix;
+    position = {m.at(0, 0), m.at(0, 1)};
 
     auto x = static_cast<int>(position.x());
     auto y = static_cast<int>(position.y());

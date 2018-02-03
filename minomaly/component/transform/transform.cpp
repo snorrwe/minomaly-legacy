@@ -54,22 +54,23 @@ void Transform::updateAsRoot()
     updateChildren();
 }
 
-void Transform::updateByParent(TransformData const& parent, Matrix const& parentMatrix)
+void Transform::updateByParent(TransformData const& parent, FixedMatrix<3, 3> const& parentMatrix)
 {
-    auto position = Matrix({localTransform.position.x(), localTransform.position.y(), 1.0f}, 1, 3);
-    auto positionMatrix = Matrix::dot(position, parentMatrix);
-    absoluteTransform.position = {positionMatrix[0][0], positionMatrix[0][1]};
+    auto position =
+        FixedMatrix<1, 3>({localTransform.position.x(), localTransform.position.y(), 1.0f});
+    auto positionMatrix = position * parentMatrix;
+    absoluteTransform.position = {positionMatrix.at(0, 0), positionMatrix.at(0, 1)};
     absoluteTransform.scale = {parent.scale.x() * localTransform.scale.x(),
                                parent.scale.y() * localTransform.scale.y()};
     absoluteTransform.rotation = parent.rotation + localTransform.rotation;
     childToWorldMatrix = transformMatrix(absoluteTransform);
 }
 
-Matrix Transform::transformMatrix(TransformData const& data)
+FixedMatrix<3, 3> Transform::transformMatrix(TransformData const& data)
 {
     const auto cx = cos(data.rotation.angle) * data.scale.x();
     const auto sy = sin(data.rotation.angle) * data.scale.y();
-    return Matrix({cx, -sy, data.position.x(), sy, cx, data.position.y(), 0, 0, 1}, 3, 3);
+    return FixedMatrix<3, 3>({cx, -sy, data.position.x(), sy, cx, data.position.y(), 0, 0, 1});
 }
 
-Matrix Transform::transformMatrix() { return childToWorldMatrix; }
+FixedMatrix<3, 3> Transform::transformMatrix() { return childToWorldMatrix; }

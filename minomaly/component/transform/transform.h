@@ -1,6 +1,6 @@
 #pragma once
+#include "fixed_matrix.h"
 #include "iterable_pool.h"
-#include "matrix.h"
 #include "renderdata.h"
 #include "vector2.h"
 #include <algorithm>
@@ -70,7 +70,7 @@ public:
     void setRotation(RotationData const& value);
 
     TransformData const& absolute() const { return absoluteTransform; }
-    Matrix transformMatrix();
+    FixedMatrix<3, 3> transformMatrix();
 
 protected:
     TransformRef::WeakRef parent = nullptr;
@@ -79,12 +79,12 @@ protected:
 
     TransformData localTransform = {};
     TransformData absoluteTransform = {};
-    Matrix childToWorldMatrix = Matrix::unit(3);
+    FixedMatrix<3, 3> childToWorldMatrix = FixedMatrix<3, 3>({1, 0, 0, 0, 1, 0, 0, 0, 1});
 
 private:
-    Matrix transformMatrix(TransformData const& parent);
+    FixedMatrix<3, 3> transformMatrix(TransformData const& parent);
 
-    void updateByParent(TransformData const& parent, Matrix const& parentMatrix);
+    void updateByParent(TransformData const& parent, FixedMatrix<3, 3> const& parentMatrix);
 };
 
 } // namespace Mino

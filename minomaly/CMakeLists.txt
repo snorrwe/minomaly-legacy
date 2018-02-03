@@ -40,6 +40,7 @@ set(_COMMON_INCLUDES common
                      common/bounding_box
                      common/asset
                      common/matrix
+                     common/fixed_matrix
                      common/object_pool
                      common/vector2)
 
