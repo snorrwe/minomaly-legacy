@@ -82,6 +82,9 @@ template <class T> void Quadtree<T>::clear()
 {
     points.clear();
     northWest = nullptr;
+    northEast = nullptr;
+    southWest = nullptr;
+    southEast = nullptr;
 }
 
 template <class T> bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)

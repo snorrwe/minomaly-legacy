@@ -51,8 +51,11 @@ public:
         gameObject->getComponent<SpriteRendererComponent>();
         gameObject->getComponent<SpriteAnimatorComponent>()->startAnimation(animations[0]);
         auto collider = gameObject->getComponent<BoxColliderComponent>();
-        collider->set(50.f, 50.f, {20.f, 20.f});
-        gameObject->getComponent<Rigidbody>()->addCollider(*collider);
+        collider->set(50.f, 50.f, {10.f, 10.f});
+        auto rigidbody = gameObject->getComponent<Rigidbody>();
+        // collider->onCollision().subscribe(
+        //[&, rigidbody](auto const&) { std::cout << rigidbody << '\n'; });
+        rigidbody->addCollider(*collider);
     }
 };
 } // namespace

@@ -68,7 +68,7 @@ Matrix::Matrix(std::vector<float> const& matrix, int columns, int rows)
 {
     if (matrix.size() != columns * rows)
     {
-        throw std::runtime_error("Input vector must have a size of columns×rows!");
+        throw std::runtime_error("Input vector must have a size of columns times rows!");
     }
     for (int i = 0; i < columns; ++i)
     {

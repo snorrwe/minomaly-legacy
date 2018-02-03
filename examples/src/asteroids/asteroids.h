@@ -12,7 +12,7 @@
 const size_t SCREEN_WIDTH = 640;
 const size_t SCREEN_HEIGHT = 480;
 
-const size_t WORLD_WIDTH = 15000;
+const size_t WORLD_WIDTH = 500;
 
 class Program : public Mino::Application
 {

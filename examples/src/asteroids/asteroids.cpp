@@ -18,12 +18,15 @@ void Program::start()
                                          BoxColliderComponent, Rigidbody, AsteroidComponent>();
         asteroid->getTransform()->setPosition({x, y});
 
-        auto vx = getRandom() / 1000.f;
-        auto vy = getRandom() / 1000.f;
+        auto vx = getRandom() % 100 * (getRandom() % 2 ? -1.f : 1.f);
+        auto vy = getRandom() % 100 * (getRandom() % 2 ? -1.f : 1.f);
 
         auto velocity = Vector2<float>(vx, vy);
         asteroid->getComponent<AsteroidComponent>()->setup(WORLD_WIDTH, velocity);
+
+        auto scale = (getRandom() * 1.5f) / WORLD_WIDTH;
+        asteroid->getTransform()->setScale({scale, scale});
     }
 
-    getEngineCore()->getPhysicsSystem()->setWorldBox({{0, 0}, 0, 0});
+    getEngineCore()->getPhysicsSystem()->setWorldBox({{-500, -500}, 2000, 2000});
 }
