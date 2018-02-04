@@ -44,10 +44,10 @@ TEST_F(TestFixedMatrices, SimpleInitTest)
     auto m = FixedMatrix<2, 3>({1, 2, 3, 4, 5, 6});
 
     EXPECT_EQ(m.at(0, 0), 1);
-    EXPECT_EQ(m.at(0, 1), 2);
-    EXPECT_EQ(m.at(0, 2), 3);
-    EXPECT_EQ(m.at(1, 0), 4);
-    EXPECT_EQ(m.at(1, 1), 5);
+    EXPECT_EQ(m.at(1, 0), 2);
+    EXPECT_EQ(m.at(0, 1), 3);
+    EXPECT_EQ(m.at(1, 1), 4);
+    EXPECT_EQ(m.at(0, 2), 5);
     EXPECT_EQ(m.at(1, 2), 6);
 }
 

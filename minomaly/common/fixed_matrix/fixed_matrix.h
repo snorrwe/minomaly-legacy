@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cassert>
+#include <iostream>
 
 namespace Mino
 {
@@ -24,7 +25,7 @@ public:
 
     constexpr TCol columns() const { return _cols; }
     constexpr TCol rows() const { return _rows; }
-    constexpr size_t size() { return _cols * _rows; }
+    constexpr size_t size() const { return _cols * _rows; }
 
     float& at(TCol const col, TCol const row);
     float const& at(TCol const col, TCol const row) const;
@@ -38,17 +39,33 @@ public:
 };
 
 template <uint8_t _cols, uint8_t _rows>
+std::ostream& operator<<(std::ostream& os, FixedMatrix<_cols, _rows> const& m)
+{
+    os << "Matrix " << '0' + _cols << " " << '0' + _rows << "\n";
+    for (int j = 0; j < _rows; ++j)
+    {
+        os << "| ";
+        for (int i = 0; i < _cols; ++i)
+        {
+            os << m.at(i, j) << " |";
+        }
+        os << "\n";
+    }
+    return os;
+}
+
+template <uint8_t _cols, uint8_t _rows>
 float& FixedMatrix<_cols, _rows>::at(TCol const col, TCol const row)
 {
     assert(col < _cols && row < _rows);
-    return values[col * _rows + row];
+    return values[col + _cols * row];
 }
 
 template <uint8_t _cols, uint8_t _rows>
 float const& FixedMatrix<_cols, _rows>::at(TCol const col, TCol const row) const
 {
     assert(col < _cols && row < _rows);
-    return values[col * _rows + row];
+    return values[col + _cols * row];
 }
 
 template <uint8_t _cols, uint8_t _rows>

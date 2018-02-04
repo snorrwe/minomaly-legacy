@@ -56,6 +56,7 @@ void Transform::updateAsRoot()
 
 void Transform::updateByParent(TransformData const& parent, FixedMatrix<3, 3> const& parentMatrix)
 {
+
     auto position =
         FixedMatrix<1, 3>({localTransform.position.x(), localTransform.position.y(), 1.0f});
     auto positionMatrix = position * parentMatrix;
@@ -70,6 +71,7 @@ FixedMatrix<3, 3> Transform::transformMatrix(TransformData const& data)
 {
     const auto cx = cos(data.rotation.angle) * data.scale.x();
     const auto sy = sin(data.rotation.angle) * data.scale.y();
+    // return FixedMatrix<3, 3>({cx, -sy, 0, sy, cx, 0, data.position.x(), data.position.y(), 1});
     return FixedMatrix<3, 3>({cx, -sy, data.position.x(), sy, cx, data.position.y(), 0, 0, 1});
 }
 
