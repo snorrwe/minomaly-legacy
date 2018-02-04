@@ -26,7 +26,6 @@ class EggComponent : public Mino::Component
     const float gravity = 50.0;
     State state = State::Grounded;
     float airTime = 1000.0;
-    bool shrink = true;
 
 public:
     Mino::IInputSystem* input;
@@ -129,28 +128,6 @@ public:
         }
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
-
-        /*
-        transform->rotation().angle += time->deltaTime();
-        const auto PI = 3.1415f;
-        if (transform->rotation().angle > 2 * PI) transform->rotation().angle = 0.0f;
-
-        auto& scale = transform->scale();
-
-        if (shrink)
-        {
-            if (scale.x() > 0.5f)
-                scale = scale - Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
-            else
-                shrink = false;
-        }
-        else
-        {
-            if (scale.x() < 2.0f)
-                scale = scale + Mino::Vector2<float>{time->deltaTime(), time->deltaTime()};
-            else
-                shrink = true;
-        }*/
     }
 
 private:

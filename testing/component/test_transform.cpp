@@ -51,16 +51,16 @@ TEST_F(TransformTests, ChildrenPositionsAreRelativeToParent)
 
     tr->updateAsRoot();
 
-    ASSERT_EQ(child1->position().x(), 1);
-    ASSERT_EQ(child1->absolute().position.x(), 1);
-    ASSERT_EQ(child2->position().x(), 2);
-    ASSERT_EQ(child2->absolute().position.x(), 3);
+    EXPECT_EQ(child1->position().x(), 1);
+    EXPECT_EQ(child1->absolute().position.x(), 1);
+    EXPECT_EQ(child2->position().x(), 2);
+    EXPECT_EQ(child2->absolute().position.x(), 3);
 
     tr->setPosition({1, 0});
     tr->updateAsRoot();
 
-    ASSERT_EQ(child1->position().x(), 1);
-    ASSERT_EQ(child1->absolute().position.x(), 2);
-    ASSERT_EQ(child2->position().x(), 2);
-    ASSERT_EQ(child2->absolute().position.x(), 4);
+    EXPECT_EQ(child1->position().x(), 1);
+    EXPECT_EQ(child1->absolute().position.x(), 2);
+    EXPECT_EQ(child2->position().x(), 2);
+    EXPECT_EQ(child2->absolute().position.x(), 4);
 }

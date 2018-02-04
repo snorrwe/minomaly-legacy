@@ -61,7 +61,6 @@ public:
     static Matrix hadamard(Matrix const& lhs, Matrix const& rhs);
     static Matrix dot(Matrix const& lhs, Matrix const& rhs) { return lhs * rhs; }
     static void assertEqualSize(Matrix const& lhs, Matrix const& rhs, std::string const& message);
-    static std::vector<float> invertValues(Matrix const& matrix);
 
     Matrix() = default;
     Matrix(int columns, int rows);

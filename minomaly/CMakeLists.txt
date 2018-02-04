@@ -34,11 +34,13 @@ set(_COMMON_INCLUDES common
                      common/color 
                      common/audio
                      common/rect
+                     common/sprite_animation
                      common/font
                      common/quadtree
                      common/bounding_box
                      common/asset
                      common/matrix
+                     common/fixed_matrix
                      common/object_pool
                      common/vector2)
 
@@ -79,6 +81,7 @@ add_library(${_MINO_COMMON} ${PROJECT_SOURCE_DIR}/common/surface/surface.cpp
                             ${PROJECT_SOURCE_DIR}/common/texture/texture.cpp
                             ${PROJECT_SOURCE_DIR}/common/bounding_box/bounding_box.cpp
                             ${PROJECT_SOURCE_DIR}/common/matrix/matrix.cpp
+                            ${PROJECT_SOURCE_DIR}/common/font/font.cpp
                             ${PROJECT_SOURCE_DIR}/common/audio/audio.cpp)
 
 add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp

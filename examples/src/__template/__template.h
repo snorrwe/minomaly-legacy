@@ -17,7 +17,6 @@ class Program : public Mino::Application
     using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
 
     Mino::IInputSystem* input;
-    Mino::IRenderSystem* renderer;
     Subscriptions subs;
     MediaContainer images;
 

@@ -9,10 +9,7 @@ std::shared_ptr<AssetSystem> AssetSystem::create(IRenderSystem* renderer)
 
 std::shared_ptr<Texture> AssetSystem::loadTexture(std::string const& name)
 {
-    if (auto cached = findAsset(name); cached) return std::static_pointer_cast<Texture>(cached);
-    auto result = Texture::loadTexture(name, *renderer);
-    assets[name] = result;
-    return result;
+    return load<Texture>(name, [&]() { return Texture::loadTexture(name, *renderer); });
 }
 
 std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font const& font,
@@ -24,11 +21,8 @@ std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font con
 typename std::shared_ptr<AssetSystem::TSpriteSheet>
 AssetSystem::loadSpriteSheet(std::string const& name, std::vector<SDL_Rect> const& rects)
 {
-    if (auto cached = findAsset(name); cached)
-        return std::static_pointer_cast<Mino::SpriteSheet>(cached);
-    auto result = Texture::loadSpriteSheet(name, *renderer, rects);
-    assets[name] = result;
-    return result;
+    return load<TSpriteSheet>(name,
+                              [&]() { return Texture::loadSpriteSheet(name, *renderer, rects); });
 }
 
 std::shared_ptr<Asset> AssetSystem::findAsset(std::string const& name)
@@ -53,4 +47,9 @@ void AssetSystem::collectGarbage()
         assets.erase(first);
         first = find();
     }
+}
+
+std::shared_ptr<Font> AssetSystem::loadFont(std::string const& path, int pts)
+{
+    return load<Font>(path, [&]() { return Font::load(path, pts); });
 }

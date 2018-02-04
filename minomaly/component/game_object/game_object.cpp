@@ -64,7 +64,7 @@ void GameObject::enableComponent(Component* component)
 void GameObject::update()
 {
     if (!components.size()) return;
-    auto toUpdate = std::vector<Component*>{};
+    static auto toUpdate = std::vector<Component*>{};
     toUpdate.reserve(components.size());
     std::transform(components.begin(), components.end(), std::back_inserter(toUpdate),
                    [](auto& i) { return i.get(); });
@@ -73,6 +73,7 @@ void GameObject::update()
     {
         (*i)->update();
     }
+    toUpdate.clear();
 }
 
 void GameObject::addChild(GameObject& go)

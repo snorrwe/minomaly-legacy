@@ -26,7 +26,7 @@ std::shared_ptr<Texture> Texture::loadText(std::string const& text, IRenderSyste
     auto textSurface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (!textSurface)
     {
-        std::cout << "Unable to render sutface! SDL_ttf Error:\n" << TTF_GetError() << std::endl;
+        std::cout << "Unable to render surface! SDL_ttf Error:\n" << TTF_GetError() << std::endl;
         throw std::runtime_error("Unable to render surface!");
     }
     return fromSurface(Surface::create(textSurface), renderer);

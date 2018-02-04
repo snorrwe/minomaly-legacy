@@ -1,6 +1,7 @@
 #pragma once
 #include "component.h"
 #include "services.h"
+#include "sprite_animation.h"
 #include "sprite_renderer.h"
 #include "texture.h"
 #include "transform.h"
@@ -10,29 +11,6 @@
 
 namespace Mino
 {
-
-namespace SpriteAnimationData
-{
-
-struct Frame
-{
-    Transform::TransformData transform = {};
-    float duration = 0.0;
-    Texture* texture = nullptr;
-};
-
-struct Animation
-{
-    enum AnimationFlags
-    {
-        Loop = 1,
-    };
-    std::vector<Frame> frames = {};
-    uint8_t flags = 0;
-    std::function<Animation*()> next = []() { return nullptr; };
-};
-
-} // namespace SpriteAnimationData
 
 class SpriteAnimatorComponent : public Component
 {
