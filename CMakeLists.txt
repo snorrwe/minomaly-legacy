@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.6)
+cmake_minimum_required(VERSION 3.9)
 
 # Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
 option(test "Build tests." ON) # Makes boolean 'test' available.
