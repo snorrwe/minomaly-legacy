@@ -21,6 +21,7 @@ enum Direction
     SouthEast = 3,
 };
 
+template <typename T>
 struct Node
 {
     Node() = default;
@@ -44,17 +45,17 @@ struct Node
 
 } // namespace QuadtreeProperties
 
-template <class T>
+template <typename T>
 class Quadtree
 {
 public:
-    using Node = QuadtreeProperties::Node;
+    using Node = QuadtreeProperties::Node<T>;
     using Points = std::vector<Node>;
     using Direction = QuadtreeProperties::Direction;
 
     Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr,
              const size_t capacity = 4)
-        : boundary(boundary), parent(parent), capacity(capacity),
+        : boundary(boundary), parent(parent), capacity(capacity)
     {
         points.reserve(capacity);
     }

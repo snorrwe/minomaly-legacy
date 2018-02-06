@@ -63,7 +63,6 @@ std::vector<typename ColliderComponent::World::Node> ColliderComponent::checkCol
 void ColliderComponent::handleCollisions(
     std::vector<typename ColliderComponent::World::Node> const& points)
 {
-
     auto currentlyTouching = TouchContainer{};
     if (points.empty())
     {
@@ -99,8 +98,8 @@ void ColliderComponent::handleResolvedCollisions(TouchContainer& currentlyTouchi
 
 void ColliderComponent::removeSelf(std::vector<World::Node>& points) const
 {
-    auto it =
-        std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
+    auto it
+        = std::find_if(points.begin(), points.end(), [&](auto const& i) { return i.item == this; });
     while (it != points.end())
     {
         points.erase(it);
