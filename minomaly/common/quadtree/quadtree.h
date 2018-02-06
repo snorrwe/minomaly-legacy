@@ -131,16 +131,16 @@ void Quadtree<T>::subdivide()
     const auto subDimension = boundary.getWidth() * 0.5001f;
     const auto center = boundary.getCenter();
     children[Direction::NorthWest] = std::make_unique<Quadtree>(
-        BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), capacity,
+        BoundingBox{{center.x() - subDimension, center.y() + subDimension}, subDimension}, capacity,
         this);
     children[Direction::NorthEast] = std::make_unique<Quadtree>(
-        BoundingBox({center.x() + subDimension, center.y() + subDimension}, subDimension), capacity,
+        BoundingBox{{center.x() + subDimension, center.y() + subDimension}, subDimension}, capacity,
         this);
     children[Direction::SouthWest] = std::make_unique<Quadtree>(
-        BoundingBox({center.x() - subDimension, center.y() - subDimension}, subDimension), capacity,
+        BoundingBox{{center.x() - subDimension, center.y() - subDimension}, subDimension}, capacity,
         this);
     children[Direction::SouthEast] = std::make_unique<Quadtree>(
-        BoundingBox({center.x() + subDimension, center.y() - subDimension}, subDimension), capacity,
+        BoundingBox{{center.x() + subDimension, center.y() - subDimension}, subDimension}, capacity,
         this);
 }
 
