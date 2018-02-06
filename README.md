@@ -6,7 +6,7 @@
 
 ### General 
 
-- [CMake](https://cmake.org/) 2.8+
+- [CMake](https://cmake.org/) 3.9+
 - C++17
 
 ### Platform specific
