@@ -38,8 +38,8 @@ public:
     using Points = std::vector<Node>;
 
     Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr,
-             const size_t capacity = 4, size_t depth = 0)
-        : boundary(boundary), parent(parent), capacity(capacity), depth(depth)
+             const size_t capacity = 4)
+        : boundary(boundary), parent(parent), capacity(capacity)
     {
         points.reserve(capacity);
     }
@@ -70,7 +70,6 @@ private:
     Quadtree* parent;
     Points points = Points{};
     size_t capacity;
-    size_t depth = 0;
 
     std::unique_ptr<Quadtree> northWest = nullptr;
     std::unique_ptr<Quadtree> northEast = nullptr;
@@ -115,19 +114,18 @@ template <class T> void Quadtree<T>::subdivide()
 {
     const auto subDimension = boundary.getWidth() * 0.5001f;
     const auto center = boundary.getCenter();
-    const auto d = depth + 1;
     northWest = std::make_unique<Quadtree>(
         BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), this,
-        capacity, d);
+        capacity);
     northEast = std::make_unique<Quadtree>(
         BoundingBox({center.x() + subDimension, center.y() + subDimension}, subDimension), this,
-        capacity, d);
+        capacity);
     southWest = std::make_unique<Quadtree>(
         BoundingBox({center.x() - subDimension, center.y() - subDimension}, subDimension), this,
-        capacity, d);
+        capacity);
     southEast = std::make_unique<Quadtree>(
         BoundingBox({center.x() + subDimension, center.y() - subDimension}, subDimension), this,
-        capacity, d);
+        capacity);
 }
 
 template <class T> bool Quadtree<T>::contains(typename Quadtree<T>::Node const& v)
