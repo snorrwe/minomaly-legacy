@@ -51,7 +51,7 @@ public:
 
 protected:
     std::unique_ptr<World> world
-        = std::make_unique<World>(BoundingBox{{0, 0}, 5e8, 5e8}, nullptr, WORLD_CAPACITY);
+        = std::make_unique<World>(BoundingBox{{0, 0}, 5e8, 5e8}, WORLD_CAPACITY);
     std::vector<Collider*> colliders = {};
     std::shared_ptr<WorkService> workService = nullptr;
 };

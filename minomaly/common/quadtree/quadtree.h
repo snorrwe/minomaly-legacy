@@ -53,8 +53,8 @@ public:
     using Points = std::vector<Node>;
     using Direction = QuadtreeProperties::Direction;
 
-    Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr,
-             const size_t capacity = 4)
+    Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), const size_t capacity = 4,
+             Quadtree* parent = nullptr)
         : boundary(boundary), parent(parent), capacity(capacity)
     {
         points.reserve(capacity);
@@ -84,8 +84,8 @@ protected:
 private:
     BoundingBox boundary;
     Quadtree* parent;
-    Points points = Points{};
     size_t capacity;
+    Points points = Points{};
 
     std::array<std::unique_ptr<Quadtree>, 4> children = {};
 };

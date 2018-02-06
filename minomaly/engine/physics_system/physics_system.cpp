@@ -45,5 +45,5 @@ void PhysicsSystem::remove(Collider* coll)
 
 void PhysicsSystem::setWorldBox(BoundingBox const& box)
 {
-    world = std::make_unique<World>(box, nullptr, WORLD_CAPACITY);
+    world = std::make_unique<World>(box, WORLD_CAPACITY);
 }
