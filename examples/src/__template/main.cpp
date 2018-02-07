@@ -1,7 +1,44 @@
 #include "__template.h"
 #include "mino.h"
+#include <array>
+#include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <vector>
+
+using namespace Mino;
+
+const size_t SCREEN_WIDTH = 640;
+const size_t SCREEN_HEIGHT = 480;
+
+class Program : public Mino::Application
+{
+    using RotationData = Mino::RenderData::RotationData;
+    using Subscriptions = std::array<Mino::ISubscription, 1>;
+    using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
+
+    Mino::IInputSystem* input;
+    Subscriptions subs;
+    MediaContainer images;
+
+public:
+    virtual ~Program()
+    {
+        for (auto i = subs.begin(); i != subs.end(); ++i)
+        {
+            i->unsubscribe();
+        }
+    }
+
+    void Program::start()
+    {
+        input = engine->getInput();
+        subs = Subscriptions{input->onKeyDown([&](auto const& e) {
+            if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();
+        })};
+    }
+};
 
 int main(int argc, char const* argv[])
 {
@@ -13,7 +50,6 @@ int main(int argc, char const* argv[])
     }
     catch (...)
     {
-
         std::cout << "Unexpected and Unknown error happened!" << std::endl;
         return 1;
     }
