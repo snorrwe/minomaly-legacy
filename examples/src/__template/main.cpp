@@ -1,4 +1,3 @@
-#include "__template.h"
 #include "mino.h"
 #include <array>
 #include <cstdlib>
