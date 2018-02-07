@@ -30,7 +30,7 @@ public:
         }
     }
 
-    void Program::start()
+    void start()
     {
         input = engine->getInput();
         subs = Subscriptions{input->onKeyDown([&](auto const& e) {
