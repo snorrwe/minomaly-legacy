@@ -85,7 +85,7 @@ private:
     BoundingBox boundary;
     Quadtree* parent;
     size_t capacity;
-    Points points = Points{};
+    Points points = {};
 
     std::array<std::unique_ptr<Quadtree>, 4> children = {};
 };

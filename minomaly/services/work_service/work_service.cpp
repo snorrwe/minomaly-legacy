@@ -2,14 +2,6 @@
 
 using namespace Mino;
 
-void Threads::join()
-{
-    for (auto i = begin(); i != end(); ++i)
-    {
-        i->join();
-    }
-}
-
 WorkService::WorkService(uint8_t concurrency)
 {
     if (!concurrency) throw std::invalid_argument("Concurrency must be greater than 0!");

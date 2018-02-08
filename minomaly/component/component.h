@@ -6,7 +6,6 @@
 
 namespace Mino
 {
-
 class GameObject;
 class IEngineCore;
 
@@ -26,17 +25,21 @@ public:
 
     bool isEnabled() { return enabled; }
 
-    virtual void setTransform(Transform::TransformRef const& value) { transform = value; }
+    void setTransform(Transform::TransformRef const& value) { transform = value; }
+    Transform::TransformRef& getTransform() { return transform; }
+    Transform::TransformRef const& getTransform() const { return transform; }
 
 protected:
-    template <typename TComponent> static std::unique_ptr<TComponent> create();
+    template <typename TComponent>
+    static std::unique_ptr<TComponent> create();
 
     GameObject* gameObject = nullptr;
     Transform::TransformRef transform = nullptr;
     bool enabled = true;
 };
 
-template <typename TComponent> std::unique_ptr<TComponent> Component::create(GameObject& gameObject)
+template <typename TComponent>
+std::unique_ptr<TComponent> Component::create(GameObject& gameObject)
 {
     static_assert(std::is_convertible<TComponent*, Component*>::value,
                   "Components must derive from Component!");
@@ -47,7 +50,8 @@ template <typename TComponent> std::unique_ptr<TComponent> Component::create(Gam
     return std::move(result);
 }
 
-template <typename TComponent> std::unique_ptr<TComponent> Component::create()
+template <typename TComponent>
+std::unique_ptr<TComponent> Component::create()
 {
     return std::make_unique<TComponent>();
 }

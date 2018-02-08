@@ -4,7 +4,6 @@
 
 namespace
 {
-
 using namespace Mino;
 
 class AsteroidComponent : public Mino::Component
@@ -15,6 +14,7 @@ class AsteroidComponent : public Mino::Component
     Animations animations = {};
     SpriteSheet asteroidSheet;
     size_t worldWidth = 0;
+    ISubscription onCollisionSub;
 
 public:
     void setup(size_t ww, Mino::Vector2<float> const& velocity)
@@ -53,8 +53,8 @@ public:
         auto collider = gameObject->getComponent<BoxColliderComponent>();
         collider->set(50.f, 50.f, {10.f, 10.f});
         auto rigidbody = gameObject->getComponent<Rigidbody>();
-        // collider->onCollision().subscribe(
-        //[&, rigidbody](auto const&) { std::cout << rigidbody << '\n'; });
+        onCollisionSub = collider->onCollision().subscribe(
+            [&, rigidbody](auto const&) { std::cout << "Bump " << rigidbody << '\n'; });
         rigidbody->addCollider(*collider);
     }
 };

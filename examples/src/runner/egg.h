@@ -17,7 +17,6 @@ class EggComponent : public Mino::Component
 
     Mino::Rigidbody* body;
     Mino::ITimeService* time;
-    Mino::Transform::TransformRef transform;
     Mino::BoxColliderComponent* bottomCollider;
     Animations animations = {};
     MediaContainer images = {};
@@ -35,7 +34,6 @@ public:
     virtual void start()
     {
         time = Mino::Services::get<Mino::ITimeService>().get();
-        transform = gameObject->getTransform();
         body = gameObject->getComponent<Mino::Rigidbody>();
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(30, 30, {0.0f, 0.0f});
@@ -129,6 +127,8 @@ public:
         velocity = {x, velocity.y()};
         body->setVelocity(velocity);
     }
+
+    State getState() { return state; }
 
 private:
     void reportState()

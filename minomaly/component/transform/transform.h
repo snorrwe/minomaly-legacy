@@ -14,7 +14,6 @@
 
 namespace Mino
 {
-
 class Transform
 {
 public:
@@ -24,6 +23,7 @@ public:
     using Vector = Vector2<float>;
 
     static TransformRef getRoot();
+    static FixedMatrix<3, 3> rotationMatrix(float rotation);
 
     struct TransformData
     {

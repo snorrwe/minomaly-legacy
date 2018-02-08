@@ -5,11 +5,11 @@
 
 namespace Mino
 {
-
-template <typename T> class Observable
+template <typename T>
+class Observable
 {
 public:
-    typedef Subscription<T> Subscription;
+    using Subscription = Subscription<T>;
 
     Observable() : subscriptions() {}
     Observable(Observable<T>&&) = delete;
