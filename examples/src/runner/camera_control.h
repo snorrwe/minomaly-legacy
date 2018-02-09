@@ -33,7 +33,7 @@ public:
             weight = 5.f;
             break;
         case State::Airborn:
-            weight = 0.75f;
+            weight = 1.75f;
             break;
         case State::Falling:
             weight = 2.75f;

@@ -22,7 +22,7 @@ class EggComponent : public Mino::Component
     MediaContainer images = {};
 
     Mino::Vector2<float> velocity = {0, 0};
-    const float gravity = 50.0;
+    const float gravity = 30.0;
     State state = State::Grounded;
     float airTime = 1000.0;
 
@@ -42,7 +42,7 @@ public:
         height = eggCollider->getHeight();
 
         bottomCollider = gameObject->addComponent<Mino::BoxColliderComponent>();
-        bottomCollider->set(28, 32, {1.0f, -2.0f});
+        bottomCollider->set(10, 12, {10.0f, -2.0f});
         bottomCollider->setLayers(0x2);
 
         images = gameObject->getApplication()->getEngineCore()->getAssets()->loadSpriteSheet(
@@ -90,7 +90,7 @@ public:
         else if (state == State::Airborn)
         {
             airTime += time->deltaTime();
-            if (airTime > 0.3f)
+            if (airTime > 0.2f)
             {
                 velocity = {velocity.x(), 0.0f};
                 state = State::Falling;

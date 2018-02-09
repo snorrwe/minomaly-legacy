@@ -49,11 +49,11 @@ void Program::initPlatforms()
     auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
     images.push_back(barImage);
     auto startx = (SCREEN_WIDTH - 50) * 0.5f;
-    createPlatform({startx, 0.0}, {2.0f, 1.0f});
-    createPlatform({startx + 2 * barWidth, barHeight}, {2.0f, 1.0f});
-    createPlatform({startx + 4 * barWidth, 2 * barHeight}, {5.0f, 0.5f});
+    createPlatform({startx, 0.0}, {2.0f, 0.5f});
+    createPlatform({startx + 2 * barWidth, 0.5f * barHeight}, {2.0f, 0.5f});
+    createPlatform({startx + 4 * barWidth, barHeight}, {5.0f, 0.25f});
     createPlatform({startx + 320, 0.0f}, {2.0f, 1.0f});
-    createPlatform({startx + 320 - 2 * barWidth, 0.5f * barHeight}, {2.0f, 2.0f});
-    createPlatform({startx + 320 + 2 * barWidth, 0.5f * barHeight}, {3.0f, 1.5f});
-    createPlatform({startx + 320 + 4 * barWidth, 0.0f}, {2.0f, 0.75f});
+    createPlatform({startx + 320 - 2 * barWidth, 0.25f * barHeight}, {2.0f, 1.0f});
+    createPlatform({startx + 320 + 2 * barWidth, 0.25f * barHeight}, {3.0f, 0.75f});
+    createPlatform({startx + 320 + 4 * barWidth, 0.0f}, {2.0f, 0.325f});
 }
