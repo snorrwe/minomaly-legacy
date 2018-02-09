@@ -14,6 +14,7 @@ class CameraControllerComponent : public Mino::Component
     Transform::TransformRef camera;
     Mino::ITimeService* time;
     float weight = 0.1f;
+    constexpr static float baseWeight = 6.f;
 
 public:
     void setPlayer(EggComponent* value) { player = value; }
@@ -30,13 +31,13 @@ public:
         switch (player->getState())
         {
         case State::Grounded:
-            weight = 5.f;
+            weight = baseWeight;
             break;
         case State::Airborn:
-            weight = 1.75f;
+            weight = baseWeight * 0.25f;
             break;
         case State::Falling:
-            weight = 2.75f;
+            weight = baseWeight * 0.5f;
             break;
         }
 

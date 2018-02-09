@@ -71,47 +71,19 @@ public:
 
     virtual void update()
     {
-        // reportState();
+        const bool touchingGround = bottomCollider->touchingAny();
 
-        bool touchingGround = bottomCollider->touchingAny();
-        if (state == State::Grounded)
+        switch (state)
         {
-            if (!touchingGround && transform->position().y() > bottom)
-            {
-                state = State::Falling;
-            }
-            if (input->isDown(SDLK_UP))
-            {
-                velocity = {velocity.x(), 525.0f};
-                state = State::Airborn;
-                airTime = 0.0;
-            }
-        }
-        else if (state == State::Airborn)
-        {
-            airTime += time->deltaTime();
-            if (airTime > 0.2f)
-            {
-                velocity = {velocity.x(), 0.0f};
-                state = State::Falling;
-            }
-        }
-        else if (state == State::Falling)
-        {
-            auto& pos = transform->position();
-            if (touchingGround || pos.y() <= bottom)
-            {
-                state = State::Grounded;
-                velocity = {velocity.x(), 0.0};
-                if (pos.y() <= bottom)
-                {
-                    pos = {pos.x(), float(bottom)};
-                }
-            }
-            else
-            {
-                velocity = {velocity.x(), velocity.y() - gravity};
-            }
+        case State::Grounded:
+            handleGrounded(touchingGround);
+            break;
+        case State::Airborn:
+            handleAirborn(touchingGround);
+            break;
+        case State::Falling:
+            handleFalling(touchingGround);
+            break;
         }
 
         const float sv = 400.0f;
@@ -131,19 +103,45 @@ public:
     State getState() { return state; }
 
 private:
-    void reportState()
+    void handleGrounded(const bool touchingGround)
     {
-        switch (state)
+        if (!touchingGround && transform->position().y() > bottom)
         {
-        case State::Grounded:
-            std::cout << "Grounded\n";
-            break;
-        case State::Airborn:
-            std::cout << "Airborn\n";
-            break;
-        case State::Falling:
-            std::cout << "Falling\n";
-            break;
+            state = State::Falling;
+        }
+        if (input->isDown(SDLK_UP))
+        {
+            velocity = {velocity.x(), 525.0f};
+            state = State::Airborn;
+            airTime = 0.0;
+        }
+    }
+
+    void handleAirborn(const bool touchingGround)
+    {
+        airTime += time->deltaTime();
+        if (airTime > 0.2f)
+        {
+            velocity = {velocity.x(), 0.0f};
+            state = State::Falling;
+        }
+    }
+
+    void handleFalling(const bool touchingGround)
+    {
+        auto& pos = transform->position();
+        if (touchingGround || pos.y() <= bottom)
+        {
+            state = State::Grounded;
+            velocity = {velocity.x(), 0.0};
+            if (pos.y() <= bottom)
+            {
+                pos = {pos.x(), float(bottom)};
+            }
+        }
+        else
+        {
+            velocity = {velocity.x(), velocity.y() - gravity};
         }
     }
 };
