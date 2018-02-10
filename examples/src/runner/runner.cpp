@@ -9,8 +9,9 @@ void Program::start()
 
     initPlatforms();
 
-    auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
-                                BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
+    auto egg
+        = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent, AudioPlayerComponent,
+                           BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
 
     auto cameraTransform = getMainCamera()->getTransform();
     cameraTransform->position()
@@ -18,7 +19,7 @@ void Program::start()
 
     auto eggPic
         = engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})->at(0);
-    images.push_back(eggPic);
+    assets.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
@@ -28,6 +29,10 @@ void Program::start()
     auto cameraController = cameraProxy->getComponent<CameraControllerComponent>();
     cameraController->setPlayer(eggEgg);
     cameraController->setCamera(getMainCamera()->getTransform());
+
+    auto music = engine->getAssets()->loadMusic("assets/runner/Aoa02.wav");
+    assets.push_back(music);
+    engine->getAudio()->playMusic(*music);
 }
 
 const auto barWidth = 30;
@@ -47,7 +52,7 @@ void Program::createPlatform(Vector2<float> const& position, Vector2<float> cons
 void Program::initPlatforms()
 {
     auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
-    images.push_back(barImage);
+    assets.push_back(barImage);
     auto startx = (SCREEN_WIDTH - 50) * 0.5f;
     createPlatform({startx, 0.0}, {2.0f, 0.5f});
     createPlatform({startx + 2 * barWidth, 0.5f * barHeight}, {2.0f, 0.5f});

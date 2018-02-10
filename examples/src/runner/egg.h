@@ -13,13 +13,18 @@ enum class State
 class EggComponent : public Mino::Component
 {
     using MediaContainer = std::shared_ptr<Mino::SpriteSheet>;
+    using AudioContainer = std::vector<std::shared_ptr<Mino::Audio>>;
     using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
 
     Mino::Rigidbody* body;
-    Mino::ITimeService* time;
+    Mino::AudioPlayerComponent* audioPlayer;
     Mino::BoxColliderComponent* bottomCollider;
+
     Animations animations = {};
     MediaContainer images = {};
+    AudioContainer audio = {};
+
+    Mino::ITimeService* time;
 
     Mino::Vector2<float> velocity = {0, 0};
     const float gravity = 30.0;
@@ -45,11 +50,11 @@ public:
         bottomCollider->set(10, 12, {10.0f, -2.0f});
         bottomCollider->setLayers(0x2);
 
-        images = gameObject->getApplication()->getEngineCore()->getAssets()->loadSpriteSheet(
-            "assets/runner/egg.png", {
-                                         {0, 0, 30, 30},
-                                         {30, 0, 30, 30},
-                                     });
+        auto assetSys = gameObject->minomaly()->getAssets();
+        images = assetSys->loadSpriteSheet("assets/runner/egg.png", {
+                                                                        {0, 0, 30, 30},
+                                                                        {30, 0, 30, 30},
+                                                                    });
         animations = {
             Mino::SpriteAnimationData::Animation{
                 {
@@ -65,8 +70,10 @@ public:
                 Mino::SpriteAnimationData::Animation::Loop, // Flags: loop this animation
             },
         };
-
         gameObject->getComponent<Mino::SpriteAnimatorComponent>()->startAnimation(animations[0]);
+
+        audio.push_back(assetSys->loadWAV("assets/runner/Dodge01.wav"));
+        audioPlayer = gameObject->getComponent<Mino::AudioPlayerComponent>();
     }
 
     virtual void update()
@@ -114,6 +121,7 @@ private:
             velocity = {velocity.x(), 525.0f};
             state = State::Airborn;
             airTime = 0.0;
+            audioPlayer->play(*audio.at(0), 1);
         }
     }
 

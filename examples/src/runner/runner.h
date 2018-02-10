@@ -19,7 +19,7 @@ class Program : public Mino::Application
 
     Mino::IInputSystem* input;
     Mino::ITimeService* time;
-    MediaContainer images;
+    MediaContainer assets;
 
 public:
     virtual void start();
