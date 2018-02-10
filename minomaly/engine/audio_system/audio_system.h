@@ -19,7 +19,7 @@ public:
     virtual bool musicPlaying() = 0;
     virtual bool musicPaused() = 0;
 
-    virtual void playMusic(Music const&, int loops = 1) = 0;
+    virtual void playMusic(Music const&, int loops = -1) = 0;
     virtual void resumeMusic() = 0;
     virtual void pauseMusic() = 0;
     virtual void stopMusic() = 0;

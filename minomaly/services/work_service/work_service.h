@@ -22,7 +22,8 @@ public:
     virtual void execute() = 0;
 };
 
-template <class TReturn> struct Job : IJob
+template <class TReturn>
+struct Job : IJob
 {
     Job(std::function<TReturn()> job) : job(job) {}
     std::function<TReturn()> job;
@@ -39,7 +40,13 @@ public:
 
 struct Threads : std::vector<std::thread>
 {
-    void join();
+    void join()
+    {
+        for (auto i = begin(); i != end(); ++i)
+        {
+            i->join();
+        }
+    }
 };
 
 class WorkService : public IWorkService, std::mutex, std::condition_variable
@@ -59,7 +66,8 @@ public:
     WorkService& operator=(WorkService const&) = delete;
     WorkService& operator=(WorkService&&) = delete;
 
-    template <typename TReturn> std::future<TReturn> requestWork(std::function<TReturn()> job);
+    template <typename TReturn>
+    std::future<TReturn> requestWork(std::function<TReturn()> job);
 
 private:
     void worker();

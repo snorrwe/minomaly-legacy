@@ -28,5 +28,5 @@ void Program::start()
         asteroid->getTransform()->setScale({scale, scale});
     }
 
-    getEngineCore()->getPhysicsSystem()->setWorldBox({{-500, -500}, 2000, 2000});
+    getEngineCore()->getPhysicsSystem()->setWorldBox({{-1000, -1000}, 2000, 2000});
 }

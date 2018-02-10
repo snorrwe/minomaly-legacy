@@ -49,6 +49,7 @@ set(_COMPONENT_INCLUDES component
                         component/renderer
                         component/game_object
                         component/rigidbody
+                        component/audio_player
                         component/collider
                         component/camera
                         component/box_collider
@@ -90,6 +91,7 @@ add_library(${_MINO_COMPONENT} ${PROJECT_SOURCE_DIR}/component/component.cpp
                                ${PROJECT_SOURCE_DIR}/component/game_object/game_object.cpp
                                ${PROJECT_SOURCE_DIR}/component/sprite_animator/sprite_animator_component.cpp
                                ${PROJECT_SOURCE_DIR}/component/camera/camera_component.cpp
+                               ${PROJECT_SOURCE_DIR}/component/audio_player/audio_player.cpp
                                ${PROJECT_SOURCE_DIR}/component/collider/collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/box_collider/box_collider.cpp
                                ${PROJECT_SOURCE_DIR}/component/rigidbody/rigidbody.cpp

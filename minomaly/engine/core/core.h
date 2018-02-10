@@ -23,12 +23,11 @@
 
 namespace Mino
 {
-
 class IWindowSystem;
 class IRenderSystem;
 class IPhysicsSystem;
-class Application;
 class IAssetSystem;
+class Application;
 
 class IEngineCore
 {

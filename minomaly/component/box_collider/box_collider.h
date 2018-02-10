@@ -1,5 +1,6 @@
 #pragma once
 #include "collider.h"
+#include "fixed_matrix.h"
 #include "vector2.h"
 #include <algorithm>
 #include <iostream>
@@ -7,7 +8,6 @@
 
 namespace Mino
 {
-
 class BoxColliderComponent : public ColliderComponent
 {
 public:

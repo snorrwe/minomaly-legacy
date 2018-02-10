@@ -8,8 +8,10 @@ GameObject::GameObject(Transform::TransformRef const& parentTransform) : transfo
 {
 }
 
-GameObject::GameObject(Transform::TransformRef const& parentTransform, Application* application)
-    : transform(parentTransform), application(application)
+GameObject::GameObject(Transform::TransformRef const& parentTransform, IEngineCore* engine)
+    : transform(parentTransform),
+      engineCore(engine),
+      application(engine ? engine->getApplication() : nullptr)
 {
 }
 
@@ -29,12 +31,15 @@ GameObject::~GameObject()
     }
 }
 
+IEngineCore* GameObject::minomaly() const { return engineCore; }
+
+Application* GameObject::getApplication() const { return application; }
+
 void GameObject::disableComponent(Component* component)
 {
-
     auto last = components.begin() + enabled;
-    auto target =
-        std::find_if(components.begin(), last, [&](auto& i) { return i.get() == component; });
+    auto target
+        = std::find_if(components.begin(), last, [&](auto& i) { return i.get() == component; });
     if (target != last)
     {
         if (components.size() > enabled)
@@ -52,8 +57,8 @@ void GameObject::disableComponent(Component* component)
 void GameObject::enableComponent(Component* component)
 {
     auto first = components.begin() + enabled;
-    auto target =
-        std::find_if(first, components.end(), [&](auto& i) { return i.get() == component; });
+    auto target
+        = std::find_if(first, components.end(), [&](auto& i) { return i.get() == component; });
     if (target != components.end())
     {
         iter_swap(first, target);

@@ -12,7 +12,7 @@ std::shared_ptr<Audio> Audio::loadWAV(std::string const& fname)
                   << Mix_GetError() << std::endl;
         throw std::runtime_error("Failed to load audio");
     }
-    return std::make_shared<Audio>(std::make_shared<ManagedAudio>(result));
+    return std::make_shared<Audio>(std::make_unique<ManagedAudio>(result));
 }
 
 std::shared_ptr<Music> Music::loadMusic(std::string const& fname)
@@ -24,5 +24,5 @@ std::shared_ptr<Music> Music::loadMusic(std::string const& fname)
                   << Mix_GetError() << std::endl;
         throw std::runtime_error("Failed to load audio");
     }
-    return std::make_shared<Music>(std::make_shared<ManagedMusic>(result));
+    return std::make_shared<Music>(std::make_unique<ManagedMusic>(result));
 }

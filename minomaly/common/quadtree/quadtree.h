@@ -2,6 +2,7 @@
 #include "bounding_box.h"
 #include "vector2.h"
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <iterator>
 #include <memory>
@@ -10,36 +11,51 @@
 
 namespace Mino
 {
+namespace QuadtreeProperties
+{
+enum Direction
+{
+    NorthWest = 0,
+    NorthEast = 1,
+    SouthWest = 2,
+    SouthEast = 3,
+};
 
-template <class T> class Quadtree
+template <typename T>
+struct Node
+{
+    Node() = default;
+    Node(float x, float y, T* item = nullptr) : pos({x, y}), item(item) {}
+    Node(Vector2<float> pos, T* item = nullptr) : pos(pos), item(item) {}
+    Node(Node const&) = default;
+    Node(Node&&) = default;
+    Node& operator=(Node const&) = default;
+    Node& operator=(Node&&) = default;
+
+    bool operator==(Node const& n) const
+    {
+        constexpr auto marginForError = 0.001f;
+        return (pos - n.pos).length() < marginForError && (!item || !n.item || item == n.item);
+    }
+    bool operator!=(Node const& n) const { return !(*this == n); }
+
+    Vector2<float> pos;
+    T* item = nullptr;
+};
+
+} // namespace QuadtreeProperties
+
+template <typename T>
+class Quadtree
 {
 public:
-    struct Node
-    {
-        Node() = default;
-        Node(float x, float y, T* item = nullptr) : pos({x, y}), item(item) {}
-        Node(Vector2<float> pos, T* item = nullptr) : pos(pos), item(item) {}
-        Node(Node const&) = default;
-        Node(Node&&) = default;
-        Node& operator=(Node const&) = default;
-        Node& operator=(Node&&) = default;
-
-        bool operator==(Node const& n) const
-        {
-            const auto marginForError = 0.001f;
-            return (pos - n.pos).length() < marginForError && (!item || !n.item || item == n.item);
-        }
-        bool operator!=(Node const& n) const { return !(*this == n); }
-
-        Vector2<float> pos;
-        T* item = nullptr;
-    };
-
+    using Node = QuadtreeProperties::Node<T>;
     using Points = std::vector<Node>;
+    using Direction = QuadtreeProperties::Direction;
 
-    Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), Quadtree* parent = nullptr,
-             const size_t capacity = 4, size_t depth = 0)
-        : boundary(boundary), parent(parent), capacity(capacity), depth(depth)
+    Quadtree(BoundingBox const& boundary = BoundingBox({0, 0}, 0), const size_t capacity = 4,
+             Quadtree* parent = nullptr)
+        : boundary(boundary), parent(parent), capacity(capacity)
     {
         points.reserve(capacity);
     }
@@ -68,35 +84,33 @@ protected:
 private:
     BoundingBox boundary;
     Quadtree* parent;
-    Points points = Points{};
     size_t capacity;
-    size_t depth = 0;
+    Points points = {};
 
-    std::unique_ptr<Quadtree> northWest = nullptr;
-    std::unique_ptr<Quadtree> northEast = nullptr;
-    std::unique_ptr<Quadtree> southWest = nullptr;
-    std::unique_ptr<Quadtree> southEast = nullptr;
+    std::array<std::unique_ptr<Quadtree>, 4> children = {};
 };
 
-template <class T> void Quadtree<T>::clear()
+template <class T>
+void Quadtree<T>::clear()
 {
     points.clear();
-    northWest = nullptr;
-    northEast = nullptr;
-    southWest = nullptr;
-    southEast = nullptr;
+    children[Direction::NorthWest] = nullptr;
+    children[Direction::NorthEast] = nullptr;
+    children[Direction::SouthWest] = nullptr;
+    children[Direction::SouthEast] = nullptr;
 }
 
-template <class T> bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)
+template <class T>
+bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)
 {
     if (!boundary.containsPoint(v.pos)) return false;
 
-    if (northWest)
+    if (children[Direction::NorthWest])
     {
-        if (northWest->insert(v)) return true;
-        if (northEast->insert(v)) return true;
-        if (southWest->insert(v)) return true;
-        if (southEast->insert(v)) return true;
+        if (children[Direction::NorthWest]->insert(v)) return true;
+        if (children[Direction::NorthEast]->insert(v)) return true;
+        if (children[Direction::SouthWest]->insert(v)) return true;
+        if (children[Direction::SouthEast]->insert(v)) return true;
     }
 
     if (points.size() < capacity)
@@ -111,33 +125,35 @@ template <class T> bool Quadtree<T>::insert(typename Quadtree<T>::Node const& v)
     return true;
 }
 
-template <class T> void Quadtree<T>::subdivide()
+template <class T>
+void Quadtree<T>::subdivide()
 {
     const auto subDimension = boundary.getWidth() * 0.5001f;
     const auto center = boundary.getCenter();
-    const auto d = depth + 1;
-    northWest = std::make_unique<Quadtree>(
-        BoundingBox({center.x() - subDimension, center.y() + subDimension}, subDimension), this,
-        capacity, d);
-    northEast = std::make_unique<Quadtree>(
-        BoundingBox({center.x() + subDimension, center.y() + subDimension}, subDimension), this,
-        capacity, d);
-    southWest = std::make_unique<Quadtree>(
-        BoundingBox({center.x() - subDimension, center.y() - subDimension}, subDimension), this,
-        capacity, d);
-    southEast = std::make_unique<Quadtree>(
-        BoundingBox({center.x() + subDimension, center.y() - subDimension}, subDimension), this,
-        capacity, d);
+    children[Direction::NorthWest] = std::make_unique<Quadtree>(
+        BoundingBox{{center.x() - subDimension, center.y() + subDimension}, subDimension}, capacity,
+        this);
+    children[Direction::NorthEast] = std::make_unique<Quadtree>(
+        BoundingBox{{center.x() + subDimension, center.y() + subDimension}, subDimension}, capacity,
+        this);
+    children[Direction::SouthWest] = std::make_unique<Quadtree>(
+        BoundingBox{{center.x() - subDimension, center.y() - subDimension}, subDimension}, capacity,
+        this);
+    children[Direction::SouthEast] = std::make_unique<Quadtree>(
+        BoundingBox{{center.x() + subDimension, center.y() - subDimension}, subDimension}, capacity,
+        this);
 }
 
-template <class T> bool Quadtree<T>::contains(typename Quadtree<T>::Node const& v)
+template <class T>
+bool Quadtree<T>::contains(typename Quadtree<T>::Node const& v)
 {
     return query(v, [&](Quadtree& qt) {
         return std::find(qt.points.begin(), qt.points.end(), v) != qt.points.end();
     });
 }
 
-template <class T> bool Quadtree<T>::propagateUp(typename Quadtree<T>::Node const& v)
+template <class T>
+bool Quadtree<T>::propagateUp(typename Quadtree<T>::Node const& v)
 {
     if (insert(v)) return true;
     if (!parent) return false;
@@ -159,7 +175,8 @@ bool Quadtree<T>::move(typename Quadtree<T>::Node const& from, typename Quadtree
     });
 }
 
-template <class T> bool Quadtree<T>::erase(typename Quadtree<T>::Node const& v)
+template <class T>
+bool Quadtree<T>::erase(typename Quadtree<T>::Node const& v)
 {
     return query(v, [&](auto& qt) {
         auto i = std::find(qt.points.begin(), qt.points.end(), v);
@@ -174,33 +191,39 @@ bool Quadtree<T>::query(typename Quadtree<T>::Node const& node,
                         std::function<bool(Quadtree<T>&)> callback)
 {
     if (callback(*this)) return true;
-    if (!northWest) return false;
+    if (!children[Direction::NorthWest]) return false;
     auto& center = boundary.getCenter();
     auto& v = node.pos;
     if (v.x() < center.x())
     {
         if (v.y() > center.y())
-            return northWest->query(node, callback);
+            return children[Direction::NorthWest]->query(node, callback);
         else if (v.y() < center.y())
-            return southWest->query(node, callback);
-        return northWest->query(node, callback) || southWest->query(node, callback);
+            return children[Direction::SouthWest]->query(node, callback);
+        return children[Direction::NorthWest]->query(node, callback)
+               || children[Direction::SouthWest]->query(node, callback);
     }
     else if (v.x() > center.x())
     {
         if (v.y() > center.y())
-            return northEast->query(node, callback);
+            return children[Direction::NorthEast]->query(node, callback);
         else if (v.y() < center.y())
-            return southEast->query(node, callback);
-        return northEast->query(node, callback) || southEast->query(node, callback);
+            return children[Direction::SouthEast]->query(node, callback);
+        return children[Direction::NorthEast]->query(node, callback)
+               || children[Direction::SouthEast]->query(node, callback);
     }
     // v.x == center.x ==> could be on either edge
     if (v.y() < center.y())
-        return southWest->query(node, callback) || southEast->query(node, callback);
+        return children[Direction::SouthWest]->query(node, callback)
+               || children[Direction::SouthEast]->query(node, callback);
     else if (v.y() > center.y())
-        return northWest->query(node, callback) || northEast->query(node, callback);
+        return children[Direction::NorthWest]->query(node, callback)
+               || children[Direction::NorthEast]->query(node, callback);
     // v == center ==> it could be in either of these
-    return (northWest->query(node, callback) || northEast->query(node, callback) ||
-            southWest->query(node, callback) || southEast->query(node, callback));
+    return (children[Direction::NorthWest]->query(node, callback)
+            || children[Direction::NorthEast]->query(node, callback)
+            || children[Direction::SouthWest]->query(node, callback)
+            || children[Direction::SouthEast]->query(node, callback));
 }
 
 template <class T>
@@ -220,12 +243,12 @@ void Quadtree<T>::queryRange(BoundingBox const& range,
 
     queryRange(range, [&result](auto const& i) { result.push_back(i); });
 
-    if (northWest)
+    if (children[Direction::NorthWest])
     {
-        northWest->queryRange(range, result);
-        northEast->queryRange(range, result);
-        southWest->queryRange(range, result);
-        southEast->queryRange(range, result);
+        children[Direction::NorthWest]->queryRange(range, result);
+        children[Direction::NorthEast]->queryRange(range, result);
+        children[Direction::SouthWest]->queryRange(range, result);
+        children[Direction::SouthEast]->queryRange(range, result);
     }
 }
 
@@ -240,12 +263,12 @@ void Quadtree<T>::queryRange(BoundingBox const& range,
         callback(point);
     }
 
-    if (northWest)
+    if (children[Direction::NorthWest])
     {
-        northWest->queryRange(range, callback);
-        northEast->queryRange(range, callback);
-        southWest->queryRange(range, callback);
-        southEast->queryRange(range, callback);
+        children[Direction::NorthWest]->queryRange(range, callback);
+        children[Direction::NorthEast]->queryRange(range, callback);
+        children[Direction::SouthWest]->queryRange(range, callback);
+        children[Direction::SouthEast]->queryRange(range, callback);
     }
 }
 

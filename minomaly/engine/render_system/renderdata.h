@@ -8,9 +8,8 @@ using Vector2 = Vector2<int>;
 
 struct RotationData
 {
-
     RotationData() = default;
-    RotationData(float angle, SDL_RendererFlip flip, Vector2 center)
+    RotationData(float angle, SDL_RendererFlip flip = SDL_FLIP_NONE, Vector2 center = {})
         : angle(angle), flip(flip), center(center)
     {
     }

@@ -2,90 +2,63 @@
 
 using namespace Mino;
 
-Program::~Program()
-{
-    for (auto i = subs.begin(); i != subs.end(); ++i)
-    {
-        i->unsubscribe();
-    }
-}
-
-class Child : public Component
-{
-public:
-    virtual void update()
-    {
-        // std::cout << "Child: " << gameObject->getTransform()->position() << " "
-        //          << gameObject->getTransform()->absolute().position << std::endl;
-    }
-};
-
 void Program::start()
 {
     input = engine->getInput();
     time = Services::get<ITimeService>().get();
-    subs = Subscriptions{};
-    auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(
-        {(SCREEN_WIDTH - 50) * 0.5, 0.0});
 
-    auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
-    images.push_back(barImage);
-    bar->getComponent<SpriteRendererComponent>()->setTexture(barImage.get());
-    auto barCollider = bar->getComponent<BoxColliderComponent>();
-    barCollider->set(30, 120);
-    barCollider->setLayers(0x1 | 0x2);
+    initPlatforms();
 
-    auto egg = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
-                                BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
+    auto egg
+        = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent, AudioPlayerComponent,
+                           BoxColliderComponent, Rigidbody, EggComponent>({0, 0});
 
-    egg->addChild(*getMainCamera());
     auto cameraTransform = getMainCamera()->getTransform();
-    cameraTransform->position() =
-        cameraTransform->position() + Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f};
+    cameraTransform->position()
+        = cameraTransform->position() + Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f};
 
-    auto eggPic =
-        engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})->at(0);
-    images.push_back(eggPic);
+    auto eggPic
+        = engine->getAssets()->loadSpriteSheet("assets/runner/egg.png", {{0, 0, 30, 30}})->at(0);
+    assets.push_back(eggPic);
     auto eggEgg = egg->getComponent<EggComponent>();
     eggEgg->input = input;
     eggEgg->bottom = 0;
-    egg->getTransform()->setPosition({50, 0.0});
+    egg->getTransform()->setPosition({50.f, 0.f});
 
-    auto currentChild = egg;
-    for (auto i = 0; i < 5; ++i)
-    {
-        auto childEgg = createGameObject<Child>();
-        currentChild->addChild(*childEgg);
-        childEgg->addComponent<SpriteRendererComponent>()->setTexture(eggPic.get());
-        childEgg->getTransform()->setPosition({10 * i, 30});
-        currentChild = childEgg;
-    }
+    auto cameraProxy = createGameObject<CameraControllerComponent>({0.f, 0.f});
+    auto cameraController = cameraProxy->getComponent<CameraControllerComponent>();
+    cameraController->setPlayer(eggEgg);
+    cameraController->setCamera(getMainCamera()->getTransform());
 
-    // getMainCamera()->getTransform()->setScale({0.5f, 0.5f});
+    auto music = engine->getAssets()->loadMusic("assets/runner/Aoa02.wav");
+    assets.push_back(music);
+    engine->getAudio()->playMusic(*music);
 }
 
-void Program::update()
-{
-    auto velocity = Mino::Vector2<float>{0.0f, 0.0f};
-    auto sv = 200.0f;
-    if (input->isDown(SDLK_a))
-    {
-        velocity = {velocity.x() - sv, velocity.y()};
-    }
-    if (input->isDown(SDLK_d))
-    {
-        velocity = {velocity.x() + sv, velocity.y()};
-    }
-    if (input->isDown(SDLK_w))
-    {
-        velocity = {velocity.x(), velocity.y() + sv};
-    }
-    if (input->isDown(SDLK_s))
-    {
-        velocity = {velocity.x(), velocity.y() - sv};
-    }
-    velocity = velocity * time->deltaTime();
+const auto barWidth = 30;
+const auto barHeight = 120;
 
-    auto& cameraPos = getMainCamera()->getTransform()->position();
-    cameraPos = cameraPos + velocity;
+void Program::createPlatform(Vector2<float> const& position, Vector2<float> const& scale)
+{
+    auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(position);
+    bar->getTransform()->setScale(scale);
+    auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
+    bar->getComponent<SpriteRendererComponent>()->setTexture(barImage.get());
+    auto barCollider = bar->getComponent<BoxColliderComponent>();
+    barCollider->set(barWidth, barHeight);
+    barCollider->setLayers(0x1 | 0x2);
+}
+
+void Program::initPlatforms()
+{
+    auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
+    assets.push_back(barImage);
+    auto startx = (SCREEN_WIDTH - 50) * 0.5f;
+    createPlatform({startx, 0.0}, {2.0f, 0.5f});
+    createPlatform({startx + 2 * barWidth, 0.5f * barHeight}, {2.0f, 0.5f});
+    createPlatform({startx + 4 * barWidth, barHeight}, {5.0f, 0.25f});
+    createPlatform({startx + 320, 0.0f}, {2.0f, 1.0f});
+    createPlatform({startx + 320 - 2 * barWidth, 0.25f * barHeight}, {2.0f, 1.0f});
+    createPlatform({startx + 320 + 2 * barWidth, 0.25f * barHeight}, {3.0f, 0.75f});
+    createPlatform({startx + 320 + 4 * barWidth, 0.0f}, {2.0f, 0.325f});
 }

@@ -5,7 +5,6 @@
 
 namespace Mino
 {
-
 class BoundingBox
 {
 public:
@@ -26,6 +25,8 @@ public:
 
     bool containsPoint(Vector2<float> const& point) const;
     bool intersects(BoundingBox const& other) const;
+
+    void set(Vector2<float> const& bottomLeft, Vector2<float> const& topRight);
 
     Vector2<float> const& getCenter() const { return center; }
     float getWidth() const { return halfWidth * 2.0f; }

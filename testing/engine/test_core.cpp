@@ -103,6 +103,8 @@ public:
     MOCK_METHOD2(loadFont, std::shared_ptr<Font>(std::string const& path, int pts));
     MOCK_METHOD0(collectGarbage, void());
     MOCK_METHOD0(clear, void());
+    MOCK_METHOD1(loadWAV, std::shared_ptr<Audio>(std::string const&));
+    MOCK_METHOD1(loadMusic, std::shared_ptr<Music>(std::string const&));
 };
 
 class FakeProgram : public Application

@@ -1,3 +1,4 @@
+#include "audio_player.h"
 #include "box_collider.h"
 #include "component.h"
 #include "rigidbody.h"

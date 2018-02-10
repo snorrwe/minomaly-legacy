@@ -14,7 +14,7 @@ public:
     size_t updates = 0;
 };
 
-class GameObjectTests : public ::testing::Test
+class TestGameObjectComponentIntegration : public ::testing::Test
 {
 public:
     static bool called;
@@ -22,21 +22,22 @@ public:
     void SetUp() { called = false; }
 };
 
-bool GameObjectTests::called = false;
+bool TestGameObjectComponentIntegration::called = false;
 
-template <> std::unique_ptr<FakeComponent> Component::create<FakeComponent>()
+template <>
+std::unique_ptr<FakeComponent> Component::create<FakeComponent>()
 {
-    GameObjectTests::called = true;
+    TestGameObjectComponentIntegration::called = true;
     return std::make_unique<FakeComponent>();
 }
 
-TEST_F(GameObjectTests, CanAddComponentWithNoError)
+TEST_F(TestGameObjectComponentIntegration, CanAddComponentWithNoError)
 {
     auto go = GameObject();
-     go.addComponent<FakeComponent>();
+    go.addComponent<FakeComponent>();
 }
 
-TEST_F(GameObjectTests, CanFindComponentByType)
+TEST_F(TestGameObjectComponentIntegration, CanFindComponentByType)
 {
     auto go = GameObject();
     auto actual = go.addComponent<FakeComponent>();
@@ -51,9 +52,8 @@ TEST_F(GameObjectTests, CanFindComponentByType)
     ASSERT_EQ(actual, expected);
 }
 
-TEST_F(GameObjectTests, ReturnsNullPtrIfNotFound)
+TEST_F(TestGameObjectComponentIntegration, ReturnsNullPtrIfNotFound)
 {
-
     class FakeComponent2 : public Component
     {
     };
@@ -68,15 +68,15 @@ TEST_F(GameObjectTests, ReturnsNullPtrIfNotFound)
     }
 }
 
-TEST_F(GameObjectTests, CanOverwriteCreate)
+TEST_F(TestGameObjectComponentIntegration, CanOverwriteCreate)
 {
     auto go = GameObject();
-     go.addComponent<FakeComponent>();
+    go.addComponent<FakeComponent>();
 
     ASSERT_TRUE(called);
 }
 
-TEST_F(GameObjectTests, UpdatesComponents)
+TEST_F(TestGameObjectComponentIntegration, UpdatesComponents)
 {
     auto go = GameObject();
 
@@ -92,7 +92,7 @@ TEST_F(GameObjectTests, UpdatesComponents)
     ASSERT_EQ(second->updates, 1);
 }
 
-TEST_F(GameObjectTests, DoesNotUpdateDisabledComponents)
+TEST_F(TestGameObjectComponentIntegration, DoesNotUpdateDisabledComponents)
 {
     auto go = GameObject();
 
@@ -114,7 +114,7 @@ TEST_F(GameObjectTests, DoesNotUpdateDisabledComponents)
     ASSERT_EQ(second->updates, 2);
 }
 
-TEST_F(GameObjectTests, CanReenableComponent)
+TEST_F(TestGameObjectComponentIntegration, CanReenableComponent)
 {
     auto go = GameObject();
 
@@ -142,7 +142,7 @@ TEST_F(GameObjectTests, CanReenableComponent)
     ASSERT_EQ(second->updates, 3);
 }
 
-TEST_F(GameObjectTests, CanSelfDisableFromComponentUpdate)
+TEST_F(TestGameObjectComponentIntegration, CanSelfDisableFromComponentUpdate)
 {
     class SelfDisablerComponent : public Component
     {
@@ -179,7 +179,7 @@ TEST_F(GameObjectTests, CanSelfDisableFromComponentUpdate)
     ASSERT_EQ(third->updates, 1);
 }
 
-TEST_F(GameObjectTests, CanToggleAnotherComponentFromUpdate)
+TEST_F(TestGameObjectComponentIntegration, CanToggleAnotherComponentFromUpdate)
 {
     class FakeComponent1 : public Component
     {
