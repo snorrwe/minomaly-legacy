@@ -10,9 +10,9 @@
 
 namespace Mino
 {
-
 class Component;
 class Application;
+class IEngineCore;
 
 class GameObject
 {
@@ -22,7 +22,7 @@ public:
 
     GameObject() = default;
     GameObject(Transform::TransformRef const& parentTransform);
-    GameObject(Transform::TransformRef const& parentTransform, Application* application);
+    GameObject(Transform::TransformRef const& parentTransform, IEngineCore* engine);
     GameObject(GameObject const& go) = delete;
     GameObject(GameObject&& go) = default;
     virtual ~GameObject();
@@ -33,8 +33,10 @@ public:
     Transform::TransformRef& getTransform() { return transform; }
     Transform::TransformRef const& getTransform() const { return transform; }
 
-    template <typename TComponent> TComponent* addComponent();
-    template <typename TComponent> TComponent* getComponent() const;
+    template <typename TComponent>
+    TComponent* addComponent();
+    template <typename TComponent>
+    TComponent* getComponent() const;
     virtual void disableComponent(Component*);
     virtual void enableComponent(Component*);
 
@@ -44,7 +46,8 @@ public:
 
     GameObject* getParent() const { return parent; }
 
-    Application* getApplication() const { return application; }
+    Application* getApplication() const;
+    IEngineCore* minomaly() const;
 
 protected:
     ComponentContainer components = {};
@@ -52,10 +55,12 @@ protected:
     ChildrenContainer children = {};
     Transform::TransformRef transform = nullptr;
     size_t enabled = 0;
+    IEngineCore* engineCore = nullptr;
     Application* application = nullptr;
 };
 
-template <typename TComponent> TComponent* GameObject::addComponent()
+template <typename TComponent>
+TComponent* GameObject::addComponent()
 {
     auto component = Component::create<TComponent>(*this);
     auto result = component.get();
@@ -64,7 +69,8 @@ template <typename TComponent> TComponent* GameObject::addComponent()
     return result;
 }
 
-template <typename TComponent> TComponent* GameObject::getComponent() const
+template <typename TComponent>
+TComponent* GameObject::getComponent() const
 {
     for (auto& component : components)
     {

@@ -33,6 +33,7 @@ protected:
     template <typename TComponent>
     static std::unique_ptr<TComponent> create();
 
+    IEngineCore* minomaly = nullptr;
     GameObject* gameObject = nullptr;
     Transform::TransformRef transform = nullptr;
     bool enabled = true;
@@ -46,6 +47,7 @@ std::unique_ptr<TComponent> Component::create(GameObject& gameObject)
     auto result = create<TComponent>();
     result->gameObject = &gameObject;
     result->setTransform(gameObject.getTransform());
+    result->minomaly = gameObject.minomaly();
     result->start();
     return std::move(result);
 }

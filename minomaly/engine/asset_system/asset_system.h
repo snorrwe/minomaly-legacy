@@ -1,5 +1,6 @@
 #pragma once
 #include "asset.h"
+#include "audio.h"
 #include "font.h"
 #include "render_system.h"
 #include "texture.h"
@@ -26,17 +27,21 @@ public:
 
     virtual std::shared_ptr<Texture> loadTexture(std::string const& name) = 0;
     virtual std::shared_ptr<Texture> loadText(std::string const& text, Font const& font,
-                                              Color const& color = Color()) = 0;
+                                              Color const& color = Color())
+        = 0;
     virtual std::shared_ptr<TSpriteSheet> loadSpriteSheet(std::string const& name,
-                                                          std::vector<SDL_Rect> const& rects) = 0;
+                                                          std::vector<SDL_Rect> const& rects)
+        = 0;
     virtual std::shared_ptr<Font> loadFont(std::string const& path, int pts) = 0;
+    virtual std::shared_ptr<Audio> loadWAV(std::string const& path) = 0;
+    virtual std::shared_ptr<Music> loadMusic(std::string const& path) = 0;
+
     virtual void collectGarbage() = 0;
     virtual void clear() = 0;
 };
 
 class AssetSystem : public IAssetSystem
 {
-
     AssetMap assets = {};
     IRenderSystem* renderer;
 
@@ -55,6 +60,8 @@ public:
     virtual std::shared_ptr<TSpriteSheet> loadSpriteSheet(std::string const& name,
                                                           std::vector<SDL_Rect> const& rects);
     virtual std::shared_ptr<Font> loadFont(std::string const& path, int pts);
+    virtual std::shared_ptr<Audio> loadWAV(std::string const& path);
+    virtual std::shared_ptr<Music> loadMusic(std::string const& path);
 
     virtual void collectGarbage();
     virtual void clear() { assets.clear(); }

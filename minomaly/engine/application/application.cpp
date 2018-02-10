@@ -5,12 +5,12 @@ using namespace Mino;
 Application::~Application()
 {
     auto gameObjectsToDelete = GameObjectContainer{std::move(gameObjects)};
-    gameObjects =GameObjectContainer{};
+    gameObjects = GameObjectContainer{};
 }
 
 GameObject* Application::createEmptyGameObject()
 {
-    gameObjects.emplace_back(std::make_unique<GameObject>(rootTransform->addChild(), this));
+    gameObjects.emplace_back(std::make_unique<GameObject>(rootTransform->addChild(), engine));
     return gameObjects.back().get();
 }
 
@@ -33,7 +33,10 @@ void Application::updateGameObjects()
     rootTransform->updateAsRoot();
 }
 
-template <> void Application::addComponents<>(GameObject& go) {}
+template <>
+void Application::addComponents<>(GameObject& go)
+{
+}
 
 void Application::initMainCamera(IRenderSystem const& renderer, float screenHeight)
 {

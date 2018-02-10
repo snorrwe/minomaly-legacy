@@ -7,6 +7,7 @@
 #include <vector>
 
 using namespace Mino;
+using ::testing::Return;
 
 class MockEngineCore : public IEngineCore
 {
@@ -26,24 +27,27 @@ public:
     MOCK_METHOD1(setTargetFps, void(float f));
 };
 
-class FakeScene : public Application
+class FakeApp : public Application
 {
 public:
-    ~FakeScene() {}
+    using Application::engine;
+
+    ~FakeApp() {}
     void update() {}
 };
 
-class SceneTests : public ::testing::Test
+class TestApplication : public ::testing::Test
 {
 public:
     void SetUp()
     {
-        mockEngineCore = std::make_shared<MockEngineCore>();
+        mockEngineCore = std::make_unique<MockEngineCore>();
         application.setEngineCore(mockEngineCore.get());
+        ON_CALL(*mockEngineCore, getApplication()).WillByDefault(Return(&application));
     }
 
-    FakeScene application = {};
-    std::shared_ptr<MockEngineCore> mockEngineCore = nullptr;
+    FakeApp application = {};
+    std::unique_ptr<MockEngineCore> mockEngineCore = nullptr;
 };
 
 class FakeComponent1 : public Component
@@ -62,17 +66,17 @@ class FakeComponent4 : public Component
 {
 };
 
-TEST_F(SceneTests, CanCreateGameObjectCorrectly)
+TEST_F(TestApplication, CanCreateGameObjectCorrectly)
 {
     auto go = application.createGameObject<>();
     ASSERT_EQ(go->getApplication(), &application);
 }
 
-TEST_F(SceneTests, CanCreateGameObjectWithComponents)
+TEST_F(TestApplication, CanCreateGameObjectWithComponents)
 {
-    auto gameObject =
-        application
-            .createGameObject<FakeComponent1, FakeComponent2, FakeComponent3, FakeComponent4>();
+    auto gameObject
+        = application
+              .createGameObject<FakeComponent1, FakeComponent2, FakeComponent3, FakeComponent4>();
 
     ASSERT_TRUE(gameObject->getComponent<FakeComponent1>());
     ASSERT_TRUE(gameObject->getComponent<FakeComponent2>());

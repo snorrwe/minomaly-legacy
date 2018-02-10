@@ -53,3 +53,13 @@ std::shared_ptr<Font> AssetSystem::loadFont(std::string const& path, int pts)
 {
     return load<Font>(path, [&]() { return Font::load(path, pts); });
 }
+
+std::shared_ptr<Audio> AssetSystem::loadWAV(std::string const& path)
+{
+    return load<Audio>(path, [&]() { return Audio::loadWAV(path); });
+}
+
+std::shared_ptr<Music> AssetSystem ::loadMusic(std::string const& path)
+{
+    return load<Music>(path, [&]() { return Music::loadMusic(path); });
+}
