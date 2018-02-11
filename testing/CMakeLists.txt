@@ -10,7 +10,7 @@ set(gtest_include_dirs "${GTEST_ROOT_DIR}/googletest"
 
 
 include_directories(${gtest_include_dirs})
-
+ 
 add_library(gtest STATIC "${GTEST_ROOT_DIR}/googletest/src/gtest-all.cc"
                          "${GTEST_ROOT_DIR}/googletest/src/gtest_main.cc")
 add_library(gmock STATIC "${GTEST_ROOT_DIR}/googlemock/src/gmock-all.cc"

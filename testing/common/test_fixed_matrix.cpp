@@ -1,4 +1,4 @@
-#include "fixed_matrix.h"
+#include "matrix.h"
 #include "gtest/gtest.h"
 #include <chrono>
 #include <iostream>

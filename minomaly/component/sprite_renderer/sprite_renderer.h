@@ -1,7 +1,7 @@
 #pragma once
 #include "application.h"
 #include "component.h"
-#include "fixed_matrix.h"
+#include "matrix.h"
 #include "renderer.h"
 #include "texture.h"
 #include <iostream>
@@ -9,7 +9,6 @@
 
 namespace Mino
 {
-
 class SpriteRendererComponent : public RenderComponent
 {
 public:

@@ -16,7 +16,7 @@ void Program::start()
 
         auto asteroid = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
                                          BoxColliderComponent, Rigidbody, AsteroidComponent>();
-        asteroid->getTransform()->setPosition({x, y});
+        asteroid->getTransform()->setPosition({(float)x, (float)y});
 
         auto vx = getRandom() % 100 * (getRandom() % 2 ? -1.f : 1.f);
         auto vy = getRandom() % 100 * (getRandom() % 2 ? -1.f : 1.f);

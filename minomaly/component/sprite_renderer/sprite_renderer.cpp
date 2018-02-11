@@ -27,12 +27,10 @@ void SpriteRendererComponent::render(Transform::TransformRef const& camera)
     auto m = FixedMatrix<1, 3>{{position.x(), position.y(), 1}} * cameraMatrix;
     position = {m.at(0, 0), m.at(0, 1)};
 
-    auto x = static_cast<int>(position.x());
-    auto y = static_cast<int>(position.y());
     auto sx = absolute.scale.x() / (camera ? camera->absolute().scale.x() : 1.0f);
     auto sy = absolute.scale.y() / (camera ? camera->absolute().scale.y() : 1.0f);
     auto rotation = camera->absolute().rotation - absolute.rotation;
-    texture->render({{x, (-y - (height * sy))}, {sx, sy}, rotation});
+    texture->render({{ position.x(), (-position.y() - (height * sy))}, {sx, sy}, rotation});
 }
 
 void SpriteRendererComponent::setTexture(Texture* t)
