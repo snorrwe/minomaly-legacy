@@ -23,7 +23,7 @@ public:
     using Vector = Vector2<float>;
 
     static TransformRef getRoot();
-    static FixedMatrix<3, 3> rotationMatrix(float rotation);
+    static Matrix<3, 3> rotationMatrix(float rotation);
 
     struct TransformData
     {
@@ -70,7 +70,7 @@ public:
     void setRotation(RotationData const& value);
 
     TransformData const& absolute() const { return absoluteTransform; }
-    FixedMatrix<3, 3> transformMatrix();
+    Matrix<3, 3> transformMatrix();
 
 protected:
     TransformRef::WeakRef parent = nullptr;
@@ -79,12 +79,12 @@ protected:
 
     TransformData localTransform = {};
     TransformData absoluteTransform = {};
-    FixedMatrix<3, 3> childToWorldMatrix = FixedMatrix<3, 3>({1, 0, 0, 0, 1, 0, 0, 0, 1});
+    Matrix<3, 3> childToWorldMatrix = Matrix<3, 3>({1, 0, 0, 0, 1, 0, 0, 0, 1});
 
 private:
-    FixedMatrix<3, 3> transformMatrix(TransformData const& parent);
+    Matrix<3, 3> transformMatrix(TransformData const& parent);
 
-    void updateByParent(TransformData const& parent, FixedMatrix<3, 3> const& parentMatrix);
+    void updateByParent(TransformData const& parent, Matrix<3, 3> const& parentMatrix);
 };
 
 } // namespace Mino

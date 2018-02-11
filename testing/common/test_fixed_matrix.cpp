@@ -5,14 +5,14 @@
 
 using namespace Mino;
 
-class TestFixedMatrices : public ::testing::Test
+class TestMatrices : public ::testing::Test
 {
 public:
 };
 
-TEST_F(TestFixedMatrices, SimpleCanAssignMembers)
+TEST_F(TestMatrices, SimpleCanAssignMembers)
 {
-    auto m = FixedMatrix<2, 3>{};
+    auto m = Matrix<2, 3>{};
     std::vector<std::vector<float>> matrix{{1, 2, 3}, {4, 5, 6}};
     for (int i = 0; i < 2; ++i)
     {
@@ -30,18 +30,18 @@ TEST_F(TestFixedMatrices, SimpleCanAssignMembers)
         }
     }
 }
-TEST_F(TestFixedMatrices, DotReturnsCorrectDimensions)
+TEST_F(TestMatrices, DotReturnsCorrectDimensions)
 {
-    auto lhs = FixedMatrix<1, 2>{};
-    auto rhs = FixedMatrix<2, 3>{};
+    auto lhs = Matrix<1, 2>{};
+    auto rhs = Matrix<2, 3>{};
     auto result = lhs * rhs;
     EXPECT_EQ(result.columns(), lhs.columns());
     EXPECT_EQ(result.rows(), rhs.rows());
 }
 
-TEST_F(TestFixedMatrices, SimpleInitTest)
+TEST_F(TestMatrices, SimpleInitTest)
 {
-    auto m = FixedMatrix<2, 3>({1, 2, 3, 4, 5, 6});
+    auto m = Matrix<2, 3>({1, 2, 3, 4, 5, 6});
 
     EXPECT_EQ(m.at(0, 0), 1);
     EXPECT_EQ(m.at(1, 0), 2);
@@ -51,24 +51,24 @@ TEST_F(TestFixedMatrices, SimpleInitTest)
     EXPECT_EQ(m.at(1, 2), 6);
 }
 
-TEST_F(TestFixedMatrices, SimpleDotProductTest)
+TEST_F(TestMatrices, SimpleDotProductTest)
 {
-    auto m1 = FixedMatrix<2, 3>({1, 2, 3, 4, 5, 6});
-    auto m2 = FixedMatrix<3, 2>({1, 2, 3, 4, 5, 6});
+    auto m1 = Matrix<2, 3>({1, 2, 3, 4, 5, 6});
+    auto m2 = Matrix<3, 2>({1, 2, 3, 4, 5, 6});
 
     auto result = m1 * m2;
 
     EXPECT_EQ(result.columns(), 2);
     EXPECT_EQ(result.rows(), 2);
 
-    auto expected = FixedMatrix<2, 2>{{22, 28, 49, 64}};
+    auto expected = Matrix<2, 2>{{22, 28, 49, 64}};
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TestFixedMatrices, SimpleSubtractTest)
+TEST_F(TestMatrices, SimpleSubtractTest)
 {
-    auto lhs = FixedMatrix<2, 2>({1, 2, 2, 1});
-    auto rhs = FixedMatrix<2, 2>({0, 1, 1, 0});
+    auto lhs = Matrix<2, 2>({1, 2, 2, 1});
+    auto rhs = Matrix<2, 2>({0, 1, 1, 0});
     auto result = lhs - rhs;
     EXPECT_EQ(result.columns(), 2);
     EXPECT_EQ(result.rows(), 2);
@@ -81,10 +81,10 @@ TEST_F(TestFixedMatrices, SimpleSubtractTest)
     }
 }
 
-TEST_F(TestFixedMatrices, SimpleAddTest)
+TEST_F(TestMatrices, SimpleAddTest)
 {
-    auto lhs = FixedMatrix<2, 2>({1, 2, 2, 1});
-    auto rhs = FixedMatrix<2, 2>({1, 0, 0, 1});
+    auto lhs = Matrix<2, 2>({1, 2, 2, 1});
+    auto rhs = Matrix<2, 2>({1, 0, 0, 1});
     auto result = lhs + rhs;
     EXPECT_EQ(result.columns(), 2);
     EXPECT_EQ(result.rows(), 2);
@@ -97,19 +97,19 @@ TEST_F(TestFixedMatrices, SimpleAddTest)
     }
 }
 
-TEST_F(TestFixedMatrices, SimpleEqualityTest)
+TEST_F(TestMatrices, SimpleEqualityTest)
 {
-    auto lhs = FixedMatrix<2, 2>({1, 1, 1, 1});
-    auto rhs = FixedMatrix<2, 2>({1, 1, 1, 1});
+    auto lhs = Matrix<2, 2>({1, 1, 1, 1});
+    auto rhs = Matrix<2, 2>({1, 1, 1, 1});
     ASSERT_TRUE(lhs == rhs);
-    rhs = FixedMatrix<2, 2>({1, 0, 1, 1});
+    rhs = Matrix<2, 2>({1, 0, 1, 1});
     ASSERT_FALSE(lhs == rhs);
 }
 
-TEST_F(TestFixedMatrices, SimpleTransposeTest)
+TEST_F(TestMatrices, SimpleTransposeTest)
 {
-    auto m = FixedMatrix<1, 2>({1, 2});
+    auto m = Matrix<1, 2>({1, 2});
     auto actual = m.transpose();
-    auto expected = FixedMatrix<2, 1>({1, 2});
+    auto expected = Matrix<2, 1>({1, 2});
     ASSERT_TRUE(actual == expected);
 }

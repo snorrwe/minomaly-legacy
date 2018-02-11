@@ -5,23 +5,23 @@
 
 namespace Mino
 {
-
-template <uint8_t _cols, uint8_t _rows> class FixedMatrix
+template <uint8_t _cols, uint8_t _rows>
+class Matrix
 {
     std::array<float, (_cols * _rows)> values = {};
 
 public:
     using TCol = uint8_t;
 
-    FixedMatrix() = default;
-    FixedMatrix(std::array<float, (_cols * _rows)> const& values) : values(values) {}
-    FixedMatrix(std::array<float, (_cols * _rows)>&& values) : values(std::move(values)) {}
-    FixedMatrix(FixedMatrix const&) = default;
-    FixedMatrix(FixedMatrix&&) = default;
-    ~FixedMatrix() {}
+    Matrix() = default;
+    Matrix(std::array<float, (_cols * _rows)> const& values) : values(values) {}
+    Matrix(std::array<float, (_cols * _rows)>&& values) : values(std::move(values)) {}
+    Matrix(Matrix const&) = default;
+    Matrix(Matrix&&) = default;
+    ~Matrix() {}
 
-    FixedMatrix& operator=(FixedMatrix const&) = default;
-    FixedMatrix& operator=(FixedMatrix&&) = default;
+    Matrix& operator=(Matrix const&) = default;
+    Matrix& operator=(Matrix&&) = default;
 
     constexpr TCol columns() const { return _cols; }
     constexpr TCol rows() const { return _rows; }
@@ -29,17 +29,19 @@ public:
 
     float& at(TCol const col, TCol const row);
     float const& at(TCol const col, TCol const row) const;
-    FixedMatrix<_rows, _cols> transpose() const;
+    Matrix<_rows, _cols> transpose() const;
 
-    template <TCol _c, TCol _r> FixedMatrix<_cols, _r> operator*(FixedMatrix<_c, _r> const&);
-    FixedMatrix<_cols, _cols> operator+(FixedMatrix<_cols, _rows> const&);
-    FixedMatrix<_cols, _cols> operator-(FixedMatrix<_cols, _rows> const&);
+    template <TCol _c, TCol _r>
+    Matrix<_cols, _r> operator*(Matrix<_c, _r> const&);
+    Matrix<_cols, _cols> operator+(Matrix<_cols, _rows> const&);
+    Matrix<_cols, _cols> operator-(Matrix<_cols, _rows> const&);
 
-    template <TCol _c, TCol _r> bool operator==(FixedMatrix<_c, _r> const&) const;
+    template <TCol _c, TCol _r>
+    bool operator==(Matrix<_c, _r> const&) const;
 };
 
 template <uint8_t _cols, uint8_t _rows>
-std::ostream& operator<<(std::ostream& os, FixedMatrix<_cols, _rows> const& m)
+std::ostream& operator<<(std::ostream& os, Matrix<_cols, _rows> const& m)
 {
     os << "Matrix " << '0' + _cols << " " << '0' + _rows << "\n";
     for (int j = 0; j < _rows; ++j)
@@ -55,14 +57,14 @@ std::ostream& operator<<(std::ostream& os, FixedMatrix<_cols, _rows> const& m)
 }
 
 template <uint8_t _cols, uint8_t _rows>
-float& FixedMatrix<_cols, _rows>::at(TCol const col, TCol const row)
+float& Matrix<_cols, _rows>::at(TCol const col, TCol const row)
 {
     assert(col < _cols && row < _rows);
     return values[col + _cols * row];
 }
 
 template <uint8_t _cols, uint8_t _rows>
-float const& FixedMatrix<_cols, _rows>::at(TCol const col, TCol const row) const
+float const& Matrix<_cols, _rows>::at(TCol const col, TCol const row) const
 {
     assert(col < _cols && row < _rows);
     return values[col + _cols * row];
@@ -70,10 +72,10 @@ float const& FixedMatrix<_cols, _rows>::at(TCol const col, TCol const row) const
 
 template <uint8_t _cols, uint8_t _rows>
 template <uint8_t _c, uint8_t _r>
-FixedMatrix<_cols, _r> FixedMatrix<_cols, _rows>::operator*(FixedMatrix<_c, _r> const& rhs)
+Matrix<_cols, _r> Matrix<_cols, _rows>::operator*(Matrix<_c, _r> const& rhs)
 {
     static_assert(_rows == _c);
-    auto result = FixedMatrix<_cols, _r>{};
+    auto result = Matrix<_cols, _r>{};
     for (int col = 0; col < result.columns(); ++col)
     {
         for (int row = 0; row < result.rows(); ++row)
@@ -90,7 +92,7 @@ FixedMatrix<_cols, _r> FixedMatrix<_cols, _rows>::operator*(FixedMatrix<_c, _r> 
 
 template <uint8_t _cols, uint8_t _rows>
 template <uint8_t _c, uint8_t _r>
-bool FixedMatrix<_cols, _rows>::operator==(FixedMatrix<_c, _r> const& rhs) const
+bool Matrix<_cols, _rows>::operator==(Matrix<_c, _r> const& rhs) const
 {
     return _cols == _c && _rows == _r && [&]() {
         auto rit = rhs.values.begin();
@@ -103,9 +105,9 @@ bool FixedMatrix<_cols, _rows>::operator==(FixedMatrix<_c, _r> const& rhs) const
 }
 
 template <uint8_t _cols, uint8_t _rows>
-FixedMatrix<_cols, _cols> FixedMatrix<_cols, _rows>::operator+(FixedMatrix<_cols, _rows> const& rhs)
+Matrix<_cols, _cols> Matrix<_cols, _rows>::operator+(Matrix<_cols, _rows> const& rhs)
 {
-    auto result = FixedMatrix<_cols, _rows>{};
+    auto result = Matrix<_cols, _rows>{};
     auto rit = rhs.values.begin();
     auto resultIt = result.values.begin();
     for (auto i = values.begin(); i != values.end(); ++i, ++rit, ++resultIt)
@@ -116,9 +118,9 @@ FixedMatrix<_cols, _cols> FixedMatrix<_cols, _rows>::operator+(FixedMatrix<_cols
 }
 
 template <uint8_t _cols, uint8_t _rows>
-FixedMatrix<_cols, _cols> FixedMatrix<_cols, _rows>::operator-(FixedMatrix<_cols, _rows> const& rhs)
+Matrix<_cols, _cols> Matrix<_cols, _rows>::operator-(Matrix<_cols, _rows> const& rhs)
 {
-    auto result = FixedMatrix<_cols, _rows>{};
+    auto result = Matrix<_cols, _rows>{};
     auto rit = rhs.values.begin();
     auto resultIt = result.values.begin();
     for (auto i = values.begin(); i != values.end(); ++i, ++rit, ++resultIt)
@@ -129,9 +131,9 @@ FixedMatrix<_cols, _cols> FixedMatrix<_cols, _rows>::operator-(FixedMatrix<_cols
 }
 
 template <uint8_t _cols, uint8_t _rows>
-FixedMatrix<_rows, _cols> FixedMatrix<_cols, _rows>::transpose() const
+Matrix<_rows, _cols> Matrix<_cols, _rows>::transpose() const
 {
-    auto result = FixedMatrix<_rows, _cols>{};
+    auto result = Matrix<_rows, _cols>{};
     for (int col = 0; col < columns(); ++col)
     {
         for (int row = 0; row < rows(); ++row)
