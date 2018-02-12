@@ -14,8 +14,14 @@ public:
     using TCol = uint8_t;
 
     Matrix() = default;
-    Matrix(std::array<float, (_cols * _rows)> const& values) : values(values) {}
-    Matrix(std::array<float, (_cols * _rows)>&& values) : values(std::move(values)) {}
+    Matrix(std::array<float, (_cols * _rows)> const& values)
+        : values(values)
+    {
+    }
+    Matrix(std::array<float, (_cols * _rows)>&& values)
+        : values(std::move(values))
+    {
+    }
     Matrix(Matrix const&) = default;
     Matrix(Matrix&&) = default;
     ~Matrix() {}
@@ -27,17 +33,17 @@ public:
     constexpr TCol rows() const { return _rows; }
     constexpr size_t size() const { return _cols * _rows; }
 
-    float& at(TCol const col, TCol const row);
-    float const& at(TCol const col, TCol const row) const;
-    Matrix<_rows, _cols> transpose() const;
+    constexpr float& at(TCol const col, TCol const row);
+    constexpr float const& at(TCol const col, TCol const row) const;
+    constexpr Matrix<_rows, _cols> transpose() const;
 
     template <TCol _c, TCol _r>
-    Matrix<_cols, _r> operator*(Matrix<_c, _r> const&);
-    Matrix<_cols, _cols> operator+(Matrix<_cols, _rows> const&);
-    Matrix<_cols, _cols> operator-(Matrix<_cols, _rows> const&);
+    constexpr Matrix<_cols, _r> operator*(Matrix<_c, _r> const&);
+    constexpr Matrix<_cols, _rows> operator+(Matrix<_cols, _rows> const&);
+    constexpr Matrix<_cols, _rows> operator-(Matrix<_cols, _rows> const&);
 
     template <TCol _c, TCol _r>
-    bool operator==(Matrix<_c, _r> const&) const;
+    constexpr bool operator==(Matrix<_c, _r> const&) const;
 };
 
 template <uint8_t _cols, uint8_t _rows>
@@ -57,14 +63,14 @@ std::ostream& operator<<(std::ostream& os, Matrix<_cols, _rows> const& m)
 }
 
 template <uint8_t _cols, uint8_t _rows>
-float& Matrix<_cols, _rows>::at(TCol const col, TCol const row)
+constexpr float& Matrix<_cols, _rows>::at(TCol const col, TCol const row)
 {
     assert(col < _cols && row < _rows);
     return values[col + _cols * row];
 }
 
 template <uint8_t _cols, uint8_t _rows>
-float const& Matrix<_cols, _rows>::at(TCol const col, TCol const row) const
+constexpr float const& Matrix<_cols, _rows>::at(TCol const col, TCol const row) const
 {
     assert(col < _cols && row < _rows);
     return values[col + _cols * row];
@@ -72,7 +78,7 @@ float const& Matrix<_cols, _rows>::at(TCol const col, TCol const row) const
 
 template <uint8_t _cols, uint8_t _rows>
 template <uint8_t _c, uint8_t _r>
-Matrix<_cols, _r> Matrix<_cols, _rows>::operator*(Matrix<_c, _r> const& rhs)
+constexpr Matrix<_cols, _r> Matrix<_cols, _rows>::operator*(Matrix<_c, _r> const& rhs)
 {
     static_assert(_rows == _c);
     auto result = Matrix<_cols, _r>{};
@@ -92,20 +98,21 @@ Matrix<_cols, _r> Matrix<_cols, _rows>::operator*(Matrix<_c, _r> const& rhs)
 
 template <uint8_t _cols, uint8_t _rows>
 template <uint8_t _c, uint8_t _r>
-bool Matrix<_cols, _rows>::operator==(Matrix<_c, _r> const& rhs) const
+constexpr bool Matrix<_cols, _rows>::operator==(Matrix<_c, _r> const& rhs) const
 {
-    return _cols == _c && _rows == _r && [&]() {
+    auto valuesAreEqual = [&]() {
         auto rit = rhs.values.begin();
         for (auto i = values.begin(); i != values.end(); ++i, ++rit)
         {
             if (*i != *rit) return false;
         }
         return true;
-    }();
+    };
+    return _cols == _c && _rows == _r && valuesAreEqual();
 }
 
 template <uint8_t _cols, uint8_t _rows>
-Matrix<_cols, _cols> Matrix<_cols, _rows>::operator+(Matrix<_cols, _rows> const& rhs)
+constexpr Matrix<_cols, _rows> Matrix<_cols, _rows>::operator+(Matrix<_cols, _rows> const& rhs)
 {
     auto result = Matrix<_cols, _rows>{};
     auto rit = rhs.values.begin();
@@ -118,7 +125,7 @@ Matrix<_cols, _cols> Matrix<_cols, _rows>::operator+(Matrix<_cols, _rows> const&
 }
 
 template <uint8_t _cols, uint8_t _rows>
-Matrix<_cols, _cols> Matrix<_cols, _rows>::operator-(Matrix<_cols, _rows> const& rhs)
+constexpr Matrix<_cols, _rows> Matrix<_cols, _rows>::operator-(Matrix<_cols, _rows> const& rhs)
 {
     auto result = Matrix<_cols, _rows>{};
     auto rit = rhs.values.begin();
@@ -131,7 +138,7 @@ Matrix<_cols, _cols> Matrix<_cols, _rows>::operator-(Matrix<_cols, _rows> const&
 }
 
 template <uint8_t _cols, uint8_t _rows>
-Matrix<_rows, _cols> Matrix<_cols, _rows>::transpose() const
+constexpr Matrix<_rows, _cols> Matrix<_cols, _rows>::transpose() const
 {
     auto result = Matrix<_rows, _cols>{};
     for (int col = 0; col < columns(); ++col)
