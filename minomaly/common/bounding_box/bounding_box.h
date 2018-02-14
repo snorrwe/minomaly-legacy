@@ -9,12 +9,20 @@ class BoundingBox
 {
 public:
     BoundingBox(Vector2<float> center, float halfDimension)
-        : center(center), halfWidth(halfDimension), halfHeight(halfDimension)
+        : center(center)
+        , halfWidth(halfDimension)
+        , halfHeight(halfDimension)
     {
     }
     BoundingBox(Vector2<float> center, float width, float height)
-        : center(center), halfWidth(width * 0.5), halfHeight(height * 0.5)
+        : center(center)
+        , halfWidth(width * 0.5f)
+        , halfHeight(height * 0.5f)
     {
+    }
+    BoundingBox(Vector2<float> const& bottomLeft, Vector2<float> const& topRight)
+    {
+        set(bottomLeft, topRight);
     }
     BoundingBox(BoundingBox const&) = default;
     BoundingBox(BoundingBox&&) = default;
@@ -37,9 +45,9 @@ public:
     void setHeight(float value) { halfHeight = value * 0.5f; }
 
 private:
-    Vector2<float> center;
-    float halfWidth;
-    float halfHeight;
+    Vector2<float> center = {0.f, 0.f};
+    float halfWidth = 0.f;
+    float halfHeight = 0.f;
 };
 
 } // namespace Mino

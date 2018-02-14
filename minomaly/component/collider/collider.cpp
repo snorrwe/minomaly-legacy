@@ -55,7 +55,10 @@ std::vector<typename ColliderComponent::World::Node> ColliderComponent::checkCol
     result.reserve(5);
     auto box = asBoundingBox();
     world->queryRange(box, [&](const auto& i) {
-        if (i.item != this && i.item->asBoundingBox().intersects(box)) result.push_back(i);
+        if (i.item != this && (i.item->intersects(*this) || this->intersects(*i.item)))
+        {
+            result.push_back(i);
+        }
     });
     return result;
 }

@@ -38,10 +38,14 @@ void Program::start()
 const auto barWidth = 30;
 const auto barHeight = 120;
 
-void Program::createPlatform(Vector2<float> const& position, Vector2<float> const& scale)
+void Program::createPlatform(Vector2<float> const& position, Vector2<float> const& scale,
+                             float rotation)
 {
     auto bar = createGameObject<SpriteRendererComponent, BoxColliderComponent>(position);
     bar->getTransform()->setScale(scale);
+    bar->getTransform()->rotation().angle = rotation;
+    bar->getTransform()->rotation().center
+        = {barWidth * -0.5f * scale.x(), barHeight * -0.5f * scale.y()};
     auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
     bar->getComponent<SpriteRendererComponent>()->setTexture(barImage.get());
     auto barCollider = bar->getComponent<BoxColliderComponent>();
@@ -54,7 +58,8 @@ void Program::initPlatforms()
     auto barImage = engine->getAssets()->loadTexture("assets/runner/bar.png");
     assets.push_back(barImage);
     auto startx = (SCREEN_WIDTH - 50) * 0.5f;
-    createPlatform({startx, 0.0}, {2.0f, 0.5f});
+    constexpr auto piPerFour = 0.78539816339744830961566084581988f;
+    createPlatform({startx, 0.0}, {2.0f, 0.5f}, piPerFour);
     createPlatform({startx + 2.f * barWidth, 0.5f * barHeight}, {2.0f, 0.5f});
     createPlatform({startx + 4.f * barWidth, 1.f * barHeight}, {5.0f, 0.25f});
     createPlatform({startx + 320, 0.0f}, {2.0f, 1.0f});

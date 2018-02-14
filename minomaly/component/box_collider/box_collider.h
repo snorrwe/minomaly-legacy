@@ -23,10 +23,11 @@ public:
     float getHeight() const { return height; }
     void set(float w, float h, Vector2<float> offset = {0, 0});
 
-    virtual BoundingBox asBoundingBox() const;
+    virtual BoundingBox asBoundingBox() const override;
 
 protected:
-    virtual void updateCornersByPosition(Vector2<float> const&);
+    virtual void updateCornersByPosition(Vector2<float> const&) override;
+    virtual bool intersects(ColliderComponent const&) const override;
 
     Vector2<float> offset = {0, 0};
     float width = 0;

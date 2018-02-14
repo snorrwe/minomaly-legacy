@@ -15,7 +15,6 @@
 
 namespace Mino
 {
-
 class Rigidbody;
 class IPhysicsSystem;
 class ColliderComponent;
@@ -32,6 +31,7 @@ public:
     using World = Quadtree<ColliderComponent>;
     using TouchContainer = std::set<ColliderComponent const*>;
     using CollisionEvent = std::unique_ptr<Subject<CollisionData>>;
+    using CornerContainer = std::vector<Vector2<float>>;
 
     virtual ~ColliderComponent();
 
@@ -56,15 +56,18 @@ public:
     TouchContainer const& getTouchingColliders() const { return touching; }
     bool touchingAny() const { return !touching.empty(); }
 
+    CornerContainer const& getCorners() const { return corners; }
+
 protected:
     virtual void updateCornersByPosition(Vector2<float> const&) = 0;
+    virtual bool intersects(ColliderComponent const&) const = 0;
 
     uint32_t layers = 0x1;
     Vector2<float> lastPos = {0, 0};
     Vector2<float> deltaPos = {0, 0};
     IPhysicsSystem* physicsSystem;
     World* world;
-    std::vector<Vector2<float>> corners = {};
+    CornerContainer corners = {};
 
 private:
     void removeSelf(std::vector<World::Node>&) const;

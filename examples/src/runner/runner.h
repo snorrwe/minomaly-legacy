@@ -27,5 +27,5 @@ public:
 private:
     void initPlatforms();
     void createPlatform(Mino::Vector2<float> const& position,
-                        Mino::Vector2<float> const& scale = {1.f, 1.f});
+                        Mino::Vector2<float> const& scale = {1.f, 1.f}, float rotation = 0.0f);
 };

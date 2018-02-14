@@ -22,7 +22,4 @@ void BoundingBox::set(Vector2<float> const& bottomLeft, Vector2<float> const& to
     halfWidth = fabs(width) * 0.5f;
     halfHeight = fabs(height) * 0.5f;
     center = bottomLeft + Vector2<float>{halfWidth, halfHeight};
-
-    std::cout << bottomLeft << "   " << topRight << "     " << halfWidth << "     " << halfHeight
-              << '\n';
 }

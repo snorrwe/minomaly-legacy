@@ -15,10 +15,13 @@ void PhysicsSystem::update()
         handles.push_back(workService->requestWork<std::vector<World::Node>>(
             [collider]() { return collider->checkCollisions(); }));
     }
+    for (auto& handle : handles)
+    {
+        handle.wait();
+    }
     auto handleIt = handles.begin();
     for (auto& collider : colliders)
     {
-        handleIt->wait();
         collider->handleCollisions(std::move(handleIt->get()));
         ++handleIt;
     }
