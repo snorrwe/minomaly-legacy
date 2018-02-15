@@ -9,16 +9,16 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
                        std::shared_ptr<IPhysicsSystem> physicsSystem,
                        std::shared_ptr<IAssetSystem> assets,
                        std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
-    : subsystems(subsystems),
-      input(input),
-      window(window),
-      application(app),
-      renderer(renderer),
-      audioSystem(audio),
-      physicsSystem(physicsSystem),
-      assets(assets),
-      logService(logService),
-      time(time)
+    : subsystems(subsystems)
+    , input(input)
+    , window(window)
+    , application(app)
+    , renderer(renderer)
+    , audioSystem(audio)
+    , physicsSystem(physicsSystem)
+    , assets(assets)
+    , logService(logService)
+    , time(time)
 {
     sub = input->onQuit([&](auto const&) { active = false; });
 }
@@ -47,7 +47,7 @@ void EngineCore::run(bool)
     active = true;
     lastUpdate = std::chrono::system_clock::now();
     lastFixedUpdate = std::chrono::system_clock::now();
-    Milli lag{0.0};
+    auto lag = Milli{0.0};
 
     time->update(lastUpdate);
     application->start();

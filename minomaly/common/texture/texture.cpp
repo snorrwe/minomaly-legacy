@@ -82,10 +82,13 @@ void Texture::render(Vector2 const& pos,
 
 void Texture::render(Transform::TransformData const& transformData) const
 {
-    auto position = Vector2{transformData.position.x(), transformData.position.y()};
+    auto x = static_cast<int>(transformData.position.x());
+    auto y = static_cast<int>(transformData.position.y());
+    auto position = Vector2{x, y};
     render(position, [&](Texture const& t, SDL_Rect* srcrect, SDL_Rect* dstrect) {
-        *dstrect = {dstrect->x, dstrect->y, dstrect->w * transformData.scale.x(),
-                    dstrect->h * transformData.scale.y()};
+        auto w = static_cast<int>(dstrect->w * transformData.scale.x());
+        auto h = static_cast<int>(dstrect->h * transformData.scale.y());
+        *dstrect = {dstrect->x, dstrect->y, w, h};
         renderer.render(t, srcrect, dstrect, transformData.rotation);
     });
 }

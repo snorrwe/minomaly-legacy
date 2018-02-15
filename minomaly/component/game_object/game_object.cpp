@@ -4,14 +4,15 @@
 using namespace Mino;
 using std::iter_swap;
 
-GameObject::GameObject(Transform::TransformRef const& parentTransform) : transform(parentTransform)
+GameObject::GameObject(Transform::TransformRef const& parentTransform)
+    : transform(parentTransform)
 {
 }
 
 GameObject::GameObject(Transform::TransformRef const& parentTransform, IEngineCore* engine)
-    : transform(parentTransform),
-      engineCore(engine),
-      application(engine ? engine->getApplication() : nullptr)
+    : transform(parentTransform)
+    , engineCore(engine)
+    , application(engine ? engine->getApplication() : nullptr)
 {
 }
 

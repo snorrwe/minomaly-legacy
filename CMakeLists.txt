@@ -14,9 +14,13 @@ set(SILENCED_WARNINGS "-Wno-pragmas -Wno-unused-command-line-argument -Wno-unkno
 
 set(CMAKE_C_FLAGS " ${SILENCED_WARNINGS}")
 set(GCC_FLAGS "-fcxx-exceptions ${SILENCED_WARNINGS}")
-set(MSVC_FLAGS "/EHa /std:c++17 ${SILENCED_WARNINGS}")
+set(MSVC_FLAGS "/EHa /std:c++17")
 if(MSVC)
   set(CMAKE_CXX_FLAGS ${MSVC_FLAGS})
+
+  if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") # LLVM toolchain support
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SILENCED_WARNINGS}")  
+  endif()
 else()
   set(CMAKE_CXX_FLAGS ${GCC_FLAGS})
 endif()
@@ -123,7 +127,7 @@ if(examples)
 
     #[[ Copy DLLs ]]
 
-    # COPY_SDL_DLLS(${name})
+    COPY_SDL_DLLS(${name})
 
   ENDMACRO()
 

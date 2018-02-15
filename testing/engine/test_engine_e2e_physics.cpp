@@ -84,7 +84,7 @@ void BallsTestApp::start()
         auto x = dist6(rng) % (BOX_WIDTH - PADDING) + PADDING;
         auto y = dist6(rng) % (BOX_HEIGHT - PADDING) + PADDING;
 
-        auto ball = createGameObject<BoxColliderComponent, Rigidbody, BallComponent>({x, y});
+        auto ball = createGameObject<BoxColliderComponent, Rigidbody, BallComponent>({1.f*x, 1.f*y});
         balls.push_back(ball);
     }
 
