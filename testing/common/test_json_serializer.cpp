@@ -27,10 +27,10 @@ struct Apple
 
 TEST_F(JsonSerializerTests, CanReadJsonIntoObject)
 {
-    const auto json = "{\"color\": \"red\",\"size\": 2\n}";
+    const auto json = "{\"color\": \"red\",\"size\": -25\n}";
 
     auto result = Json::parse<Apple>(json);
 
     EXPECT_EQ(result.color, "red");
-    EXPECT_EQ(result.size, 2);
+    EXPECT_EQ(result.size, -25);
 }

@@ -99,6 +99,7 @@ public:
         auto result = Object{};
 
         auto* current = &result;
+        State state = State::Default;
 
         auto sstr = std::istringstream{str};
         auto buffer = std::stringstream{};
@@ -137,7 +138,7 @@ public:
                 {
                     state = State::Default; // TODO: state.pop
                 }
-                else if (chr == ' ' || chr == '\n' || chr == '\t' || chr == ',')
+                else if (isWhiteSpace(chr) || chr == ',')
                 {
                     break;
                 }
@@ -164,7 +165,7 @@ public:
             }
             case State::UnknownValue:
             {
-                if (isNumber(chr) || '-')
+                if (isNumber(chr) || chr == '-')
                 {
                     buffer << chr;
                     state = State::NumberValue;
@@ -182,6 +183,11 @@ public:
                 {
                     // TODO
                     throw std::runtime_error("Not implemented");
+                }
+                else
+                {
+                    throw ParseError(std::string{"Unexpected character: ["} + chr
+                                     + "] in JSON value string!");
                 }
                 break;
             }
@@ -243,6 +249,8 @@ public:
 
 private:
     bool isNumber(char chr) { return '0' <= chr && chr <= '9'; }
+    bool isWhiteSpace(char chr) { return chr == ' ' || chr == '\n' || chr == '\t' || chr == '\r'; }
+    bool isLetter(char chr) { return ('a' <= chr && chr <= 'z') || ('A' <= chr && chr <= 'Z'); }
 };
 
 template <typename TData>
