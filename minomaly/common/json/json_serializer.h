@@ -94,163 +94,29 @@ class JsonParser
     State state = State::Default;
 
 public:
-    Object parse(std::string const& str)
-    {
-        auto result = Object{};
-
-        auto* current = &result;
-        state = State::Default;
-
-        auto sstr = std::istringstream{str};
-        auto buffer = std::stringstream{};
-        auto currentKey = std::string{};
-        while (sstr)
-        {
-            char chr;
-            sstr >> chr;
-
-            switch (state)
-            {
-            case State::Default:
-            {
-                switch (chr)
-                {
-                case '{':
-                    state = State::Object;
-                    break;
-                case '[':
-                    state = State::Array;
-                    break;
-                }
-                break;
-            }
-            case State::Object:
-            {
-                if (chr == '"')
-                {
-                    state = State::Key;
-                }
-                else if (!currentKey.empty() && chr == ':')
-                {
-                    state = State::UnknownValue;
-                }
-                else if (chr == '}')
-                {
-                    state = State::Default; // TODO: state.pop
-                }
-                else if (isWhiteSpace(chr) || chr == ',')
-                {
-                    break;
-                }
-                else
-                {
-                    throw ParseError(std::string{"Unexpected character: ["} + chr
-                                     + "] in JSON string!");
-                }
-                break;
-            }
-            case State::Key:
-            {
-                if (chr == '"')
-                {
-                    state = State::Object;
-                    buffer >> currentKey;
-                    buffer = std::stringstream{};
-                }
-                else
-                {
-                    buffer << chr;
-                }
-                break;
-            }
-            case State::UnknownValue:
-            {
-                if (isNumber(chr) || chr == '-')
-                {
-                    buffer << chr;
-                    state = State::NumberValue;
-                }
-                else if (chr == '"')
-                {
-                    state = State::StringValue;
-                }
-                else if (chr == '{')
-                {
-                    // TODO
-                    throw std::runtime_error("Not implemented");
-                }
-                else if (chr == '[')
-                {
-                    // TODO
-                    throw std::runtime_error("Not implemented");
-                }
-                else
-                {
-                    throw ParseError(std::string{"Unexpected character: ["} + chr
-                                     + "] in JSON value string!");
-                }
-                break;
-            }
-            case State::NumberValue:
-            {
-                if (isNumber(chr))
-                {
-                    buffer << chr;
-                }
-                else if (chr == '.')
-                {
-                    state = State::DecimalValue;
-                    buffer << chr;
-                }
-                else
-                {
-                    // TODO: assert next character for correctness
-                    state = State::Object; // TODO: state.pop
-                    buffer >> current->operator[](currentKey).integer;
-                    buffer = std::stringstream{};
-                    currentKey.clear();
-                }
-                break;
-            }
-            case State::DecimalValue:
-            {
-                if (isNumber(chr))
-                {
-                    buffer << chr;
-                }
-                else
-                {
-                    state = State::Object; // TODO: state.pop
-                    buffer >> current->operator[](currentKey).decimal;
-                    buffer = std::stringstream{};
-                    currentKey.clear();
-                }
-                break;
-            }
-            case State::StringValue:
-            {
-                if (chr == '"')
-                {
-                    state = State::Object; // TODO: state.pop
-                    buffer >> current->operator[](currentKey).string;
-                    buffer = std::stringstream{};
-                    currentKey.clear();
-                }
-                else
-                {
-                    buffer << chr;
-                }
-                break;
-            }
-            }
-        }
-        return result;
-    }
+    Object parse(std::string const& str);
 
 private:
-    bool isNumber(char chr) { return '0' <= chr && chr <= '9'; }
-    bool isWhiteSpace(char chr) { return chr == ' ' || chr == '\n' || chr == '\t' || chr == '\r'; }
-    bool isLetter(char chr) { return ('a' <= chr && chr <= 'z') || ('A' <= chr && chr <= 'Z'); }
+    static bool isNumber(char chr) { return '0' <= chr && chr <= '9'; }
+    static bool isWhiteSpace(char chr)
+    {
+        return chr == ' ' || chr == '\n' || chr == '\t' || chr == '\r';
+    }
+    static bool isLetter(char chr)
+    {
+        return ('a' <= chr && chr <= 'z') || ('A' <= chr && chr <= 'Z');
+    }
+
+    void handleDefault(char chr, std::string& currentKey, std::stringstream& buffer);
+    void handleObject(char chr, std::string& currentKey, std::stringstream& buffer);
+    void handleKey(char chr, std::string& currentKey, std::stringstream& buffer);
+    void handleUnknownValue(char chr, std::string& currentKey, std::stringstream& buffer);
+    void handleNumberValue(char chr, std::string& currentKey, std::stringstream& buffer,
+                           Object& result);
+    void handleDecimalValue(char chr, std::string& currentKey, std::stringstream& buffer,
+                            Object& result);
+    void handleStringValue(char chr, std::string& currentKey, std::stringstream& buffer,
+                           Object& result);
 };
 
 template <typename TData>
