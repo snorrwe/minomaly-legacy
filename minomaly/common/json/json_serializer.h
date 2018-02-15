@@ -47,7 +47,7 @@ struct Object : std::map<std::string, AnyJsonValue>
 template <typename T>
 inline auto asAny(AnyJsonValue const& value)
 {
-    static_assert(false, "May not be called without specialization!");
+    throw std::domain_error("May not be called without specialization!");
 }
 
 template <>
@@ -87,8 +87,8 @@ class JsonParser
         StringValue,
         NumberValue,
         DecimalValue,
-        // BoolValue,//TODO
-        Array
+        BoolValue, // TODO
+        Array      // TODO
     };
 
     State state = State::Default;
@@ -99,7 +99,7 @@ public:
         auto result = Object{};
 
         auto* current = &result;
-        State state = State::Default;
+        state = State::Default;
 
         auto sstr = std::istringstream{str};
         auto buffer = std::stringstream{};
