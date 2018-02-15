@@ -42,7 +42,10 @@ public:
     Transform() = default;
     Transform(Transform const&) = delete;
     Transform(Transform&&) = default;
-    Transform(TransformRef const& parent) : parent(parent) {}
+    Transform(TransformRef const& parent)
+        : parent(parent)
+    {
+    }
     virtual ~Transform() {}
 
     Transform& operator=(Transform const&) = delete;

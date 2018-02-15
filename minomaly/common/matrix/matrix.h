@@ -13,21 +13,21 @@ class Matrix
 public:
     using TCol = uint8_t;
 
-    Matrix() = default;
-    Matrix(std::array<float, (_cols * _rows)> const& values)
+    constexpr Matrix() = default;
+    constexpr Matrix(std::array<float, (_cols * _rows)> const& values)
         : values(values)
     {
     }
-    Matrix(std::array<float, (_cols * _rows)>&& values)
+    constexpr Matrix(std::array<float, (_cols * _rows)>&& values)
         : values(std::move(values))
     {
     }
-    Matrix(Matrix const&) = default;
-    Matrix(Matrix&&) = default;
+    constexpr Matrix(Matrix const&) = default;
+    constexpr Matrix(Matrix&&) = default;
     ~Matrix() {}
 
-    Matrix& operator=(Matrix const&) = default;
-    Matrix& operator=(Matrix&&) = default;
+    constexpr Matrix& operator=(Matrix const&) = default;
+    constexpr Matrix& operator=(Matrix&&) = default;
 
     constexpr TCol columns() const { return _cols; }
     constexpr TCol rows() const { return _rows; }
