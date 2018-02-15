@@ -78,6 +78,7 @@ using Private::property;
 
 class JsonParser
 {
+public:
     enum class State
     {
         Default,
@@ -91,9 +92,6 @@ class JsonParser
         Array      // TODO
     };
 
-    State state = State::Default;
-
-public:
     Object parse(std::string const& str);
 
 private:
@@ -117,6 +115,8 @@ private:
                             Object& result);
     void handleStringValue(char chr, std::string& currentKey, std::stringstream& buffer,
                            Object& result);
+
+    State state = State::Default;
 };
 
 template <typename TData>
