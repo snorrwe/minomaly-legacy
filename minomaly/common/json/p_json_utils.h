@@ -16,4 +16,16 @@ struct PropertyImpl
     T Class::*member;
     const char* name;
 };
+
+template <typename T>
+T parseValue(std::stringstream& stream)
+{
+    return T{}; // TODO
+}
+
+template <>
+int parseValue<int>(std::stringstream& stream)
+{
+    return 0; // TODO
+}
 }

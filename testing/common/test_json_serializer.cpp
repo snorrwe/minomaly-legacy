@@ -8,7 +8,7 @@ using namespace std::string_literals;
 
 class JsonSerializerTests : public ::testing::Test
 {
-public:
+protected:
 };
 
 struct Apple
