@@ -46,6 +46,10 @@ Object JsonParser::parse(std::string const& str)
             throw std::runtime_error("Not implemented");
         }
     }
+    if (state != State::Default)
+    {
+        throw ParseError("JSON input ended unexpectedly.");
+    }
     return result;
 }
 

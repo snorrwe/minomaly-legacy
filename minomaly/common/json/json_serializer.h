@@ -47,6 +47,7 @@ struct Object : std::map<std::string, AnyJsonValue>
 template <typename T>
 inline auto asAny(AnyJsonValue const& value)
 {
+    // TODO: support arbitrary objects
     throw std::domain_error("May not be called without specialization!");
 }
 
@@ -68,12 +69,6 @@ inline auto asAny<std::string>(AnyJsonValue const& value)
     return value.string;
 }
 
-template <>
-inline auto asAny<Object>(AnyJsonValue const& value)
-{
-    return *value.object;
-}
-
 using Private::property;
 
 class JsonParser
@@ -92,19 +87,21 @@ public:
         Array      // TODO
     };
 
-    Object parse(std::string const& str);
-
-private:
     static bool isNumber(char chr) { return '0' <= chr && chr <= '9'; }
+
     static bool isWhiteSpace(char chr)
     {
         return chr == ' ' || chr == '\n' || chr == '\t' || chr == '\r';
     }
+
     static bool isLetter(char chr)
     {
         return ('a' <= chr && chr <= 'z') || ('A' <= chr && chr <= 'Z');
     }
 
+    Object parse(std::string const& str);
+
+private:
     void handleDefault(char chr, std::string& currentKey, std::stringstream& buffer);
     void handleObject(char chr, std::string& currentKey, std::stringstream& buffer);
     void handleKey(char chr, std::string& currentKey, std::stringstream& buffer);
