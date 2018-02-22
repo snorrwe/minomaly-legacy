@@ -1,7 +1,9 @@
 #pragma once
 #include "p_json_error.h"
+#include <iostream>
 #include <sstream>
 #include <string>
+#include <tuple>
 
 namespace Mino::Json::Private
 {
@@ -25,9 +27,40 @@ struct Type
 {
 };
 
-template <typename FwIt>
-struct ParseImpl
+// sequence for
+template <typename T, T... S, typename F>
+constexpr void for_sequence(std::integer_sequence<T, S...>, F&& f)
 {
+    using unpack_t = int[];
+    (void)unpack_t{(static_cast<void>(f(std::integral_constant<T, S>{})), 0)..., 0};
+}
+
+constexpr auto strEqual(const char* lhs, const char* rhs)
+{
+    for (; *lhs && *rhs; ++lhs, ++rhs)
+    {
+        if (*lhs != *rhs) return false;
+    }
+    return *lhs == *rhs;
+}
+
+template <typename TResult, typename TValue>
+void setProperty(TResult& result, const char* name, TValue value)
+{
+    constexpr auto nbProperties = std::tuple_size<decltype(TResult::jsonProperties())>::value;
+    for_sequence(std::make_index_sequence<nbProperties>{}, [&](auto i) {
+        constexpr auto property = std::get<i>(TResult::jsonProperties());
+        if (strEqual(property.name, name))
+        {
+            (TValue&)(result.*(property.member)) = value;
+        }
+    });
+};
+
+template <typename FwIt>
+class ParseImpl
+{
+public:
     enum ParseState
     {
         Default,
@@ -59,13 +92,16 @@ struct ParseImpl
     int parse(Type<int>, FwIt begin, FwIt end)
     {
         auto stream = std::stringstream{};
-        /*for (; begin != end and *begin != ','; ++begin)
+        /*
+        for (; begin != end and *begin != ','; ++begin)
         {
             stream
-        }*/
+        }
+        */
         return 0; // TODO
     }
 
+private:
     ParseState state = ParseState::Default;
 };
 }

@@ -13,20 +13,38 @@ protected:
 
 struct Apple
 {
-    std::string color;
-    int size;
+    std::string color = "";
+    int size = 0;
 
     constexpr static auto jsonProperties()
     {
-        return std::make_tuple(Json::property(&Apple::size, "size"),
-                               Json::property(&Apple::color, "color"));
+        return std::make_tuple(Json::property(&Apple::color, "color"),
+                               Json::property(&Apple::size, "size"));
     }
 };
 
-/*TEST_F(JsonSerializerTests, CanSerializeObject)
+TEST(TestJsonSetter, TestStrEqual)
 {
-    // toJson
-}*/
+    auto phrase1 = "red";
+    auto phrase2 = "red";
+    auto phrase3 = "blue";
+    auto phrase4 = "red123";
+    auto phrase5 = "re";
+
+    EXPECT_TRUE(Json::Private::strEqual(phrase1, phrase2));
+    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase3));
+    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase4));
+    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase5));
+}
+
+TEST(TestJsonSetter, CanFindTypeByName)
+{
+    auto apple = Apple{};
+    Json::Private::setProperty(apple, "color", "blue"s);
+    Json::Private::setProperty(apple, "size", 5);
+    EXPECT_EQ(apple.size, 5);
+    EXPECT_EQ(apple.color, "blue"s);
+}
 
 TEST_F(JsonSerializerTests, CanReadJsonIntoObject)
 {
