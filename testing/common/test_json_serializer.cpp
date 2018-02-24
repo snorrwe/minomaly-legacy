@@ -53,12 +53,12 @@ TEST(TestJsonSetter, CanFindTypeByName)
     EXPECT_EQ(apple.color, "red"s);
 }
 
-class JsonSerializerTests : public ::testing::Test
+class TestJsonSerializer : public ::testing::Test
 {
 protected:
 };
 
-TEST_F(JsonSerializerTests, CanReadJsonIntoObject)
+TEST_F(TestJsonSerializer, CanReadJsonIntoObject)
 {
     const auto json
         = "     {\"color\":\"red\",\"size\": -25\n, \"seed\":   {\"radius\":        -3.14}}"s;
@@ -70,7 +70,7 @@ TEST_F(JsonSerializerTests, CanReadJsonIntoObject)
     EXPECT_FLOAT_EQ(result.seed.radius, -3.14);
 }
 
-TEST_F(JsonSerializerTests, ThrowsParseErrorOnInvalidJson)
+TEST_F(TestJsonSerializer, ThrowsParseErrorOnInvalidJson)
 {
     auto json = "{asd \"color\": \"red\",\"size\": -25\n}"s;
     EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::ParseError);
@@ -94,7 +94,7 @@ struct AppleTree
     }
 };
 
-TEST_F(JsonSerializerTests, CanReadObjectWithVectorOfObjects)
+TEST_F(TestJsonSerializer, CanReadObjectWithVectorOfObjects)
 {
     const auto json = "{\"apples\": ["
                       "{\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
@@ -127,7 +127,7 @@ struct Orchid
     }
 };
 
-TEST_F(JsonSerializerTests, CanReadVectorOfObjectsWithVectors)
+TEST_F(TestJsonSerializer, CanReadVectorOfObjectsWithVectors)
 {
     const auto json = "{"
                       "\"trees\":["
@@ -147,7 +147,7 @@ TEST_F(JsonSerializerTests, CanReadVectorOfObjectsWithVectors)
     EXPECT_EQ(result.trees.size(), 2);
 }
 
-TEST_F(JsonSerializerTests, RaisesExceptionIfNonExistentPropertyIsRead)
+TEST_F(TestJsonSerializer, RaisesExceptionIfNonExistentPropertyIsRead)
 {
     auto json = "{\"color\": \"red\",\"size\": -25\n, \"fakeproperty\": \"asd\"}"s;
     EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::UnexpectedPropertyName);

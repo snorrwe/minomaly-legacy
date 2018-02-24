@@ -195,17 +195,16 @@ public:
         skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
         auto stream = std::stringstream{};
         stream << *begin++;
-        while (begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin)))
+        if (isNumber(*begin))
         {
-            stream << *begin;
-            ++begin;
+            stream << parse(Type<unsigned>{}, begin, end);
         }
-        int result;
+        int result = 0;
         stream >> result;
         return result;
     }
 
-    size_t parse(Type<size_t>, FwIt& begin, FwIt end)
+    unsigned parse(Type<unsigned>, FwIt& begin, FwIt end)
     {
         skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
         auto stream = std::stringstream{};
@@ -214,7 +213,7 @@ public:
             stream << *begin;
             ++begin;
         }
-        size_t result;
+        unsigned result = 0;
         stream >> result;
         return result;
     }
@@ -250,22 +249,6 @@ private:
     static bool isNumber(char c) { return '0' <= c && c <= '9'; }
     static bool isWhiteSpace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
     static bool isValueEnd(char c) { return c == ','; }
-
-    template <typename TResult>
-    TResult parseInteger(FwIt& begin, FwIt end)
-    {
-        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
-        auto stream = std::stringstream{};
-        stream << *begin++;
-        while (begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin)))
-        {
-            stream << *begin;
-            ++begin;
-        }
-        TResult result;
-        stream >> result;
-        return result;
-    }
 
     template <typename TResult>
     TResult parseFloat(FwIt& begin, FwIt end)
