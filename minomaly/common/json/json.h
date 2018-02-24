@@ -13,13 +13,16 @@ constexpr auto property(T Class::*member, const char* name)
  *   Parse value T
  *   T has to be default contructable
  *   and type T must have a static member function named 'jsonProperties'
- *   that returns the json properties to be parsed
- *   parsed properties must be able to beset by the parse method
+ *   that returns a tuple of the the json properties to be parsed.
+ *   Parsed properties must be able to be set by the parse method
  *   (declare them as public)
  */
 template <typename T, typename FwIt>
 T parse(FwIt begin, FwIt end)
 {
+    static_assert(Private::IsJsonParseble<T>::value,
+                  "Type must specify 'jsonProperties' static member "
+                  "function to be used in this context!");
     auto parser = Private::ParseImpl<FwIt>{};
     return parser.parse<T>(Private::Type<T>{}, begin, end);
 }

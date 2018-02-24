@@ -44,17 +44,47 @@ constexpr auto strEqual(const char* lhs, const char* rhs)
     return *lhs == *rhs;
 }
 
-template <typename TResult, typename TValue>
-void setProperty(TResult& result, const char* name, TValue value)
+template <typename T, typename Fun>
+constexpr void executeByPropertyName(const char* name, Fun&& f)
 {
-    constexpr auto nbProperties = std::tuple_size<decltype(TResult::jsonProperties())>::value;
+    constexpr auto nbProperties = std::tuple_size<decltype(T::jsonProperties())>::value;
     for_sequence(std::make_index_sequence<nbProperties>{}, [&](auto i) {
-        constexpr auto property = std::get<i>(TResult::jsonProperties());
+        constexpr auto property = std::get<i>(T::jsonProperties());
         if (strEqual(property.name, name))
         {
-            (TValue&)(result.*(property.member)) = value;
+            f(property);
         }
     });
+}
+
+template <typename TResult, typename TValue>
+constexpr void setProperty(TResult& result, const char* name, TValue value)
+{
+    executeByPropertyName<TResult>(
+        name, [&](auto property) { (TValue&)(result.*(property.member)) = value; });
+};
+
+template <typename T>
+class IsJsonParseble
+{
+    struct Two
+    {
+        char _[2];
+    };
+
+    typedef char one;
+    typedef Two two;
+
+    template <typename C>
+    static one test(char[&C::jsonProperties]);
+    template <typename C>
+    static two test(...);
+
+public:
+    enum
+    {
+        value = sizeof(test<T>(0)) == sizeof(char)
+    };
 };
 
 template <typename FwIt>
@@ -69,39 +99,148 @@ public:
     };
 
     template <typename T>
-    T parse(Type<T>, FwIt begin, FwIt end)
+    T parse(Type<T>, FwIt& begin, FwIt end)
     {
+        static_assert(Private::IsJsonParseble<T>::value,
+                      "Type must specify 'jsonProperties' static member "
+                      "function to be used in this context!");
         auto result = T{};
-        // TODO: create property pointer / name / type lookup table
         state = ParseState::Default;
-        for (; begin != end; ++begin)
+        auto key = ""s;
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        if (*begin != '{')
+        {
+            throwUnexpectedCharacter(*begin);
+        }
+        ++begin;
+        while (begin != end)
         {
             switch (state)
             {
             case ParseState::Default:
+                if (isWhiteSpace(*begin))
+                {
+                    continue;
+                }
+                if (*begin == '"')
+                {
+                    state = ParseState::Key;
+                }
+                else
+                {
+                    throwUnexpectedCharacter(*begin);
+                }
                 break;
             case ParseState::Key:
+                if (*begin == '"')
+                {
+                    state = ParseState::Value;
+                    ++begin;
+                    skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+                    if (*begin != ':')
+                    {
+                        throwUnexpectedCharacter(*begin);
+                    }
+                    ++begin;
+                }
+                else
+                {
+                    key += *begin;
+                }
                 break;
             case ParseState::Value:
-                break;
+                executeByPropertyName<T>(key.c_str(), [&](auto property) {
+                    setProperty(result, key.c_str(),
+                                parseValue<decltype(property)::Type>(begin, end));
+                });
+                state = ParseState::Default;
+                key.clear();
+                skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c) && !isValueEnd(c); });
+                continue;
             }
+            ++begin;
+        }
+        if (state != ParseState::Default)
+        {
+            throw ParseError("Unexpected end to the json input!");
         }
         return result;
     }
 
-    int parse(Type<int>, FwIt begin, FwIt end)
+    int parse(Type<int>, FwIt& begin, FwIt end) { return parseNumber<int>(begin, end); }
+    double parse(Type<double>, FwIt& begin, FwIt end) { return parseNumber<double>(begin, end); }
+
+    std::string parse(Type<std::string>, FwIt& begin, FwIt end)
     {
-        auto stream = std::stringstream{};
-        /*
-        for (; begin != end and *begin != ','; ++begin)
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        if (*begin == '"')
         {
-            stream
+            ++begin;
         }
-        */
-        return 0; // TODO
+        else
+        {
+            throwUnexpectedCharacter(*begin);
+        }
+        auto stream = std::stringstream{};
+        for (; begin != end && *begin != '"'; ++begin)
+        {
+            stream << *begin;
+        }
+        if (begin == end)
+        {
+            throw ParseError("Unexpected end to the json input!");
+        }
+        ++begin;
+        return stream.str();
     }
 
 private:
+    static bool isNumber(char c) { return '0' <= c && c <= '9'; }
+    static bool isWhiteSpace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
+    static bool isValueEnd(char c) { return c == ',' || c == '}'; }
+
+    template <typename TResult>
+    TResult parseNumber(FwIt& begin, FwIt end)
+    {
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        auto stream = std::stringstream{};
+        stream << *begin++;
+        for (; begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin));
+             ++begin)
+        {
+            stream << *begin;
+        }
+        TResult result;
+        stream >> result;
+        return result;
+    }
+
+    template <typename TResult>
+    TResult parseValue(FwIt& begin, FwIt end)
+    {
+        return ParseImpl<FwIt>{}.parse(Type<TResult>{}, begin, end);
+    }
+
+    void throwUnexpectedCharacter(char chr)
+    {
+        throw ParseError("Unexpected character: ["s + chr + "] in json input!");
+    }
+
+    template <typename Fun>
+    void skipUntil(FwIt& begin, FwIt end, Fun&& predicate)
+    {
+        auto result = begin == end || predicate(*begin);
+        while (!result)
+        {
+            ++begin;
+            result = begin == end || predicate(*begin);
+        }
+        if (begin == end && !result)
+        {
+            throw ParseError("Unexpected end to the json input!");
+        }
+    }
+
     ParseState state = ParseState::Default;
 };
 }
