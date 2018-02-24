@@ -23,7 +23,7 @@ T parse(FwIt begin, FwIt end)
     static_assert(Private::IsJsonParseble<T>::value,
                   "Type must specify 'jsonProperties' static member "
                   "function to be used in this context!");
-    auto parser = Private::ParseImpl<FwIt>{};
-    return parser.template parse<T>(Private::Type<T>{}, begin, end);
+    auto parser = Private::ParseImpl<FwIt>{begin, end};
+    return parser.template parse<T>(Private::Type<T>{});
 }
 }
