@@ -74,23 +74,21 @@ constexpr void setProperty(TResult& result, const char* name, TValue value)
 template <typename T>
 class IsJsonParseble
 {
-    struct Two
+    using Yes = char;
+    struct No
     {
         char _[2];
     };
 
-    typedef char one;
-    typedef Two two;
+    template <typename C>
+    static Yes test(decltype(&C::jsonProperties));
 
-    template <typename C>
-    static one test(char[&C::jsonProperties]);
-    template <typename C>
-    static two test(...);
+    static No test(...);
 
 public:
     enum
     {
-        value = sizeof(test<T>(0)) == sizeof(char)
+        value = sizeof(test<T>(0)) == sizeof(Yes)
     };
 };
 
@@ -108,9 +106,9 @@ public:
     template <typename T>
     T parse(Type<T>, FwIt& begin, FwIt end)
     {
-        // static_assert(Private::IsJsonParseble<T>::value,
-        //              "Type must specify 'jsonProperties' static member "
-        //              "function to be used in this context!");
+        static_assert(Private::IsJsonParseble<T>::value,
+                      "Type must specify 'jsonProperties' static member "
+                      "function to be used in this context!");
         auto result = T{};
         state = ParseState::Default;
         auto key = ""s;
@@ -158,7 +156,7 @@ public:
                 break;
             case ParseState::Value:
                 executeByPropertyName<T>(key.c_str(), [&](auto property) {
-                    using PropertyType = decltype(property)::Type;
+                    using PropertyType = typename decltype(property)::Type;
                     setProperty(result, key.c_str(), parseValue<PropertyType>(begin, end));
                 });
                 state = ParseState::Default;

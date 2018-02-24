@@ -20,10 +20,10 @@ constexpr auto property(T Class::*member, const char* name)
 template <typename T, typename FwIt>
 T parse(FwIt begin, FwIt end)
 {
-    // static_assert(Private::IsJsonParseble<T>::value,
-    //              "Type must specify 'jsonProperties' static member "
-    //              "function to be used in this context!");
+    static_assert(Private::IsJsonParseble<T>::value,
+                  "Type must specify 'jsonProperties' static member "
+                  "function to be used in this context!");
     auto parser = Private::ParseImpl<FwIt>{};
-    return parser.parse<T>(Private::Type<T>{}, begin, end);
+    return parser.template parse<T>(Private::Type<T>{}, begin, end);
 }
 }
