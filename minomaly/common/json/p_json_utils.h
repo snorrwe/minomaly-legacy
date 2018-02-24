@@ -49,13 +49,19 @@ template <typename T, typename Fun>
 constexpr void executeByPropertyName(const char* name, Fun&& f)
 {
     constexpr auto nbProperties = std::tuple_size<decltype(T::jsonProperties())>::value;
+    auto found = false;
     for_sequence(std::make_index_sequence<nbProperties>{}, [&](auto i) {
         constexpr auto property = std::get<i>(T::jsonProperties());
         if (strEqual(property.name, name))
         {
+            found = true;
             f(property);
         }
     });
+    if (!found)
+    {
+        throw UnexpectedPropertyName(name);
+    }
 }
 
 template <typename TResult, typename TValue>

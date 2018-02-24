@@ -17,4 +17,14 @@ struct ParseError : public std::exception
 
     const char* what() const override { return message.c_str(); }
 };
+
+struct UnexpectedPropertyName : public ParseError
+{
+    UnexpectedPropertyName(std::string msg)
+        : ParseError(std::move(msg))
+    {
+    }
+    UnexpectedPropertyName(UnexpectedPropertyName const&) = default;
+    UnexpectedPropertyName& operator=(UnexpectedPropertyName const&) = default;
+};
 }

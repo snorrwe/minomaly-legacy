@@ -84,25 +84,71 @@ TEST_F(JsonSerializerTests, ThrowsParseErrorOnInvalidJson)
 
 struct AppleTree
 {
+    std::string id = "";
     std::vector<Apple> apples = {};
 
     constexpr static auto jsonProperties()
     {
-        return std::make_tuple(Json::property(&AppleTree::apples, "apples"));
+        return std::make_tuple(Json::property(&AppleTree::apples, "apples"),
+                               Json::property(&AppleTree::id, "id"));
     }
 };
 
-TEST_F(JsonSerializerTests, CanReadVectorOfObjects)
+TEST_F(JsonSerializerTests, CanReadObjectWithVectorOfObjects)
 {
     const auto json = "{\"apples\": ["
-                      "{\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":1}},"
+                      "{\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
                       "{\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}},"
-                      "{\"color\":\"red\",\"size\":2,\"seed\":{\"radius\":1}},"
-                      "{\"color\":\"red\",\"size\":3,\"seed\":{\"radius\":1}},"
-                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":1}}]}"s;
+                      "{\"color\":\"red\",\"size\":2,\"seed\":{\"radius\":2}},"
+                      "{\"color\":\"red\",\"size\":3,\"seed\":{\"radius\":3}},"
+                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":4}}]}"s;
 
     auto result = Json::parse<AppleTree>(json.begin(), json.end());
 
-    EXPECT_EQ(result.apples.size(), 5);
-    // TODO
+    ASSERT_EQ(result.apples.size(), 5);
+
+    auto i = 0;
+    for (auto& apple : result.apples)
+    {
+        EXPECT_EQ(apple.color, "red");
+        EXPECT_EQ(apple.size, i);
+        EXPECT_FLOAT_EQ(apple.seed.radius, i);
+        ++i;
+    }
+}
+
+struct Orchid
+{
+    std::vector<AppleTree> trees = {};
+
+    constexpr static auto jsonProperties()
+    {
+        return std::make_tuple(Json::property(&Orchid::trees, "trees"));
+    }
+};
+
+TEST_F(JsonSerializerTests, CanReadVectorOfObjectsWithVectors)
+{
+    const auto json = "{"
+                      "\"trees\":["
+                      "  {\"id\":\"tree1\",\"apples\": ["
+                      "      {\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
+                      "      {\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}}"
+                      "  ]},"
+                      "  {\"id\":\"tree2\",\"apples\": ["
+                      "      {\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
+                      "      {\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}}"
+                      "  ]}"
+                      " ]"
+                      "}"s;
+
+    auto result = Json::parse<Orchid>(json.begin(), json.end());
+
+    EXPECT_EQ(result.trees.size(), 2);
+}
+
+TEST_F(JsonSerializerTests, RaisesExceptionIfNonExistentPropertyIsRead)
+{
+    auto json = "{\"color\": \"red\",\"size\": -25\n, \"fakeproperty\": \"asd\"}"s;
+    EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::UnexpectedPropertyName);
 }
