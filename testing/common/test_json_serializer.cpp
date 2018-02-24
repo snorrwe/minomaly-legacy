@@ -101,7 +101,8 @@ TEST_F(TestJsonSerializer, CanReadObjectWithVectorOfObjects)
                       "{\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}},"
                       "{\"color\":\"red\",\"size\":2,\"seed\":{\"radius\":2}},"
                       "{\"color\":\"red\",\"size\":3,\"seed\":{\"radius\":3}},"
-                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":4}}]}"s;
+                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":4}}"
+                      "]}"s;
 
     auto result = Json::parse<AppleTree>(json.begin(), json.end());
 

@@ -108,9 +108,9 @@ public:
     template <typename T>
     T parse(Type<T>, FwIt& begin, FwIt end)
     {
-        static_assert(Private::IsJsonParseble<T>::value,
-                      "Type must specify 'jsonProperties' static member "
-                      "function to be used in this context!");
+        // static_assert(Private::IsJsonParseble<T>::value,
+        //              "Type must specify 'jsonProperties' static member "
+        //              "function to be used in this context!");
         auto result = T{};
         state = ParseState::Default;
         auto key = ""s;
@@ -158,8 +158,8 @@ public:
                 break;
             case ParseState::Value:
                 executeByPropertyName<T>(key.c_str(), [&](auto property) {
-                    setProperty(result, key.c_str(),
-                                parseValue<decltype(property)::Type>(begin, end));
+                    using PropertyType = decltype(property)::Type;
+                    setProperty(result, key.c_str(), parseValue<PropertyType>(begin, end));
                 });
                 state = ParseState::Default;
                 key.clear();
