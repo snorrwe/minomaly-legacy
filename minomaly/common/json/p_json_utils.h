@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <vector>
 
 namespace Mino::Json::Private
 {
@@ -118,13 +119,15 @@ public:
             switch (state)
             {
             case ParseState::Default:
-                if (isWhiteSpace(*begin))
-                {
-                    continue;
-                }
+                skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
                 if (*begin == '"')
                 {
                     state = ParseState::Key;
+                }
+                else if (*begin == '}')
+                {
+                    ++begin;
+                    return result;
                 }
                 else
                 {
@@ -141,7 +144,6 @@ public:
                     {
                         throwUnexpectedCharacter(*begin);
                     }
-                    ++begin;
                 }
                 else
                 {
@@ -160,15 +162,59 @@ public:
             }
             ++begin;
         }
-        if (state != ParseState::Default)
+        throw ParseError("Unexpected end to the json input!");
+    }
+
+    template <typename T>
+    std::vector<T> parse(Type<std::vector<T>>, FwIt& begin, FwIt end)
+    {
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        if (*begin != '[')
         {
-            throw ParseError("Unexpected end to the json input!");
+            throwUnexpectedCharacter(*begin);
         }
+        ++begin;
+        auto result = std::vector<T>{};
+        while (*begin != ']')
+        {
+            result.push_back(parse(Type<T>{}, begin, end));
+            skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c) && !isValueEnd(c); });
+        }
+        ++begin;
         return result;
     }
 
-    int parse(Type<int>, FwIt& begin, FwIt end) { return parseNumber<int>(begin, end); }
-    double parse(Type<double>, FwIt& begin, FwIt end) { return parseNumber<double>(begin, end); }
+    int parse(Type<int>, FwIt& begin, FwIt end)
+    {
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        auto stream = std::stringstream{};
+        stream << *begin++;
+        while (begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin)))
+        {
+            stream << *begin;
+            ++begin;
+        }
+        int result;
+        stream >> result;
+        return result;
+    }
+
+    size_t parse(Type<size_t>, FwIt& begin, FwIt end)
+    {
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        auto stream = std::stringstream{};
+        while (begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin)))
+        {
+            stream << *begin;
+            ++begin;
+        }
+        size_t result;
+        stream >> result;
+        return result;
+    }
+
+    float parse(Type<float>, FwIt& begin, FwIt end) { return parseFloat<float>(begin, end); }
+    double parse(Type<double>, FwIt& begin, FwIt end) { return parseFloat<double>(begin, end); }
 
     std::string parse(Type<std::string>, FwIt& begin, FwIt end)
     {
@@ -197,18 +243,36 @@ public:
 private:
     static bool isNumber(char c) { return '0' <= c && c <= '9'; }
     static bool isWhiteSpace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
-    static bool isValueEnd(char c) { return c == ',' || c == '}'; }
+    static bool isValueEnd(char c) { return c == ','; }
 
     template <typename TResult>
-    TResult parseNumber(FwIt& begin, FwIt end)
+    TResult parseInteger(FwIt& begin, FwIt end)
     {
         skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
         auto stream = std::stringstream{};
         stream << *begin++;
-        for (; begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin));
-             ++begin)
+        while (begin != end && (isNumber(*begin) && !isValueEnd(*begin) && !isWhiteSpace(*begin)))
         {
             stream << *begin;
+            ++begin;
+        }
+        TResult result;
+        stream >> result;
+        return result;
+    }
+
+    template <typename TResult>
+    TResult parseFloat(FwIt& begin, FwIt end)
+    {
+        skipUntil(begin, end, [](auto c) { return !isWhiteSpace(c); });
+        auto stream = std::stringstream{};
+        stream << *begin++;
+        while (begin != end
+               && ((isNumber(*begin) || *begin == '.') && !isValueEnd(*begin)
+                   && !isWhiteSpace(*begin)))
+        {
+            stream << *begin;
+            ++begin;
         }
         TResult result;
         stream >> result;
