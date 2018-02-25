@@ -44,15 +44,6 @@ struct Apple
     }
 };
 
-TEST(TestJsonSetter, CanFindTypeByName)
-{
-    auto apple = Apple{};
-    Json::Private::setProperty(apple, "color", "red"s);
-    Json::Private::setProperty(apple, "size", 5);
-    EXPECT_EQ(apple.size, 5);
-    EXPECT_EQ(apple.color, "red"s);
-}
-
 class TestJsonParser : public ::testing::Test
 {
 protected:

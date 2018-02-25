@@ -50,12 +50,12 @@ private:
     static bool isValueEnd(char c) { return c == ','; }
 
     template <typename TResult>
-    TResult ParseImpl<FwIt>::parseFloat();
-    void ParseImpl<FwIt>::throwUnexpectedCharacter(char chr);
+    TResult parseFloat();
+    void throwUnexpectedCharacter(char chr);
     template <typename Fun>
-    void ParseImpl<FwIt>::skipUntil(Fun&& predicate);
+    void skipUntil(Fun&& predicate);
     template <typename T>
-    void ParseImpl<FwIt>::init();
+    void init();
 };
 
 template <typename FwIt>
@@ -104,8 +104,8 @@ T ParseImpl<FwIt>::parse(Type<T>)
         case ParseState::Value:
             executeByPropertyName<T>(key.c_str(), [&](auto property) {
                 using PropertyType = typename decltype(property)::Type;
-                setProperty(result, key.c_str(),
-                            ParseImpl<FwIt>{begin, end}.parse(Type<PropertyType>{}));
+                (PropertyType&)(result.*(property.member))
+                    = ParseImpl<FwIt>{begin, end}.parse(Type<PropertyType>{});
             });
             state = ParseState::Default;
             key.clear();
