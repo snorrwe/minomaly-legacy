@@ -61,6 +61,15 @@ TEST_F(TestJsonParser, CanReadJsonIntoObject)
     EXPECT_FLOAT_EQ(result.seed.radius, -3.14);
 }
 
+TEST_F(TestJsonParser, CanReadQuotes)
+{
+    const auto json = "{\"color\":\"\\\"red\\\"\",}"s;
+
+    auto result = Json::parse<Apple>(json.begin(), json.end());
+
+    EXPECT_EQ(result.color, "\\\"red\\\"");
+}
+
 TEST_F(TestJsonParser, ThrowsParseErrorOnInvalidJson)
 {
     auto json = "{asd \"color\": \"red\",\"size\": -25\n}"s;

@@ -192,7 +192,7 @@ std::string ParseImpl<FwIt>::parse(Type<std::string>)
         throwUnexpectedCharacter(*begin);
     }
     auto stream = std::stringstream{};
-    for (; begin != end && *begin != '"'; ++begin)
+    for (; begin != end && (*begin != '"' || stream.str().back() == '\\'); ++begin)
     {
         stream << *begin;
     }

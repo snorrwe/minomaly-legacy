@@ -72,7 +72,6 @@ class IsJsonParseble
 
     template <typename C>
     static Yes test(decltype(&C::jsonProperties));
-
     static No test(...);
 
 public:

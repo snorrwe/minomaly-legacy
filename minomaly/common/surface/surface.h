@@ -9,7 +9,6 @@
 
 namespace Mino
 {
-
 class Surface
 {
 public:
@@ -19,7 +18,10 @@ public:
                                               SDL_Surface* screenSurface = nullptr);
     static std::shared_ptr<Surface> create(SDL_Surface* surface);
 
-    Surface(SDL_Surface* media) : media(media) {}
+    Surface(SDL_Surface* media)
+        : media(media)
+    {
+    }
     ~Surface() { SDL_FreeSurface(media); }
 
     operator SDL_Surface*() { return media; }
