@@ -61,13 +61,6 @@ constexpr void executeByPropertyName(const char* name, Fun&& f)
     }
 }
 
-template <typename TResult, typename TValue>
-constexpr void setProperty(TResult& result, const char* name, TValue value)
-{
-    executeByPropertyName<TResult>(
-        name, [&](auto property) { (TValue&)(result.*(property.member)) = value; });
-};
-
 template <typename T>
 class IsJsonParseble
 {
@@ -79,13 +72,12 @@ class IsJsonParseble
 
     template <typename C>
     static Yes test(decltype(&C::jsonProperties));
-
     static No test(...);
 
 public:
     enum
     {
-        value = sizeof(test<T>(0)) == sizeof(Yes)
+        value = sizeof(test<T>(nullptr)) == sizeof(Yes)
     };
 };
 }

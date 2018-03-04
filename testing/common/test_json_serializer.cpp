@@ -1,86 +1,28 @@
 #include "json.h"
 #include "gtest/gtest.h"
 #include <iostream>
+#include <sstream>
 #include <string>
 
 using namespace Mino;
 using namespace std::string_literals;
 
-TEST(TestJsonSetter, TestStrEqual)
+namespace
 {
-    auto phrase1 = "red";
-    auto phrase2 = "red";
-    auto phrase3 = "blue";
-    auto phrase4 = "red123";
-    auto phrase5 = "re";
-
-    EXPECT_TRUE(Json::Private::strEqual(phrase1, phrase2));
-    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase3));
-    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase4));
-    EXPECT_FALSE(Json::Private::strEqual(phrase1, phrase5));
-}
-
-struct Seed
-{
-    double radius = 0.0;
-
-    constexpr static auto jsonProperties()
-    {
-        return std::make_tuple(Json::property(&Seed::radius, "radius"));
-    }
-};
-
 struct Apple
 {
     std::string color = "";
     int size = 0;
-    Seed seed;
 
     constexpr static auto jsonProperties()
     {
         return std::make_tuple(Json::property(&Apple::color, "color"),
-                               Json::property(&Apple::seed, "seed"),
                                Json::property(&Apple::size, "size"));
     }
+
+    bool operator==(Apple const& t) const { return color == t.color && size == t.size; }
+    bool operator!=(Apple const& t) const { return !operator==(t); }
 };
-
-TEST(TestJsonSetter, CanFindTypeByName)
-{
-    auto apple = Apple{};
-    Json::Private::setProperty(apple, "color", "red"s);
-    Json::Private::setProperty(apple, "size", 5);
-    EXPECT_EQ(apple.size, 5);
-    EXPECT_EQ(apple.color, "red"s);
-}
-
-class TestJsonSerializer : public ::testing::Test
-{
-protected:
-};
-
-TEST_F(TestJsonSerializer, CanReadJsonIntoObject)
-{
-    const auto json
-        = "     {\"color\":\"red\",\"size\": -25\n, \"seed\":   {\"radius\":        -3.14}}"s;
-
-    auto result = Json::parse<Apple>(json.begin(), json.end());
-
-    EXPECT_EQ(result.color, "red");
-    EXPECT_EQ(result.size, -25);
-    EXPECT_FLOAT_EQ(result.seed.radius, -3.14);
-}
-
-TEST_F(TestJsonSerializer, ThrowsParseErrorOnInvalidJson)
-{
-    auto json = "{asd \"color\": \"red\",\"size\": -25\n}"s;
-    EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::ParseError);
-
-    json = "{\"color\"asd: \"red\",\"size\": -25\n}"s;
-    EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::ParseError);
-
-    json = "{\"color\"asd: \"red\",\"size\": -2asd5\n}"s;
-    EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::ParseError);
-}
 
 struct AppleTree
 {
@@ -92,64 +34,49 @@ struct AppleTree
         return std::make_tuple(Json::property(&AppleTree::apples, "apples"),
                                Json::property(&AppleTree::id, "id"));
     }
+
+    bool operator==(AppleTree const& t) const
+    {
+        return id == t.id && [&]() {
+            auto j = t.apples.begin();
+            for (auto i = apples.begin(); i != apples.end() && j != t.apples.end(); ++i, ++j)
+            {
+                if (*i != *j) return false;
+            }
+            return true;
+        }();
+    }
+
+    bool operator!=(AppleTree const& t) const { return !operator==(t); }
 };
 
-TEST_F(TestJsonSerializer, CanReadObjectWithVectorOfObjects)
+class TestJsonSerializer : public ::testing::Test
 {
-    const auto json = "{\"apples\": ["
-                      "{\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
-                      "{\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}},"
-                      "{\"color\":\"red\",\"size\":2,\"seed\":{\"radius\":2}},"
-                      "{\"color\":\"red\",\"size\":3,\"seed\":{\"radius\":3}},"
-                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":4}}"
-                      "]}"s;
-
-    auto result = Json::parse<AppleTree>(json.begin(), json.end());
-
-    ASSERT_EQ(result.apples.size(), 5);
-
-    auto i = 0;
-    for (auto& apple : result.apples)
+    void SetUp()
     {
-        EXPECT_EQ(apple.color, "red");
-        EXPECT_EQ(apple.size, i);
-        EXPECT_FLOAT_EQ(apple.seed.radius, i);
-        ++i;
+        tree.id = "tree_id"s;
+        tree.apples = {Apple{"red"s, 0}, Apple{"blue"s, 1}, Apple{"green"s, 2}};
     }
-}
 
-struct Orchid
-{
-    std::vector<AppleTree> trees = {};
-
-    constexpr static auto jsonProperties()
-    {
-        return std::make_tuple(Json::property(&Orchid::trees, "trees"));
-    }
+public:
+    AppleTree tree;
 };
 
-TEST_F(TestJsonSerializer, CanReadVectorOfObjectsWithVectors)
+TEST_F(TestJsonSerializer, DoesSerialize)
 {
-    const auto json = "{"
-                      "\"trees\":["
-                      "  {\"id\":\"tree1\",\"apples\": ["
-                      "      {\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
-                      "      {\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}}"
-                      "  ]},"
-                      "  {\"id\":\"tree2\",\"apples\": ["
-                      "      {\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
-                      "      {\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}}"
-                      "  ]}"
-                      " ]"
-                      "}"s;
-
-    auto result = Json::parse<Orchid>(json.begin(), json.end());
-
-    EXPECT_EQ(result.trees.size(), 2);
+    auto result = std::stringstream();
+    Json::serialize(tree, result);
+    EXPECT_FALSE(result.str().empty());
 }
 
-TEST_F(TestJsonSerializer, RaisesExceptionIfNonExistentPropertyIsRead)
+TEST_F(TestJsonSerializer, ParsedSerializationEqualsOriginal)
 {
-    auto json = "{\"color\": \"red\",\"size\": -25\n, \"fakeproperty\": \"asd\"}"s;
-    EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::UnexpectedPropertyName);
+    auto json = std::stringstream();
+    Json::serialize(tree, json);
+
+    auto jsonStr = json.str();
+    std::cout << jsonStr << '\n';
+    auto result = Json::parse<AppleTree>(jsonStr.begin(), jsonStr.end());
+    EXPECT_EQ(result, tree);
+}
 }

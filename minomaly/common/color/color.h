@@ -2,15 +2,16 @@
 
 namespace Mino
 {
-
 struct Color
 {
-public:
-    typedef uint8_t TValue;
+    using TValue = uint8_t;
 
     Color() = default;
     Color(TValue red, TValue green, TValue blue, TValue alpha = 1)
-        : red(red), green(green), blue(blue), alpha(alpha)
+        : red(red)
+        , green(green)
+        , blue(blue)
+        , alpha(alpha)
     {
     }
     ~Color() = default;
