@@ -12,7 +12,7 @@ namespace Mino::Json::Private
 template <typename FwIt>
 class ParseImpl
 {
-    enum ParseState
+    enum class ParseState
     {
         Default,
         Key,

@@ -1,5 +1,9 @@
 #pragma once
 #include "p_json_parser.h"
+#include "p_json_serializer.h"
+#include <iostream>
+#include <iterator>
+#include <string>
 
 namespace Mino::Json
 {
@@ -25,5 +29,24 @@ T parse(FwIt begin, FwIt end)
                   "function to be used in this context!");
     auto parser = Private::ParseImpl<FwIt>{begin, end};
     return parser.template parse<T>(Private::Type<T>{});
+}
+
+/*
+//TODO
+template <typename T>
+T parse(std::istream& stream)
+{
+    return parse<T>(std::istream_iterator<char>(stream), std::istream_iterator<char>());
+}
+*/
+
+template <typename T, typename TStream>
+void serialize(T const& item, TStream& result)
+{
+    static_assert(Private::IsJsonParseble<T>::value,
+                  "Type must specify 'jsonProperties' static member "
+                  "function to be used in this context!");
+    auto serializer = Private::SerializerImpl<TStream>(result);
+    serializer.serialize(item);
 }
 }

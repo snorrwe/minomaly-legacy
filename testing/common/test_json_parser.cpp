@@ -6,6 +6,8 @@
 using namespace Mino;
 using namespace std::string_literals;
 
+namespace
+{
 TEST(TestJsonSetter, TestStrEqual)
 {
     auto phrase1 = "red";
@@ -152,4 +154,5 @@ TEST_F(TestJsonParser, RaisesExceptionIfNonExistentPropertyIsRead)
 {
     auto json = "{\"color\": \"red\",\"size\": -25\n, \"fakeproperty\": \"asd\"}"s;
     EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::UnexpectedPropertyName);
+}
 }
