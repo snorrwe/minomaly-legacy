@@ -37,13 +37,20 @@ T parse(std::istream& stream)
     return parse<T>(std::istream_iterator<char>(stream), std::istream_iterator<char>());
 }
 
-template <typename T, typename TStream>
-void serialize(T const& item, TStream& result)
+/**
+ *   Serialize value T
+ *   and type T must have a static member function named 'jsonProperties'
+ *   that returns a tuple of the the json properties to be serialized.
+ *   Serialized properties must be able to be read by the parse method
+ *   (declare them as public)
+ */
+template <typename T, typename OStream>
+void serialize(T const& item, OStream& result)
 {
     static_assert(Private::IsJsonParseble<T>::value,
                   "Type must specify 'jsonProperties' static member "
                   "function to be used in this context!");
-    auto serializer = Private::SerializerImpl<TStream>(result);
+    auto serializer = Private::SerializerImpl<OStream>(result);
     serializer.serialize(item);
 }
 }
