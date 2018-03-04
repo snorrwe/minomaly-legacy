@@ -1,6 +1,7 @@
 #include "json.h"
 #include "gtest/gtest.h"
 #include <iostream>
+#include <sstream>
 #include <string>
 
 using namespace Mino;
@@ -154,5 +155,32 @@ TEST_F(TestJsonParser, RaisesExceptionIfNonExistentPropertyIsRead)
 {
     auto json = "{\"color\": \"red\",\"size\": -25\n, \"fakeproperty\": \"asd\"}"s;
     EXPECT_THROW(Json::parse<Apple>(json.begin(), json.end()), Json::UnexpectedPropertyName);
+}
+
+TEST_F(TestJsonParser, CanParseStreams)
+{
+    const auto json = "{\"apples\": ["
+                      "{\"color\":\"red\",\"size\":0,\"seed\":{\"radius\":0}},"
+                      "{\"color\":\"red\",\"size\":1,\"seed\":{\"radius\":1}},"
+                      "{\"color\":\"red\",\"size\":2,\"seed\":{\"radius\":2}},"
+                      "{\"color\":\"red\",\"size\":3,\"seed\":{\"radius\":3}},"
+                      "{\"color\":\"red\",\"size\":4,\"seed\":{\"radius\":4}}"
+                      "]}"s;
+
+    auto stream = std::stringstream();
+    stream << json;
+
+    auto result = Json::parse<AppleTree>(stream);
+
+    ASSERT_EQ(result.apples.size(), 5);
+
+    auto i = 0;
+    for (auto& apple : result.apples)
+    {
+        EXPECT_EQ(apple.color, "red");
+        EXPECT_EQ(apple.size, i);
+        EXPECT_FLOAT_EQ(apple.seed.radius, i);
+        ++i;
+    }
 }
 }
