@@ -69,7 +69,7 @@ TEST_F(TestJsonParser, CanReadQuotes)
 
     auto result = Json::parse<Apple>(json.begin(), json.end());
 
-    EXPECT_EQ(result.color, "\\\"red\\\"");
+    EXPECT_EQ(result.color, "\"red\"");
 }
 
 TEST_F(TestJsonParser, ThrowsParseErrorOnInvalidJson)

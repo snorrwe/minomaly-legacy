@@ -31,14 +31,11 @@ T parse(FwIt begin, FwIt end)
     return parser.template parse<T>(Private::Type<T>{});
 }
 
-/*
-//TODO
 template <typename T>
 T parse(std::istream& stream)
 {
     return parse<T>(std::istream_iterator<char>(stream), std::istream_iterator<char>());
 }
-*/
 
 template <typename T, typename TStream>
 void serialize(T const& item, TStream& result)

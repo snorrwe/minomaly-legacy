@@ -192,6 +192,7 @@ std::string ParseImpl<FwIt>::parse(Type<std::string>)
         throwUnexpectedCharacter(*begin);
     }
     auto stream = std::stringstream{};
+    stream << "\"";
     for (; begin != end && (*begin != '"' || stream.str().back() == '\\'); ++begin)
     {
         stream << *begin;
@@ -200,8 +201,11 @@ std::string ParseImpl<FwIt>::parse(Type<std::string>)
     {
         throw ParseError("Unexpected end to the json input!");
     }
+    stream << "\"";
+    auto result = std::string();
+    stream >> std::quoted(result);
     ++begin;
-    return stream.str();
+    return result;
 }
 
 template <typename FwIt>
