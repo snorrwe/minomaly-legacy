@@ -183,4 +183,38 @@ TEST_F(TestJsonParser, CanParseStreams)
         ++i;
     }
 }
+
+TEST_F(TestJsonParser, RaisesExceptionIfCommaIsMissingInList)
+{
+    struct Simple
+    {
+        std::vector<int> ns;
+
+        constexpr static auto jsonProperties()
+        {
+            return std::make_tuple(Json::property(&Simple::ns, "numbers"));
+        }
+    };
+    const auto json = "{"
+                      "\"numbers\":[1 2 3 4]"
+                      "}"s;
+    EXPECT_THROW(Json::parse<Simple>(json.begin(), json.end()), Json::ParseError);
+}
+
+TEST_F(TestJsonParser, RaisesExceptionIfCommaIsMissingInDict)
+{
+    struct Simple
+    {
+        int x = 0;
+        int y = 0;
+
+        constexpr static auto jsonProperties()
+        {
+            return std::make_tuple(Json::property(&Simple::x, "x"),
+                                   Json::property(&Simple::y, "y"));
+        }
+    };
+    const auto json = "{\"x\": 1 \"y\": 2}"s;
+    EXPECT_THROW(Json::parse<Simple>(json.begin(), json.end()), Json::ParseError);
+}
 }

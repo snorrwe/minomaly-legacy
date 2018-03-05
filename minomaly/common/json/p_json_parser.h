@@ -26,6 +26,10 @@ class ParseImpl
 public:
     using ParseState = ParseState;
 
+    static bool isNumber(char c) { return '0' <= c && c <= '9'; }
+    static bool isWhiteSpace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
+    static bool isValueEnd(char c) { return c == ','; }
+
     ParseImpl(FwIt& begin, FwIt end)
         : begin(begin)
         , end(end)
@@ -45,10 +49,6 @@ public:
     std::string parse(Type<std::string>);
 
 private:
-    static bool isNumber(char c) { return '0' <= c && c <= '9'; }
-    static bool isWhiteSpace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
-    static bool isValueEnd(char c) { return c == ','; }
-
     template <typename TResult>
     TResult parseFloat();
     void throwUnexpectedCharacter(char chr);
@@ -56,6 +56,7 @@ private:
     void skipUntil(Fun&& predicate);
     template <typename T>
     void init();
+    void assertCorrectValueEnd(char ending);
 };
 
 template <typename FwIt>
@@ -109,7 +110,8 @@ T ParseImpl<FwIt>::parse(Type<T>)
             });
             state = ParseState::Default;
             key.clear();
-            skipUntil([](auto c) { return !isWhiteSpace(c) && !isValueEnd(c); });
+            skipUntil([](auto c) { return !isWhiteSpace(c); });
+            assertCorrectValueEnd('}');
             continue;
         }
         ++begin;
@@ -131,7 +133,8 @@ std::vector<T> ParseImpl<FwIt>::parse(Type<std::vector<T>>)
     while (*begin != ']')
     {
         result.push_back(parse(Type<T>{}));
-        skipUntil([](auto c) { return !isWhiteSpace(c) && !isValueEnd(c); });
+        skipUntil([](auto c) { return !isWhiteSpace(c); });
+        assertCorrectValueEnd(']');
     }
     ++begin;
     return result;
@@ -262,5 +265,17 @@ void ParseImpl<FwIt>::init()
         throwUnexpectedCharacter(*begin);
     }
     ++begin;
+}
+template <typename FwIt>
+void ParseImpl<FwIt>::assertCorrectValueEnd(char ending)
+{
+    if (*begin == ',')
+    {
+        ++begin;
+    }
+    else if (*begin != ending)
+    {
+        throwUnexpectedCharacter(*begin);
+    }
 }
 }
