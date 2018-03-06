@@ -25,11 +25,14 @@ public:
 template <class TReturn>
 struct Job : IJob
 {
-    Job(std::function<TReturn()> job) : job(job) {}
+    Job(std::function<TReturn()> job)
+        : job(job)
+    {
+    }
     std::function<TReturn()> job;
     std::promise<TReturn> promise = {};
 
-    virtual void execute() { promise.set_value(job()); }
+    virtual void execute() override { promise.set_value(job()); }
 };
 
 class IWorkService : public IService
@@ -52,7 +55,7 @@ struct Threads : std::vector<std::thread>
 class WorkService : public IWorkService, std::mutex, std::condition_variable
 {
 public:
-    using Queue = std::queue<std::unique_ptr<IJob>>;
+    using Queue      = std::queue<std::unique_ptr<IJob>>;
     using UniqueLock = std::unique_lock<std::mutex>;
 
     static std::shared_ptr<WorkService> create() { return std::make_shared<WorkService>(); }
@@ -62,7 +65,7 @@ public:
     virtual ~WorkService();
 
     WorkService(WorkService const&) = delete;
-    WorkService(WorkService&&) = delete;
+    WorkService(WorkService&&)      = delete;
     WorkService& operator=(WorkService const&) = delete;
     WorkService& operator=(WorkService&&) = delete;
 
@@ -72,17 +75,17 @@ public:
 private:
     void worker();
 
-    bool done = false;
+    bool done       = false;
     Threads threads = {};
-    Queue queue = {};
+    Queue queue     = {};
 };
 
 template <typename TReturn>
 std::future<TReturn> WorkService::requestWork(std::function<TReturn()> job)
 {
-    auto lock = UniqueLock{*this};
+    auto lock     = UniqueLock{*this};
     auto addedJob = std::make_unique<Job<TReturn>>(job);
-    auto result = addedJob->promise.get_future();
+    auto result   = addedJob->promise.get_future();
     queue.push(std::move(addedJob));
     notify_one();
     return result;
