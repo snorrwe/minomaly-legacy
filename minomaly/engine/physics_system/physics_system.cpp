@@ -13,8 +13,8 @@ void PhysicsSystem::update()
     auto handles = std::vector<std::future<std::vector<World::Node>>>{};
     for (auto& collider : colliders)
     {
-        handles.push_back(workService->requestWork<std::vector<World::Node>>(
-            [collider]() { return collider->checkCollisions(); }));
+        constexpr auto job = [collider]() { return collider->checkCollisions(); };
+        handles.push_back(workService->requestWork<std::vector<World::Node>>(job));
     }
     for (auto i = handles.rbegin(); i != handles.rend(); ++i)
     {
