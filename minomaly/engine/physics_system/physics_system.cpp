@@ -4,6 +4,7 @@ using namespace Mino;
 
 void PhysicsSystem::update()
 {
+    world->clear();
     for (auto& collider : colliders)
     {
         collider->updatePosition();
@@ -15,15 +16,16 @@ void PhysicsSystem::update()
         handles.push_back(workService->requestWork<std::vector<World::Node>>(
             [collider]() { return collider->checkCollisions(); }));
     }
+    for (auto i = handles.rbegin(); i != handles.rend(); ++i)
+    {
+        i->wait();
+    }
     auto handleIt = handles.begin();
     for (auto& collider : colliders)
     {
-        handleIt->wait();
         collider->handleCollisions(std::move(handleIt->get()));
         ++handleIt;
     }
-
-    world->clear();
 }
 
 void PhysicsSystem::add(Collider* coll)
