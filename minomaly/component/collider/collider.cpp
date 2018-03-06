@@ -8,14 +8,11 @@ void ColliderComponent::start()
 {
     lastPos = transform->absolute().position;
     physicsSystem = gameObject->getApplication()->getEngineCore()->getPhysicsSystem();
-    world = physicsSystem->getWorld();
     physicsSystem->add(this);
-    addToWorld();
 }
 
 void ColliderComponent::enable()
 {
-    addToWorld();
     physicsSystem->add(this);
     Component::enable();
 }
@@ -40,8 +37,6 @@ void ColliderComponent::updatePosition()
     lastPos = currentPos;
 }
 
-void ColliderComponent::addToWorld() { world->insert({asBoundingBox().getCenter(), this}); }
-
 Observable<CollisionData>& ColliderComponent::onCollision() { return *onCollisionSubject; }
 
 Observable<CollisionData>& ColliderComponent::onCollisionResolve()
@@ -49,12 +44,13 @@ Observable<CollisionData>& ColliderComponent::onCollisionResolve()
     return *onCollisionResolutionSubject;
 }
 
-std::vector<typename ColliderComponent::World::Node> ColliderComponent::checkCollisions() const
+std::vector<typename ColliderComponent::World::Node>
+ColliderComponent::checkCollisions(World const& world) const
 {
     auto result = std::vector<World::Node>{};
     result.reserve(5);
     auto box = asBoundingBox();
-    world->queryRange(box, [&](const auto& i) {
+    world.queryRange(box, [&](const auto& i) {
         if (i.item != this && i.item->asBoundingBox().intersects(box)) result.push_back(i);
     });
     return result;

@@ -15,7 +15,6 @@
 
 namespace Mino
 {
-
 class Rigidbody;
 class IPhysicsSystem;
 class ColliderComponent;
@@ -45,9 +44,8 @@ public:
 
     virtual BoundingBox asBoundingBox() const = 0;
 
-    std::vector<World::Node> checkCollisions() const;
+    std::vector<World::Node> checkCollisions(World const& world) const;
     void handleCollisions(std::vector<World::Node> const& points);
-    virtual void addToWorld();
 
     void setLayers(uint32_t l) { layers = l; }
     uint32_t getLayers() const { return layers; }
@@ -63,7 +61,6 @@ protected:
     Vector2<float> lastPos = {0, 0};
     Vector2<float> deltaPos = {0, 0};
     IPhysicsSystem* physicsSystem;
-    World* world;
     std::vector<Vector2<float>> corners = {};
 
 private:

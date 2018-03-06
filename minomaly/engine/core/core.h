@@ -32,22 +32,22 @@ class Application;
 class IEngineCore
 {
 public:
-    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
-    using Milli = std::chrono::duration<float, std::milli>;
+    using TimePoint        = std::chrono::time_point<std::chrono::system_clock>;
+    using Milli            = std::chrono::duration<float, std::milli>;
     const float OneSecInMs = 1000.0;
 
     virtual ~IEngineCore() {}
 
-    virtual void run() = 0;
+    virtual void run()  = 0;
     virtual void stop() = 0;
 
-    virtual IWindowSystem* getWindow() const = 0;
-    virtual IInputSystem* getInput() const = 0;
-    virtual IRenderSystem* getRenderer() const = 0;
-    virtual IAudioSystem* getAudio() const = 0;
-    virtual Application* getApplication() const = 0;
+    virtual IWindowSystem* getWindow() const         = 0;
+    virtual IInputSystem* getInput() const           = 0;
+    virtual IRenderSystem* getRenderer() const       = 0;
+    virtual IAudioSystem* getAudio() const           = 0;
+    virtual Application* getApplication() const      = 0;
     virtual IPhysicsSystem* getPhysicsSystem() const = 0;
-    virtual IAssetSystem* getAssets() const = 0;
+    virtual IAssetSystem* getAssets() const          = 0;
 
     virtual void setTargetFps(float f) = 0;
 
@@ -58,16 +58,21 @@ class EngineCore : public IEngineCore
 {
 public:
     template <typename TLogic>
-    static std::shared_ptr<EngineCore> create(std::string const& name, size_t screenWidth,
-                                              size_t screenHeight);
+    static std::shared_ptr<EngineCore>
+    create(std::string const& name, size_t screenWidth, size_t screenHeight);
 
-    EngineCore(std::shared_ptr<SdlSubsystems> subsystems, std::shared_ptr<IInputSystem> input,
-               std::shared_ptr<IWindowSystem> window, std::shared_ptr<Application> app,
-               std::shared_ptr<IRenderSystem> renderer, std::shared_ptr<IAudioSystem> audioSystem,
-               std::shared_ptr<IPhysicsSystem> physicsSystem, std::shared_ptr<IAssetSystem> assets,
-               std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time);
+    EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
+               std::shared_ptr<IInputSystem> input,
+               std::shared_ptr<IWindowSystem> window,
+               std::shared_ptr<Application> app,
+               std::shared_ptr<IRenderSystem> renderer,
+               std::shared_ptr<IAudioSystem> audioSystem,
+               std::shared_ptr<IPhysicsSystem> physicsSystem,
+               std::shared_ptr<IAssetSystem> assets,
+               std::shared_ptr<ILogService> logService,
+               std::shared_ptr<ITimeService> time);
     EngineCore(EngineCore const&) = delete;
-    EngineCore(EngineCore&&) = delete;
+    EngineCore(EngineCore&&)      = delete;
     virtual ~EngineCore();
 
     EngineCore& operator=(EngineCore const&) = delete;
@@ -89,7 +94,8 @@ public:
     virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
 
 private:
-    static std::shared_ptr<EngineCore> initCore(std::string const& name, size_t screenWidth,
+    static std::shared_ptr<EngineCore> initCore(std::string const& name,
+                                                size_t screenWidth,
                                                 size_t screenHeight,
                                                 std::shared_ptr<Application> const& app);
 
@@ -115,11 +121,11 @@ private:
 };
 
 template <typename TLogic>
-std::shared_ptr<EngineCore> EngineCore::create(std::string const& name, size_t screenWidth,
-                                               size_t screenHeight)
+std::shared_ptr<EngineCore>
+EngineCore::create(std::string const& name, size_t screenWidth, size_t screenHeight)
 {
     auto application = std::make_shared<TLogic>();
-    auto core = initCore(name, screenWidth, screenHeight, application);
+    auto core        = initCore(name, screenWidth, screenHeight, application);
     application->setEngineCore(core.get());
     application->initMainCamera(*core->renderer, screenHeight);
     return core;

@@ -6,7 +6,7 @@ void Program::start()
 {
     auto rng = std::mt19937{};
     rng.seed(std::random_device()());
-    auto dist6 = std::uniform_int_distribution<std::mt19937::result_type>(0, WORLD_WIDTH);
+    auto dist6     = std::uniform_int_distribution<std::mt19937::result_type>(0, WORLD_WIDTH);
     auto getRandom = [&]() { return dist6(rng); };
 
     for (int i = 0; i < 500; ++i)
@@ -14,8 +14,11 @@ void Program::start()
         auto x = getRandom();
         auto y = getRandom();
 
-        auto asteroid = createGameObject<SpriteRendererComponent, SpriteAnimatorComponent,
-                                         BoxColliderComponent, Rigidbody, AsteroidComponent>();
+        auto asteroid = createGameObject<SpriteRendererComponent,
+                                         SpriteAnimatorComponent,
+                                         BoxColliderComponent,
+                                         Rigidbody,
+                                         AsteroidComponent>();
         asteroid->getTransform()->setPosition({(float)x, (float)y});
 
         auto vx = getRandom() % 100 * (getRandom() % 2 ? -1.f : 1.f);
@@ -28,5 +31,5 @@ void Program::start()
         asteroid->getTransform()->setScale({scale, scale});
     }
 
-    getEngineCore()->getPhysicsSystem()->setWorldBox({{-1000, -1000}, 2000, 2000});
+    getEngineCore()->getPhysicsSystem()->setWorldBox({{-1000, -1000}, 20000, 20000});
 }
