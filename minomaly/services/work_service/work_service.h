@@ -45,9 +45,9 @@ struct Threads : std::vector<std::thread>
 {
     void join()
     {
-        for (auto i = begin(); i != end(); ++i)
+        for (auto& thread : *this)
         {
-            i->join();
+            thread.join();
         }
     }
 };
