@@ -2,13 +2,16 @@
 
 using namespace Mino;
 
-EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
-                       std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
-                       std::shared_ptr<Application> app, std::shared_ptr<IRenderSystem> renderer,
-                       std::shared_ptr<IAudioSystem> audio,
-                       std::shared_ptr<IPhysicsSystem> physicsSystem,
-                       std::shared_ptr<IAssetSystem> assets,
-                       std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
+EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
+                       std::shared_ptr<IInputSystem> const& input,
+                       std::shared_ptr<IWindowSystem> const& window,
+                       std::shared_ptr<Application> const& app,
+                       std::shared_ptr<IRenderSystem> const& renderer,
+                       std::shared_ptr<IAudioSystem> const& audio,
+                       std::shared_ptr<IPhysicsSystem> const& physicsSystem,
+                       std::shared_ptr<IAssetSystem> const& assets,
+                       std::shared_ptr<ILogService> const& logService,
+                       std::shared_ptr<ITimeService> const& time)
     : subsystems(subsystems)
     , input(input)
     , window(window)
@@ -86,7 +89,8 @@ SdlStatus EngineCore::subsystemStatus(SdlSubSystemType type) const
 
 void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
 
-std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t screenWidth,
+std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
+                                                 size_t screenWidth,
                                                  size_t screenHeight,
                                                  std::shared_ptr<Application> const& app)
 {
@@ -97,13 +101,17 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t
                      ? AudioSystem::create()
                      : std::make_shared<MuteAudioSystem>();
     auto inp = Input::create();
-    auto window = WindowSystem::create(
-        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+    auto window
+        = WindowSystem::create(name.c_str(),
+                               SDL_WINDOWPOS_UNDEFINED,
+                               SDL_WINDOWPOS_UNDEFINED,
+                               screenWidth,
+                               screenHeight,
+                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
     auto physics = PhysicsSystem::create();
     auto assets = AssetSystem::create(renderer.get());
 
-    return std::make_shared<EngineCore>(subsystems, inp, window, app, renderer, audio, physics,
-                                        assets, logService, time);
+    return std::make_shared<EngineCore>(
+        subsystems, inp, window, app, renderer, audio, physics, assets, logService, time);
 }
