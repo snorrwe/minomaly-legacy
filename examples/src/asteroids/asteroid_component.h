@@ -8,7 +8,7 @@ using namespace Mino;
 
 class AsteroidComponent : public Mino::Component
 {
-    using Animations  = std::vector<Mino::SpriteAnimationData::Animation>;
+    using Animations = std::vector<Mino::SpriteAnimationData::Animation>;
     using SpriteSheet = std::shared_ptr<Mino::SpriteSheet>;
 
     Animations animations = {};

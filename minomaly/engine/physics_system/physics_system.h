@@ -16,13 +16,13 @@ class IPhysicsSystem
 {
 public:
     using Collider = ColliderComponent;
-    using World    = Quadtree<Collider>;
+    using World = Quadtree<Collider>;
 
     virtual ~IPhysicsSystem() {}
 
-    virtual void update()                            = 0;
-    virtual void add(Collider*)                      = 0;
-    virtual void remove(Collider*)                   = 0;
+    virtual void update() = 0;
+    virtual void add(Collider*) = 0;
+    virtual void remove(Collider*) = 0;
     virtual void setWorldBox(BoundingBox const& box) = 0;
 
     virtual World* getWorld() = 0;
@@ -31,7 +31,7 @@ public:
 class PhysicsSystem : public IPhysicsSystem
 {
 public:
-    const size_t WORLD_CAPACITY = 64;
+    const size_t WORLD_CAPACITY = 4;
 
     static std::shared_ptr<PhysicsSystem> create()
     {
@@ -55,7 +55,7 @@ public:
 protected:
     std::unique_ptr<World> world
         = std::make_unique<World>(BoundingBox{{0, 0}, 5e8, 5e8}, WORLD_CAPACITY);
-    std::vector<Collider*> colliders         = {};
+    std::vector<Collider*> colliders = {};
     std::shared_ptr<WorkService> workService = nullptr;
 };
 
