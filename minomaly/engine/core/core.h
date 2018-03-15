@@ -99,7 +99,6 @@ private:
                                                 size_t screenHeight,
                                                 std::shared_ptr<Application> const& app);
 
-    void run(bool);
     void update();
 
     bool active = false;

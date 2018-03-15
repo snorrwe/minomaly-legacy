@@ -28,24 +28,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
 
 EngineCore::~EngineCore() { application.reset(); }
 
-void EngineCore::run()
-{
-    try
-    {
-        run(true);
-    }
-    catch (std::exception& exc)
-    {
-        logService->error("Unexpected exception was thrown while running Minomaly!");
-        logService->error(exc.what());
-    }
-    catch (...)
-    {
-        logService->error("Unknown error happened while running Minomaly!");
-    }
-}
-
-void EngineCore::run(bool)
+void EngineCore::run() try
 {
     active = true;
     lastUpdate = std::chrono::system_clock::now();
@@ -71,6 +54,15 @@ void EngineCore::run(bool)
         physicsSystem->update();
         renderer->update();
     }
+}
+catch (std::exception& exc)
+{
+    logService->error("Unexpected exception was thrown while running Minomaly!");
+    logService->error(exc.what());
+}
+catch (...)
+{
+    logService->error("Unknown error happened while running Minomaly!");
 }
 
 void EngineCore::update()
