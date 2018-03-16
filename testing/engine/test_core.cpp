@@ -172,8 +172,8 @@ protected:
         auto mockWindow = std::make_unique<NiceMock<MockWindow>>();
         auto mockPhysics = std::make_unique<NiceMock<MockPhysics>>();
         auto mockAudioSystem = std::make_unique<NiceMock<MockAudioSystem>>();
+        auto mockAssets = std::make_unique<MockAssets>();
         mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
-        mockAssets = std::make_shared<MockAssets>();
         engine = std::make_unique<EngineCore>(
             std::make_unique<NiceMock<MockSubsystems>>(mockLogService),
             std::move(mockInp),
@@ -182,7 +182,7 @@ protected:
             std::move(mockRender),
             std::move(mockAudioSystem),
             std::move(mockPhysics),
-            mockAssets,
+            std::move(mockAssets),
             mockLogService,
             mockTimeSystem);
         mockApplication->setEngineCore(engine.get());
@@ -196,7 +196,6 @@ protected:
     MockInput* mockInput;
     MockRenderer* mockRenderer;
     std::shared_ptr<MockTimeSystem> mockTimeSystem;
-    std::shared_ptr<MockAssets> mockAssets;
     std::shared_ptr<MockLogService> mockLogService;
 };
 

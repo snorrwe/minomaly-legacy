@@ -2,9 +2,9 @@
 
 using namespace Mino;
 
-std::shared_ptr<AssetSystem> AssetSystem::create(IRenderSystem* renderer)
+std::unique_ptr<AssetSystem> AssetSystem::create(IRenderSystem* renderer)
 {
-    return std::make_shared<AssetSystem>(renderer);
+    return std::make_unique<AssetSystem>(renderer);
 }
 
 std::shared_ptr<Texture> AssetSystem::loadTexture(std::string const& name)
@@ -12,8 +12,8 @@ std::shared_ptr<Texture> AssetSystem::loadTexture(std::string const& name)
     return load<Texture>(name, [&]() { return Texture::loadTexture(name, *renderer); });
 }
 
-std::shared_ptr<Texture> AssetSystem::loadText(std::string const& text, Font const& font,
-                                               Color const& color)
+std::shared_ptr<Texture>
+AssetSystem::loadText(std::string const& text, Font const& font, Color const& color)
 {
     return Texture::loadText(text, *renderer, font, color);
 }
@@ -38,8 +38,8 @@ std::shared_ptr<Asset> AssetSystem::findAsset(std::string const& name)
 void AssetSystem::collectGarbage()
 {
     auto find = [&]() {
-        return std::find_if(assets.begin(), assets.end(),
-                            [](auto const& pair) { return pair.second.expired(); });
+        return std::find_if(
+            assets.begin(), assets.end(), [](auto const& pair) { return pair.second.expired(); });
     };
     auto first = find();
     while (first != assets.end())

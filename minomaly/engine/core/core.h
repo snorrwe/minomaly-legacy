@@ -68,7 +68,7 @@ public:
                std::unique_ptr<IRenderSystem>&& renderer,
                std::unique_ptr<IAudioSystem>&& audioSystem,
                std::unique_ptr<IPhysicsSystem>&& physicsSystem,
-               std::shared_ptr<IAssetSystem> const& assets,
+               std::unique_ptr<IAssetSystem>&& assets,
                std::shared_ptr<ILogService> const& logService,
                std::shared_ptr<ITimeService> const& time);
     EngineCore(EngineCore const&) = delete;
@@ -115,7 +115,7 @@ private:
     std::unique_ptr<IRenderSystem> renderer;
     std::unique_ptr<IAudioSystem> audioSystem;
     std::unique_ptr<IPhysicsSystem> physicsSystem;
-    std::shared_ptr<IAssetSystem> assets;
+    std::unique_ptr<IAssetSystem> assets;
     std::shared_ptr<ILogService> logService;
     std::shared_ptr<ITimeService> time;
 };
