@@ -5,7 +5,7 @@ using namespace Mino;
 EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
                        std::shared_ptr<IInputSystem> const& input,
                        std::shared_ptr<IWindowSystem> const& window,
-                       std::shared_ptr<Application> const& app,
+                       std::unique_ptr<Application> app,
                        std::shared_ptr<IRenderSystem> const& renderer,
                        std::shared_ptr<IAudioSystem> const& audio,
                        std::shared_ptr<IPhysicsSystem> const& physicsSystem,
@@ -15,7 +15,7 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
     : subsystems(subsystems)
     , input(input)
     , window(window)
-    , application(app)
+    , application(std::move(app))
     , renderer(renderer)
     , audioSystem(audio)
     , physicsSystem(physicsSystem)
@@ -23,14 +23,31 @@ EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
     , logService(logService)
     , time(time)
 {
-    sub = input->onQuit([&](auto const&) { active = false; });
+    quitSub = input->onQuit([&](auto const&) { active = false; });
 }
 
 EngineCore::~EngineCore() { application.reset(); }
 
-void EngineCore::run() try
+void EngineCore::run()
 {
-    active = true;
+    try
+    {
+        active = true;
+        runApplication();
+    }
+    catch (std::exception& exc)
+    {
+        logService->error("Unexpected exception was thrown while running Minomaly!");
+        logService->error(exc.what());
+    }
+    catch (...)
+    {
+        logService->error("Unknown error happened while running Minomaly!");
+    }
+}
+
+void EngineCore::runApplication()
+{
     lastUpdate = std::chrono::system_clock::now();
     lastFixedUpdate = std::chrono::system_clock::now();
     auto lag = Milli{0.0};
@@ -47,27 +64,19 @@ void EngineCore::run() try
         input->update();
         while (lag >= targetMsPerUpdate)
         {
-            update();
+            time->update(lastUpdate);
+            updateLogic();
             lag -= targetMsPerUpdate;
             lastUpdate = std::chrono::system_clock::now();
         }
         physicsSystem->update();
         renderer->update();
     }
-}
-catch (std::exception& exc)
-{
-    logService->error("Unexpected exception was thrown while running Minomaly!");
-    logService->error(exc.what());
-}
-catch (...)
-{
-    logService->error("Unknown error happened while running Minomaly!");
+    application->stop();
 }
 
-void EngineCore::update()
+void EngineCore::updateLogic()
 {
-    time->update(lastUpdate);
     application->update();
     application->updateGameObjects();
 }
@@ -84,7 +93,7 @@ void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / 
 std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                                  size_t screenWidth,
                                                  size_t screenHeight,
-                                                 std::shared_ptr<Application> const& app)
+                                                 std::unique_ptr<Application>&& app)
 {
     auto logService = Services::get<ILogService>();
     auto time = Services::get<ITimeService>();
@@ -104,6 +113,14 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
     auto physics = PhysicsSystem::create();
     auto assets = AssetSystem::create(renderer.get());
 
-    return std::make_shared<EngineCore>(
-        subsystems, inp, window, app, renderer, audio, physics, assets, logService, time);
+    return std::make_shared<EngineCore>(subsystems,
+                                        inp,
+                                        window,
+                                        std::move(app),
+                                        renderer,
+                                        audio,
+                                        physics,
+                                        assets,
+                                        logService,
+                                        time);
 }

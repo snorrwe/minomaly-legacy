@@ -159,7 +159,8 @@ class CoreTest : public ::testing::Test
 protected:
     virtual void SetUp()
     {
-        mockApplication = std::make_shared<NiceMock<MockApplication>>();
+        auto mockApp = std::make_unique<NiceMock<MockApplication>>();
+        mockApplication = mockApp.get();
         mockApplication->delegateToFake();
 
         mockLogService = std::make_shared<NiceMock<MockLogService>>();
@@ -174,7 +175,7 @@ protected:
         engine = std::make_unique<EngineCore>(mockSubsystems,
                                               mockInput,
                                               mockWindow,
-                                              mockApplication,
+                                              std::move(mockApp),
                                               mockRenderer,
                                               mockAudioSystem,
                                               mockPhysics,
@@ -191,7 +192,7 @@ protected:
     std::shared_ptr<MockSubsystems> mockSubsystems;
     std::shared_ptr<MockInput> mockInput;
     std::shared_ptr<MockRenderer> mockRenderer;
-    std::shared_ptr<MockApplication> mockApplication;
+    MockApplication* mockApplication;
     std::shared_ptr<MockWindow> mockWindow;
     std::shared_ptr<MockPhysics> mockPhysics;
     std::shared_ptr<MockAudioSystem> mockAudioSystem;

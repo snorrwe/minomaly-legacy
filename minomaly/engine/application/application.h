@@ -11,7 +11,6 @@
 
 namespace Mino
 {
-
 class IEngineCore;
 class IRenderSystem;
 class GameObject;
@@ -26,6 +25,7 @@ public:
     void updateGameObjects();
     virtual void update() {}
     virtual void start() {}
+    virtual void stop() {}
 
     template <typename... TComponents>
     GameObject* createGameObject(Vector2<float> position = {0, 0});
@@ -40,9 +40,12 @@ public:
 
 protected:
     GameObject* createEmptyGameObject();
-    template <typename TComponent> void addComponent(GameObject& go);
-    template <typename... Ts> void addComponents(GameObject& go);
-    template <typename T, typename... Ts> void addComponentHelper(GameObject& go);
+    template <typename TComponent>
+    void addComponent(GameObject& go);
+    template <typename... Ts>
+    void addComponents(GameObject& go);
+    template <typename T, typename... Ts>
+    void addComponentHelper(GameObject& go);
 
     Transform::TransformRef rootTransform = Transform::getRoot();
     GameObjectContainer gameObjects;
@@ -50,19 +53,23 @@ protected:
     IEngineCore* engine;
 };
 
-template <typename TComponent> void Application::addComponent(GameObject& go)
+template <typename TComponent>
+void Application::addComponent(GameObject& go)
 {
     go.addComponent<TComponent>();
 }
 
-template <typename... Ts> void Application::addComponents(GameObject& go)
+template <typename... Ts>
+void Application::addComponents(GameObject& go)
 {
     addComponentHelper<Ts...>(go);
 }
 
-template <> void Application::addComponents<>(GameObject& go);
+template <>
+void Application::addComponents<>(GameObject& go);
 
-template <typename T, typename... Ts> void Application::addComponentHelper(GameObject& go)
+template <typename T, typename... Ts>
+void Application::addComponentHelper(GameObject& go)
 {
     addComponent<T>(go);
     addComponents<Ts...>(go);

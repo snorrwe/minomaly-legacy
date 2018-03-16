@@ -64,7 +64,7 @@ public:
     EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
                std::shared_ptr<IInputSystem> const& input,
                std::shared_ptr<IWindowSystem> const& window,
-               std::shared_ptr<Application> const& app,
+               std::unique_ptr<Application> app,
                std::shared_ptr<IRenderSystem> const& renderer,
                std::shared_ptr<IAudioSystem> const& audioSystem,
                std::shared_ptr<IPhysicsSystem> const& physicsSystem,
@@ -81,6 +81,10 @@ public:
     virtual void run();
     virtual void stop();
 
+    virtual void setTargetFps(float f);
+
+    virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
+
     virtual IWindowSystem* getWindow() const { return window.get(); }
     virtual IInputSystem* getInput() const { return input.get(); }
     virtual IRenderSystem* getRenderer() const { return renderer.get(); }
@@ -89,44 +93,42 @@ public:
     virtual IPhysicsSystem* getPhysicsSystem() const { return physicsSystem.get(); }
     virtual IAssetSystem* getAssets() const { return assets.get(); }
 
-    virtual void setTargetFps(float f);
-
-    virtual SdlStatus subsystemStatus(SdlSubSystemType type) const;
-
 private:
     static std::shared_ptr<EngineCore> initCore(std::string const& name,
                                                 size_t screenWidth,
                                                 size_t screenHeight,
-                                                std::shared_ptr<Application> const& app);
+                                                std::unique_ptr<Application>&& app);
 
-    void update();
+    void updateLogic();
+    void runApplication();
 
     bool active = false;
     TimePoint lastUpdate;
     TimePoint lastFixedUpdate;
     Milli targetMsPerUpdate = Milli{OneSecInMs / 128.0};
+    ISubscription quitSub;
 
+    std::unique_ptr<Application> application;
     std::shared_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
     std::shared_ptr<IWindowSystem> window;
-    std::shared_ptr<Application> application;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;
     std::shared_ptr<IPhysicsSystem> physicsSystem;
     std::shared_ptr<IAssetSystem> assets;
     std::shared_ptr<ILogService> logService;
     std::shared_ptr<ITimeService> time;
-    ISubscription sub;
 };
 
 template <typename TLogic>
 std::shared_ptr<EngineCore>
 EngineCore::create(std::string const& name, size_t screenWidth, size_t screenHeight)
 {
-    auto application = std::make_shared<TLogic>();
-    auto core = initCore(name, screenWidth, screenHeight, application);
-    application->setEngineCore(core.get());
-    application->initMainCamera(*core->renderer, screenHeight);
+    auto application = std::make_unique<TLogic>();
+    auto app = application.get();
+    auto core = initCore(name, screenWidth, screenHeight, std::move(application));
+    app->setEngineCore(core.get());
+    app->initMainCamera(*core->renderer, screenHeight);
     return core;
 }
 
