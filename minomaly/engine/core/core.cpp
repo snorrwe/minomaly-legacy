@@ -6,7 +6,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::unique_ptr<IInputSystem>&& input,
                        std::unique_ptr<IWindowSystem>&& window,
                        std::unique_ptr<Application>&& app,
-                       std::shared_ptr<IRenderSystem> const& renderer,
+                       std::unique_ptr<IRenderSystem>&& renderer,
                        std::shared_ptr<IAudioSystem> const& audio,
                        std::shared_ptr<IPhysicsSystem> const& physicsSystem,
                        std::shared_ptr<IAssetSystem> const& assets,
@@ -16,7 +16,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
     , input(std::move(input))
     , window(std::move(window))
     , application(std::move(app))
-    , renderer(renderer)
+    , renderer(std::move(renderer))
     , audioSystem(audio)
     , physicsSystem(physicsSystem)
     , assets(assets)
@@ -114,7 +114,7 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                         Input::create(),
                                         std::move(window),
                                         std::move(app),
-                                        renderer,
+                                        std::move(renderer),
                                         audio,
                                         PhysicsSystem::create(),
                                         assets,
