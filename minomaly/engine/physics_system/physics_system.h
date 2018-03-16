@@ -33,10 +33,10 @@ class PhysicsSystem : public IPhysicsSystem
 public:
     const size_t WORLD_CAPACITY = 4;
 
-    static std::shared_ptr<PhysicsSystem> create()
+    static std::unique_ptr<PhysicsSystem> create()
     {
         auto workService = std::static_pointer_cast<WorkService>(Services::get<IWorkService>());
-        return std::make_shared<PhysicsSystem>(workService);
+        return std::make_unique<PhysicsSystem>(workService);
     }
 
     PhysicsSystem(std::shared_ptr<WorkService> workService)

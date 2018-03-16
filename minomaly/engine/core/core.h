@@ -67,7 +67,7 @@ public:
                std::unique_ptr<Application>&& app,
                std::unique_ptr<IRenderSystem>&& renderer,
                std::unique_ptr<IAudioSystem>&& audioSystem,
-               std::shared_ptr<IPhysicsSystem> const& physicsSystem,
+               std::unique_ptr<IPhysicsSystem>&& physicsSystem,
                std::shared_ptr<IAssetSystem> const& assets,
                std::shared_ptr<ILogService> const& logService,
                std::shared_ptr<ITimeService> const& time);
@@ -114,7 +114,7 @@ private:
     std::unique_ptr<IWindowSystem> window;
     std::unique_ptr<IRenderSystem> renderer;
     std::unique_ptr<IAudioSystem> audioSystem;
-    std::shared_ptr<IPhysicsSystem> physicsSystem;
+    std::unique_ptr<IPhysicsSystem> physicsSystem;
     std::shared_ptr<IAssetSystem> assets;
     std::shared_ptr<ILogService> logService;
     std::shared_ptr<ITimeService> time;

@@ -8,7 +8,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::unique_ptr<Application>&& app,
                        std::unique_ptr<IRenderSystem>&& renderer,
                        std::unique_ptr<IAudioSystem>&& audio,
-                       std::shared_ptr<IPhysicsSystem> const& physicsSystem,
+                       std::unique_ptr<IPhysicsSystem>&& physicsSystem,
                        std::shared_ptr<IAssetSystem> const& assets,
                        std::shared_ptr<ILogService> const& logService,
                        std::shared_ptr<ITimeService> const& time)
@@ -18,7 +18,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
     , application(std::move(app))
     , renderer(std::move(renderer))
     , audioSystem(std::move(audio))
-    , physicsSystem(physicsSystem)
+    , physicsSystem(std::move(physicsSystem))
     , assets(assets)
     , logService(logService)
     , time(time)
