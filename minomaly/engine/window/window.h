@@ -8,7 +8,6 @@
 
 namespace Mino
 {
-
 class EngineCore;
 
 class IWindowSystem
@@ -28,11 +27,14 @@ class WindowSystem : public IWindowSystem
 public:
     friend class EngineCore;
 
-    static std::shared_ptr<WindowSystem> create(const char* title, int x, int y, int w, int h,
-                                                Uint32 flags);
+    static std::unique_ptr<WindowSystem>
+    create(const char* title, int x, int y, int w, int h, Uint32 flags);
 
     WindowSystem(SDL_Window* window, int width, int height)
-        : window(window), surface(SDL_GetWindowSurface(window)), width(width), height(height)
+        : window(window)
+        , surface(SDL_GetWindowSurface(window))
+        , width(width)
+        , height(height)
     {
     }
     WindowSystem(WindowSystem const&) = delete;
