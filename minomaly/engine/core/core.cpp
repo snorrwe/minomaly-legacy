@@ -3,7 +3,7 @@
 using namespace Mino;
 
 EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
-                       std::shared_ptr<IInputSystem> const& input,
+                       std::unique_ptr<IInputSystem>&& input,
                        std::shared_ptr<IWindowSystem> const& window,
                        std::unique_ptr<Application>&& app,
                        std::shared_ptr<IRenderSystem> const& renderer,
@@ -13,7 +13,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::shared_ptr<ILogService> const& logService,
                        std::shared_ptr<ITimeService> const& time)
     : subsystems(std::move(subsystems))
-    , input(input)
+    , input(std::move(input))
     , window(window)
     , application(std::move(app))
     , renderer(renderer)
@@ -23,7 +23,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
     , logService(logService)
     , time(time)
 {
-    quitSub = input->onQuit([&](auto const&) { active = false; });
+    quitSub = this->input->onQuit([&](auto const&) { active = false; });
 }
 
 EngineCore::~EngineCore() { application.reset(); }
@@ -101,7 +101,6 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
     auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
                      ? AudioSystem::create()
                      : std::make_shared<MuteAudioSystem>();
-    auto inp = Input::create();
     auto window
         = WindowSystem::create(name.c_str(),
                                SDL_WINDOWPOS_UNDEFINED,
@@ -110,16 +109,14 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                screenHeight,
                                SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
-    auto physics = PhysicsSystem::create();
     auto assets = AssetSystem::create(renderer.get());
-
     return std::make_shared<EngineCore>(std::move(subsystems),
-                                        inp,
+                                        Input::create(),
                                         window,
                                         std::move(app),
                                         renderer,
                                         audio,
-                                        physics,
+                                        PhysicsSystem::create(),
                                         assets,
                                         logService,
                                         time);

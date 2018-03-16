@@ -62,7 +62,7 @@ public:
     create(std::string const& name, size_t screenWidth, size_t screenHeight);
 
     EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
-               std::shared_ptr<IInputSystem> const& input,
+               std::unique_ptr<IInputSystem>&& input,
                std::shared_ptr<IWindowSystem> const& window,
                std::unique_ptr<Application>&& app,
                std::shared_ptr<IRenderSystem> const& renderer,
@@ -110,7 +110,7 @@ private:
 
     std::unique_ptr<Application> application;
     std::unique_ptr<SdlSubsystems> subsystems;
-    std::shared_ptr<IInputSystem> input;
+    std::unique_ptr<IInputSystem> input;
     std::shared_ptr<IWindowSystem> window;
     std::shared_ptr<IRenderSystem> renderer;
     std::shared_ptr<IAudioSystem> audioSystem;

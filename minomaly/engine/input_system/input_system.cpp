@@ -2,11 +2,7 @@
 
 using namespace Mino;
 
-std::shared_ptr<Input> Input::create()
-{
-    static std::shared_ptr<Input> instance = std::make_shared<Input>();
-    return instance;
-}
+std::unique_ptr<Input> Input::create() { return std::make_unique<Input>(); }
 
 void Input::update()
 {

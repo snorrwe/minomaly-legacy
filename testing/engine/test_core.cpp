@@ -163,8 +163,10 @@ protected:
         mockApplication = mockApp.get();
         mockApplication->delegateToFake();
 
+        auto mockInp = std::make_unique<NiceMock<MockInput>>();
+        mockInput = mockInp.get();
+
         mockLogService = std::make_shared<NiceMock<MockLogService>>();
-        mockInput = std::make_shared<NiceMock<MockInput>>();
         mockRenderer = std::make_shared<NiceMock<MockRenderer>>();
         mockWindow = std::make_shared<NiceMock<MockWindow>>();
         mockPhysics = std::make_shared<NiceMock<MockPhysics>>();
@@ -173,7 +175,7 @@ protected:
         mockAssets = std::make_shared<MockAssets>();
         engine = std::make_unique<EngineCore>(
             std::make_unique<NiceMock<MockSubsystems>>(mockLogService),
-            mockInput,
+            std::move(mockInp),
             mockWindow,
             std::move(mockApp),
             mockRenderer,
@@ -190,7 +192,7 @@ protected:
 
     /*Mocks*/
     MockApplication* mockApplication;
-    std::shared_ptr<MockInput> mockInput;
+    MockInput* mockInput;
     std::shared_ptr<MockRenderer> mockRenderer;
     std::shared_ptr<MockWindow> mockWindow;
     std::shared_ptr<MockPhysics> mockPhysics;
