@@ -16,4 +16,4 @@ void AudioSystem::resumeMusic() { Mix_ResumeMusic(); }
 void AudioSystem::pauseMusic() { Mix_PauseMusic(); }
 void AudioSystem::stopMusic() { Mix_HaltMusic(); }
 
-std::shared_ptr<IAudioSystem> AudioSystem::create() { return std::make_shared<AudioSystem>(); }
+std::unique_ptr<IAudioSystem> AudioSystem::create() { return std::make_unique<AudioSystem>(); }

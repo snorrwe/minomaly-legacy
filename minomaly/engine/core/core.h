@@ -66,7 +66,7 @@ public:
                std::unique_ptr<IWindowSystem>&& window,
                std::unique_ptr<Application>&& app,
                std::unique_ptr<IRenderSystem>&& renderer,
-               std::shared_ptr<IAudioSystem> const& audioSystem,
+               std::unique_ptr<IAudioSystem>&& audioSystem,
                std::shared_ptr<IPhysicsSystem> const& physicsSystem,
                std::shared_ptr<IAssetSystem> const& assets,
                std::shared_ptr<ILogService> const& logService,
@@ -113,7 +113,7 @@ private:
     std::unique_ptr<IInputSystem> input;
     std::unique_ptr<IWindowSystem> window;
     std::unique_ptr<IRenderSystem> renderer;
-    std::shared_ptr<IAudioSystem> audioSystem;
+    std::unique_ptr<IAudioSystem> audioSystem;
     std::shared_ptr<IPhysicsSystem> physicsSystem;
     std::shared_ptr<IAssetSystem> assets;
     std::shared_ptr<ILogService> logService;

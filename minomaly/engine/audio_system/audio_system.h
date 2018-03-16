@@ -42,7 +42,7 @@ public:
 class AudioSystem : public IAudioSystem
 {
 public:
-    static std::shared_ptr<IAudioSystem> create();
+    static std::unique_ptr<IAudioSystem> create();
 
     virtual ~AudioSystem() {}
 

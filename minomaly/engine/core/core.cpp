@@ -7,7 +7,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::unique_ptr<IWindowSystem>&& window,
                        std::unique_ptr<Application>&& app,
                        std::unique_ptr<IRenderSystem>&& renderer,
-                       std::shared_ptr<IAudioSystem> const& audio,
+                       std::unique_ptr<IAudioSystem>&& audio,
                        std::shared_ptr<IPhysicsSystem> const& physicsSystem,
                        std::shared_ptr<IAssetSystem> const& assets,
                        std::shared_ptr<ILogService> const& logService,
@@ -17,7 +17,7 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
     , window(std::move(window))
     , application(std::move(app))
     , renderer(std::move(renderer))
-    , audioSystem(audio)
+    , audioSystem(std::move(audio))
     , physicsSystem(physicsSystem)
     , assets(assets)
     , logService(logService)
@@ -96,11 +96,10 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                                  std::unique_ptr<Application>&& app)
 {
     auto logService = Services::get<ILogService>();
-    auto time = Services::get<ITimeService>();
     auto subsystems = SdlSubsystems::initialize(logService);
     auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
                      ? AudioSystem::create()
-                     : std::make_shared<MuteAudioSystem>();
+                     : std::make_unique<MuteAudioSystem>();
     auto window
         = WindowSystem::create(name.c_str(),
                                SDL_WINDOWPOS_UNDEFINED,
@@ -115,9 +114,9 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                         std::move(window),
                                         std::move(app),
                                         std::move(renderer),
-                                        audio,
+                                        std::move(audio),
                                         PhysicsSystem::create(),
                                         assets,
                                         logService,
-                                        time);
+                                        Services::get<ITimeService>());
 }
