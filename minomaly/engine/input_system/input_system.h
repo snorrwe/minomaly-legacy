@@ -11,7 +11,6 @@
 
 namespace Mino
 {
-
 class IInputSystem
 {
 public:
@@ -31,7 +30,7 @@ public:
 class Input : public IInputSystem
 {
 public:
-    static std::shared_ptr<Input> create();
+    static std::unique_ptr<Input> create();
 
     Input() = default;
     Input(Input const&) = delete;

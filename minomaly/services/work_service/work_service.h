@@ -25,11 +25,14 @@ public:
 template <class TReturn>
 struct Job : IJob
 {
-    Job(std::function<TReturn()> job) : job(job) {}
+    Job(std::function<TReturn()> job)
+        : job(job)
+    {
+    }
     std::function<TReturn()> job;
     std::promise<TReturn> promise = {};
 
-    virtual void execute() { promise.set_value(job()); }
+    virtual void execute() override { promise.set_value(job()); }
 };
 
 class IWorkService : public IService
@@ -42,9 +45,9 @@ struct Threads : std::vector<std::thread>
 {
     void join()
     {
-        for (auto i = begin(); i != end(); ++i)
+        for (auto& thread : *this)
         {
-            i->join();
+            thread.join();
         }
     }
 };

@@ -2,25 +2,28 @@
 
 using namespace Mino;
 
-EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> subsystems,
-                       std::shared_ptr<IInputSystem> input, std::shared_ptr<IWindowSystem> window,
-                       std::shared_ptr<Application> app, std::shared_ptr<IRenderSystem> renderer,
-                       std::shared_ptr<IAudioSystem> audio,
-                       std::shared_ptr<IPhysicsSystem> physicsSystem,
-                       std::shared_ptr<IAssetSystem> assets,
-                       std::shared_ptr<ILogService> logService, std::shared_ptr<ITimeService> time)
-    : subsystems(subsystems)
-    , input(input)
-    , window(window)
-    , application(app)
-    , renderer(renderer)
-    , audioSystem(audio)
-    , physicsSystem(physicsSystem)
-    , assets(assets)
+EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
+                       std::unique_ptr<IInputSystem>&& input,
+                       std::unique_ptr<IWindowSystem>&& window,
+                       std::unique_ptr<Application>&& app,
+                       std::unique_ptr<IRenderSystem>&& renderer,
+                       std::unique_ptr<IAudioSystem>&& audio,
+                       std::unique_ptr<IPhysicsSystem>&& physicsSystem,
+                       std::unique_ptr<IAssetSystem>&& assets,
+                       std::shared_ptr<ILogService> const& logService,
+                       std::shared_ptr<ITimeService> const& time)
+    : subsystems(std::move(subsystems))
+    , input(std::move(input))
+    , window(std::move(window))
+    , application(std::move(app))
+    , renderer(std::move(renderer))
+    , audioSystem(std::move(audio))
+    , physicsSystem(std::move(physicsSystem))
+    , assets(std::move(assets))
     , logService(logService)
     , time(time)
 {
-    sub = input->onQuit([&](auto const&) { active = false; });
+    quitSub = this->input->onQuit([&](auto const&) { active = false; });
 }
 
 EngineCore::~EngineCore() { application.reset(); }
@@ -29,7 +32,8 @@ void EngineCore::run()
 {
     try
     {
-        run(true);
+        active = true;
+        runApplication();
     }
     catch (std::exception& exc)
     {
@@ -42,9 +46,8 @@ void EngineCore::run()
     }
 }
 
-void EngineCore::run(bool)
+void EngineCore::runApplication()
 {
-    active = true;
     lastUpdate = std::chrono::system_clock::now();
     lastFixedUpdate = std::chrono::system_clock::now();
     auto lag = Milli{0.0};
@@ -61,18 +64,19 @@ void EngineCore::run(bool)
         input->update();
         while (lag >= targetMsPerUpdate)
         {
-            update();
+            time->update(lastUpdate);
+            updateLogic();
             lag -= targetMsPerUpdate;
             lastUpdate = std::chrono::system_clock::now();
         }
         physicsSystem->update();
         renderer->update();
     }
+    application->stop();
 }
 
-void EngineCore::update()
+void EngineCore::updateLogic()
 {
-    time->update(lastUpdate);
     application->update();
     application->updateGameObjects();
 }
@@ -86,24 +90,33 @@ SdlStatus EngineCore::subsystemStatus(SdlSubSystemType type) const
 
 void EngineCore::setTargetFps(float f) { targetMsPerUpdate = Milli{OneSecInMs / f}; }
 
-std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name, size_t screenWidth,
+std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
+                                                 size_t screenWidth,
                                                  size_t screenHeight,
-                                                 std::shared_ptr<Application> const& app)
+                                                 std::unique_ptr<Application>&& app)
 {
     auto logService = Services::get<ILogService>();
-    auto time = Services::get<ITimeService>();
     auto subsystems = SdlSubsystems::initialize(logService);
     auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
                      ? AudioSystem::create()
-                     : std::make_shared<MuteAudioSystem>();
-    auto inp = Input::create();
-    auto window = WindowSystem::create(
-        name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+                     : std::make_unique<MuteAudioSystem>();
+    auto window
+        = WindowSystem::create(name.c_str(),
+                               SDL_WINDOWPOS_UNDEFINED,
+                               SDL_WINDOWPOS_UNDEFINED,
+                               screenWidth,
+                               screenHeight,
+                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
     auto renderer = RenderSystem::create(*window);
-    auto physics = PhysicsSystem::create();
     auto assets = AssetSystem::create(renderer.get());
-
-    return std::make_shared<EngineCore>(subsystems, inp, window, app, renderer, audio, physics,
-                                        assets, logService, time);
+    return std::make_shared<EngineCore>(std::move(subsystems),
+                                        Input::create(),
+                                        std::move(window),
+                                        std::move(app),
+                                        std::move(renderer),
+                                        std::move(audio),
+                                        PhysicsSystem::create(),
+                                        std::move(assets),
+                                        logService,
+                                        Services::get<ITimeService>());
 }

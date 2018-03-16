@@ -4,26 +4,28 @@ using namespace Mino;
 
 void PhysicsSystem::update()
 {
+    world->clear();
     for (auto& collider : colliders)
     {
         collider->updatePosition();
-        collider->addToWorld();
+        world->insert({collider->asBoundingBox().getCenter(), collider});
     }
     auto handles = std::vector<std::future<std::vector<World::Node>>>{};
     for (auto& collider : colliders)
     {
-        handles.push_back(workService->requestWork<std::vector<World::Node>>(
-            [collider]() { return collider->checkCollisions(); }));
+        const auto job = [collider, this]() { return collider->checkCollisions(*world); };
+        handles.push_back(workService->requestWork<std::vector<World::Node>>(job));
+    }
+    for (auto i = handles.rbegin(); i != handles.rend(); ++i)
+    {
+        i->wait();
     }
     auto handleIt = handles.begin();
     for (auto& collider : colliders)
     {
-        handleIt->wait();
         collider->handleCollisions(std::move(handleIt->get()));
         ++handleIt;
     }
-
-    world->clear();
 }
 
 void PhysicsSystem::add(Collider* coll)

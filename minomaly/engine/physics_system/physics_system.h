@@ -31,23 +31,26 @@ public:
 class PhysicsSystem : public IPhysicsSystem
 {
 public:
-    const size_t WORLD_CAPACITY = 64;
+    const size_t WORLD_CAPACITY = 4;
 
-    static std::shared_ptr<PhysicsSystem> create()
+    static std::unique_ptr<PhysicsSystem> create()
     {
         auto workService = std::static_pointer_cast<WorkService>(Services::get<IWorkService>());
-        return std::make_shared<PhysicsSystem>(workService);
+        return std::make_unique<PhysicsSystem>(workService);
     }
 
-    PhysicsSystem(std::shared_ptr<WorkService> workService) : workService(std::move(workService)) {}
+    PhysicsSystem(std::shared_ptr<WorkService> workService)
+        : workService(std::move(workService))
+    {
+    }
     virtual ~PhysicsSystem() {}
 
-    virtual void update();
-    virtual void add(Collider*);
-    virtual void remove(Collider*);
-    virtual void setWorldBox(BoundingBox const& box);
+    virtual void update() override;
+    virtual void add(Collider*) override;
+    virtual void remove(Collider*) override;
+    virtual void setWorldBox(BoundingBox const& box) override;
 
-    virtual World* getWorld() { return world.get(); }
+    virtual World* getWorld() override { return world.get(); }
 
 protected:
     std::unique_ptr<World> world

@@ -2,10 +2,10 @@
 
 using namespace Mino;
 
-std::shared_ptr<IRenderSystem> RenderSystem::create(WindowSystem& window)
+std::unique_ptr<IRenderSystem> RenderSystem::create(WindowSystem& window)
 {
-    auto renderer =
-        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    auto renderer
+        = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL)
     {
         std::cout << "RenderSystem could not be created! SDL Error:\n"
@@ -13,14 +13,15 @@ std::shared_ptr<IRenderSystem> RenderSystem::create(WindowSystem& window)
         throw std::runtime_error("RenderSystem could not be created!");
     }
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    auto result = std::make_shared<RenderSystem>(renderer);
+    auto result = std::make_unique<RenderSystem>(renderer);
     auto& mainCamera = result->getMainCamera();
     auto win = window.size();
     mainCamera->setViewport(0, 0, win.x(), win.y());
-    return result;
+    return std::move(result);
 }
 
-RenderSystem::RenderSystem(SDL_Renderer* renderer) : renderer(renderer)
+RenderSystem::RenderSystem(SDL_Renderer* renderer)
+    : renderer(renderer)
 {
     mainCamera = addCamera();
 }
@@ -34,12 +35,19 @@ void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* d
     SDL_RenderCopy(renderer, texture.getRaw(), srcrect, dstrect);
 }
 
-void RenderSystem::render(Texture const& texture, SDL_Rect* srcrect, SDL_Rect* dstrect,
+void RenderSystem::render(Texture const& texture,
+                          SDL_Rect* srcrect,
+                          SDL_Rect* dstrect,
                           RotationData const& rotation)
 {
     SDL_Point center{rotation.center.x(), rotation.center.y()};
-    SDL_RenderCopyEx(renderer, texture.getRaw(), srcrect, dstrect, rotation.angle * 57.2958,
-                     &center, rotation.flip);
+    SDL_RenderCopyEx(renderer,
+                     texture.getRaw(),
+                     srcrect,
+                     dstrect,
+                     rotation.angle * 57.2958,
+                     &center,
+                     rotation.flip);
 }
 
 void RenderSystem::update()
@@ -57,8 +65,8 @@ void RenderSystem::update()
     SDL_RenderPresent(renderer);
 }
 
-std::shared_ptr<Texture> RenderSystem::loadTexture(std::string const& name, bool flag,
-                                                   Color const* color)
+std::shared_ptr<Texture>
+RenderSystem::loadTexture(std::string const& name, bool flag, Color const* color)
 {
     return Texture::loadTexture(name, *this, flag, *color);
 }
