@@ -2,17 +2,17 @@
 
 using namespace Mino;
 
-EngineCore::EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
+EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::shared_ptr<IInputSystem> const& input,
                        std::shared_ptr<IWindowSystem> const& window,
-                       std::unique_ptr<Application> app,
+                       std::unique_ptr<Application>&& app,
                        std::shared_ptr<IRenderSystem> const& renderer,
                        std::shared_ptr<IAudioSystem> const& audio,
                        std::shared_ptr<IPhysicsSystem> const& physicsSystem,
                        std::shared_ptr<IAssetSystem> const& assets,
                        std::shared_ptr<ILogService> const& logService,
                        std::shared_ptr<ITimeService> const& time)
-    : subsystems(subsystems)
+    : subsystems(std::move(subsystems))
     , input(input)
     , window(window)
     , application(std::move(app))
@@ -113,7 +113,7 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
     auto physics = PhysicsSystem::create();
     auto assets = AssetSystem::create(renderer.get());
 
-    return std::make_shared<EngineCore>(subsystems,
+    return std::make_shared<EngineCore>(std::move(subsystems),
                                         inp,
                                         window,
                                         std::move(app),

@@ -164,7 +164,6 @@ protected:
         mockApplication->delegateToFake();
 
         mockLogService = std::make_shared<NiceMock<MockLogService>>();
-        mockSubsystems = std::make_shared<NiceMock<MockSubsystems>>(mockLogService);
         mockInput = std::make_shared<NiceMock<MockInput>>();
         mockRenderer = std::make_shared<NiceMock<MockRenderer>>();
         mockWindow = std::make_shared<NiceMock<MockWindow>>();
@@ -172,16 +171,17 @@ protected:
         mockAudioSystem = std::make_shared<NiceMock<MockAudioSystem>>();
         mockTimeSystem = std::make_shared<NiceMock<MockTimeSystem>>();
         mockAssets = std::make_shared<MockAssets>();
-        engine = std::make_unique<EngineCore>(mockSubsystems,
-                                              mockInput,
-                                              mockWindow,
-                                              std::move(mockApp),
-                                              mockRenderer,
-                                              mockAudioSystem,
-                                              mockPhysics,
-                                              mockAssets,
-                                              mockLogService,
-                                              mockTimeSystem);
+        engine = std::make_unique<EngineCore>(
+            std::make_unique<NiceMock<MockSubsystems>>(mockLogService),
+            mockInput,
+            mockWindow,
+            std::move(mockApp),
+            mockRenderer,
+            mockAudioSystem,
+            mockPhysics,
+            mockAssets,
+            mockLogService,
+            mockTimeSystem);
         mockApplication->setEngineCore(engine.get());
     }
 
@@ -189,10 +189,9 @@ protected:
     std::unique_ptr<EngineCore> engine;
 
     /*Mocks*/
-    std::shared_ptr<MockSubsystems> mockSubsystems;
+    MockApplication* mockApplication;
     std::shared_ptr<MockInput> mockInput;
     std::shared_ptr<MockRenderer> mockRenderer;
-    MockApplication* mockApplication;
     std::shared_ptr<MockWindow> mockWindow;
     std::shared_ptr<MockPhysics> mockPhysics;
     std::shared_ptr<MockAudioSystem> mockAudioSystem;

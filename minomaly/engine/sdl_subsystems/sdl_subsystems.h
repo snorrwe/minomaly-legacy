@@ -12,7 +12,6 @@
 
 namespace Mino
 {
-
 enum class SdlSubSystemType
 {
     SDL = 0,
@@ -32,7 +31,7 @@ enum class SdlStatus
 class SdlSubsystems
 {
 public:
-    static std::shared_ptr<SdlSubsystems> initialize(std::shared_ptr<ILogService>);
+    static std::unique_ptr<SdlSubsystems> initialize(std::shared_ptr<ILogService>);
 
     SdlSubsystems(std::shared_ptr<ILogService>);
     SdlSubsystems(SdlSubsystems const&) = delete;
@@ -47,7 +46,6 @@ public:
 
 private:
     static bool isInitialized;
-    static SdlSubsystems* instance;
     static std::array<SdlStatus, static_cast<int>(SdlSubSystemType::COUNT)> status;
 
     static void Init_SDL(std::shared_ptr<ILogService> logService);

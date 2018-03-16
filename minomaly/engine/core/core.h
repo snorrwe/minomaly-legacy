@@ -61,10 +61,10 @@ public:
     static std::shared_ptr<EngineCore>
     create(std::string const& name, size_t screenWidth, size_t screenHeight);
 
-    EngineCore(std::shared_ptr<SdlSubsystems> const& subsystems,
+    EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                std::shared_ptr<IInputSystem> const& input,
                std::shared_ptr<IWindowSystem> const& window,
-               std::unique_ptr<Application> app,
+               std::unique_ptr<Application>&& app,
                std::shared_ptr<IRenderSystem> const& renderer,
                std::shared_ptr<IAudioSystem> const& audioSystem,
                std::shared_ptr<IPhysicsSystem> const& physicsSystem,
@@ -109,7 +109,7 @@ private:
     ISubscription quitSub;
 
     std::unique_ptr<Application> application;
-    std::shared_ptr<SdlSubsystems> subsystems;
+    std::unique_ptr<SdlSubsystems> subsystems;
     std::shared_ptr<IInputSystem> input;
     std::shared_ptr<IWindowSystem> window;
     std::shared_ptr<IRenderSystem> renderer;
