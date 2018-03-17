@@ -203,12 +203,12 @@ TEST_F(CoreTest, CanCreate) { ASSERT_TRUE(engine); }
 
 TEST_F(CoreTest, CanStopEngineFromLogic)
 {
-    mockApplication->getFake().quitAfter = 1;
     EXPECT_CALL(*mockInput, update()).Times(AtLeast(1));
     EXPECT_CALL(*mockRenderer, update()).Times(AtLeast(1));
     EXPECT_CALL(*mockApplication, start()).Times(1);
     EXPECT_CALL(*mockApplication, update()).Times(1);
 
+    mockApplication->getFake().quitAfter = 1;
     engine->run();
 }
 
