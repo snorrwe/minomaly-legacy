@@ -44,6 +44,8 @@ protected:
     void addComponent(GameObject& go);
     template <typename... Ts>
     void addComponents(GameObject& go);
+
+private:
     template <typename T, typename... Ts>
     void addComponentHelper(GameObject& go);
 

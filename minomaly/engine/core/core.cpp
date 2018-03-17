@@ -95,27 +95,31 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                                  size_t screenHeight,
                                                  std::unique_ptr<Application>&& app)
 {
+    auto inputSystem = Input::create();
+    auto physicsSystem = PhysicsSystem::create();
+
     auto logService = Services::get<ILogService>();
     auto subsystems = SdlSubsystems::initialize(logService);
     auto audio = subsystems->subsystemStatus(SdlSubSystemType::SDL_mixer) == SdlStatus::Initialized
                      ? AudioSystem::create()
                      : std::make_unique<MuteAudioSystem>();
-    auto window
-        = WindowSystem::create(name.c_str(),
-                               SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED,
-                               screenWidth,
-                               screenHeight,
-                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+
+    auto windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
+    auto window = WindowSystem::create(name.c_str(),
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       screenWidth,
+                                       screenHeight,
+                                       windowFlags);
     auto renderer = RenderSystem::create(*window);
     auto assets = AssetSystem::create(renderer.get());
     return std::make_shared<EngineCore>(std::move(subsystems),
-                                        Input::create(),
+                                        std::move(inputSystem),
                                         std::move(window),
                                         std::move(app),
                                         std::move(renderer),
                                         std::move(audio),
-                                        PhysicsSystem::create(),
+                                        std::move(physicsSystem),
                                         std::move(assets),
                                         logService,
                                         Services::get<ITimeService>());

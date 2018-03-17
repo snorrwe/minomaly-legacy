@@ -120,7 +120,7 @@ public:
         updates++;
         if (updates >= quitAfter)
         {
-            engine->stop();
+            getEngineCore()->stop();
             return;
         }
     }

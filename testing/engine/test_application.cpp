@@ -30,10 +30,6 @@ public:
 class FakeApp : public Application
 {
 public:
-    using Application::engine;
-
-    ~FakeApp() {}
-    void update() {}
 };
 
 class TestApplication : public ::testing::Test
