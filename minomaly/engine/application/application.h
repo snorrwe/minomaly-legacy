@@ -29,6 +29,7 @@ public:
 
     template <typename... TComponents>
     GameObject* createGameObject(Vector2<float> position = {0, 0});
+
     void destroyGameObject(GameObject*);
 
     GameObject* getMainCamera() { return mainCamera; }
@@ -40,8 +41,10 @@ public:
 
 protected:
     GameObject* createEmptyGameObject();
+
     template <typename TComponent>
     void addComponent(GameObject& go);
+
     template <typename... Ts>
     void addComponents(GameObject& go);
 
