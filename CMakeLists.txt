@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.9)
 # Options. Turn off with 'cmake -Dmyvarname=OFF'. e.g. -Dtest=OFF
 option(test "Build tests." ON) # Makes boolean 'test' available.
 option(examples "Build examples." ON) # Makes boolean 'examples' available.
+option(ci "Is it a CI build?" OFF)
 
 set(MASTER_NAME Minomaly CXX)
 project(${MASTER_NAME})
@@ -15,9 +16,12 @@ set(SILENCED_WARNINGS "-Wno-pragmas -Wno-unused-command-line-argument -Wno-unkno
 set(CMAKE_C_FLAGS " ${SILENCED_WARNINGS}")
 set(GCC_FLAGS "-fcxx-exceptions ${SILENCED_WARNINGS}")
 set(MSVC_FLAGS "/EHa /std:c++17")
+if(${ci})
+  set(GCC_FLAGS "${GCC_FLAGS} -Werror")
+  set(MSVC_FLAGS "${MSVC_FLAGS} /WX")
+endif()
 if(MSVC)
   set(CMAKE_CXX_FLAGS ${MSVC_FLAGS})
-
   if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") # LLVM toolchain support
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SILENCED_WARNINGS} -stdlib=libc++")
   endif()

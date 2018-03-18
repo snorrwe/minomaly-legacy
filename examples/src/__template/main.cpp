@@ -32,9 +32,9 @@ public:
 
     void start()
     {
-        input = engine->getInput();
+        input = getEngineCore()->getInput();
         subs = Subscriptions{input->onKeyDown([&](auto const& e) {
-            if (e.key.keysym.sym == SDLK_ESCAPE) engine->stop();
+            if (e.key.keysym.sym == SDLK_ESCAPE) getEngineCore()->stop();
         })};
     }
 };

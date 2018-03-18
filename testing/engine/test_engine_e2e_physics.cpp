@@ -11,8 +11,8 @@ const auto BALL_RADIUS = 30;
 const auto PADDING = 150;
 const auto OFFSET = 300;
 
-constexpr auto MAX_BALLS_FITTING_IN_BOX =
-    (BOX_WIDTH - PADDING) * (BOX_HEIGHT - PADDING) / (BALL_RADIUS * BALL_RADIUS);
+constexpr auto MAX_BALLS_FITTING_IN_BOX
+    = (BOX_WIDTH - PADDING) * (BOX_HEIGHT - PADDING) / (BALL_RADIUS * BALL_RADIUS);
 
 class BallComponent : public Mino::Component
 {
@@ -22,8 +22,8 @@ public:
         auto eggCollider = gameObject->getComponent<Mino::BoxColliderComponent>();
         eggCollider->set(BALL_RADIUS, BALL_RADIUS, {0.0f, 0.0f});
         eggCollider->onCollision().subscribe([&](auto const& collisionData) {
-            auto v =
-                collisionData.second.getPositionDelta() - collisionData.first.getPositionDelta();
+            auto v
+                = collisionData.second.getPositionDelta() - collisionData.first.getPositionDelta();
             body->setVelocity(v.normalized() * velocity);
         });
 
@@ -68,9 +68,9 @@ void BallsTestApp::start()
 {
     time = Services::get<ITimeService>().get();
 
-    engine->getPhysicsSystem()->setWorldBox({{BOX_WIDTH * 0.5f, BOX_HEIGHT * 0.5f},
-                                             BOX_WIDTH + (OFFSET * 2),
-                                             BOX_HEIGHT + (OFFSET * 2)});
+    getEngineCore()->getPhysicsSystem()->setWorldBox({{BOX_WIDTH * 0.5f, BOX_HEIGHT * 0.5f},
+                                                      BOX_WIDTH + (OFFSET * 2),
+                                                      BOX_HEIGHT + (OFFSET * 2)});
 
     std::srand(std::time(nullptr));
     std::mt19937 rng;
@@ -84,7 +84,8 @@ void BallsTestApp::start()
         auto x = dist6(rng) % (BOX_WIDTH - PADDING) + PADDING;
         auto y = dist6(rng) % (BOX_HEIGHT - PADDING) + PADDING;
 
-        auto ball = createGameObject<BoxColliderComponent, Rigidbody, BallComponent>({1.f*x, 1.f*y});
+        auto ball
+            = createGameObject<BoxColliderComponent, Rigidbody, BallComponent>({1.f * x, 1.f * y});
         balls.push_back(ball);
     }
 
