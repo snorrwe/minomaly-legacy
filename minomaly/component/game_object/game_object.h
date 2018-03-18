@@ -74,12 +74,18 @@ TComponent* GameObject::getComponent() const
 {
     for (auto& component : components)
     {
+        if (!component) continue;
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
-        if (component && typeid(*component) == typeid(TComponent))
+#endif
+        if (typeid(*component) == typeid(TComponent))
         {
             return static_cast<TComponent*>(component.get());
         }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
     }
     return nullptr;
 }

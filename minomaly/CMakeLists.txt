@@ -108,13 +108,13 @@ set_property(TARGET ${_MINO_SERVICES} PROPERTY CMAKE_CXX_STANDARD 17)
 # [[ Link ]]
 
 target_link_libraries(${_MINO_ENGINE}
-                            ${_MINO_COMMON} 
-                            ${_MINO_COMPONENT} 
-                            ${_MINO_SERVICES} 
-                            ${SDL2_LIBRARIES} 
-                            "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
-                            "${SDL2_MIXER_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_mixer.lib"
-                            "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
+                      ${_MINO_COMMON} 
+                      ${_MINO_COMPONENT} 
+                      ${_MINO_SERVICES} 
+                      ${SDL2_LIBRARIES} 
+                      "${SDL2_IMAGE_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_image.lib" 
+                      "${SDL2_MIXER_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_mixer.lib"
+                      "${SDL2_TTF_DIR}/${VC_LIB_PATH_SUFFIX}/SDL2_ttf.lib")
 
 #[[ Set exported variables ]]
 
