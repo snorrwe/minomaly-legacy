@@ -17,8 +17,8 @@ void Program::start()
                                 EggComponent>({0, 0});
 
     auto cameraTransform = getMainCamera()->getTransform();
-    cameraTransform->position()
-        = cameraTransform->position() + Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f};
+    cameraTransform->setPosition(cameraTransform->getPosition()
+                                 + Vector2<float>{SCREEN_WIDTH * -0.5f, SCREEN_HEIGHT * -0.5f});
 
     auto eggPic = getEngineCore()
                       ->getAssets()
