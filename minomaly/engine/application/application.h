@@ -92,3 +92,4 @@ GameObject* Application::createGameObject(Vector2<float> position)
 }
 
 } // namespace Mino
+
