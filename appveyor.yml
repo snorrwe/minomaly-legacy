@@ -40,7 +40,7 @@ build_script:
   - mkdir build
   - cd build
   - set CC=clang-cl
-  - cmake .. -GNinja -DCMAKE_CXX_COMPILER=clang-cl -Dexamples=OFF -Dci=ON
+  - cmake .. -GNinja -DCMAKE_CXX_COMPILER=clang-cl -Dexamples=OFF # -Dci=ON # disable 'ci' option until the false-positive clang warnings are resolved
   - cmake --build . --config %CONFIGURATION%
 
 test_script:
