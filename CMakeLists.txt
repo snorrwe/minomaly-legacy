@@ -23,7 +23,7 @@ endif()
 if(MSVC)
     set(CMAKE_CXX_FLAGS ${MSVC_FLAGS})
     if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") # LLVM toolchain support
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SILENCED_WARNINGS} -stdlib=libc++")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CLANG_FLAGS} -stdlib=libc++")
     endif()
 else()
     if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
