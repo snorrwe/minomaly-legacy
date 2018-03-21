@@ -16,6 +16,7 @@ set(SILENCED_WARNINGS "-Wno-pragmas -Wno-unused-command-line-argument -Wno-unkno
 set(CMAKE_C_FLAGS " ${SILENCED_WARNINGS}")
 set(GNU_FLAGS "")
 set(CLANG_FLAGS "-fcxx-exceptions ${SILENCED_WARNINGS}")
+set(MSVC_FLAGS "")
 if(${ci})
     set(CLANG_FLAGS "${CLANG_FLAGS} -Werror")
     set(MSVC_FLAGS "${MSVC_FLAGS} /WX")
