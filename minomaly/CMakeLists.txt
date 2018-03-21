@@ -36,6 +36,7 @@ set(_COMMON_INCLUDES common
                      common/rect
                      common/sprite_animation
                      common/font
+                     common/scene
                      common/quadtree
                      common/bounding_box
                      common/json

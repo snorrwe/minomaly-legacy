@@ -1,4 +1,4 @@
-set(_MINO_TEST MinoTest)
+set(_MINO_TEST mino-test)
 project(${_MINO_TEST})
 
 #[[ gtest ]]

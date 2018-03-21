@@ -12,9 +12,9 @@ configuration:
 
 install:
   # Init submodules
-  - git submodule init 
+  - git submodule init
   - git submodule update
-  
+
   # All external dependencies are installed in C:\projects\deps    
   - mkdir C:\projects\deps    
   - cd C:\projects\deps   
@@ -45,8 +45,8 @@ build_script:
 
 test_script:
   - cd C:\projects\minomaly\bin
-    # Run MinoTests
-  - MinoTest.exe
+    # Run the tests
+  - mino-test.exe
 
 # Only build interesting files
 only_commits:
