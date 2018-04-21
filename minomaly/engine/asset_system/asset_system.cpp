@@ -63,3 +63,4 @@ std::shared_ptr<Music> AssetSystem ::loadMusic(std::string const& path)
 {
     return load<Music>(path, [&]() { return Music::loadMusic(path); });
 }
+

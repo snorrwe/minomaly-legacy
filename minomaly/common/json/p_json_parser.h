@@ -65,7 +65,7 @@ T ParseImpl<FwIt>::parse(Type<T>)
 {
     init<T>();
     auto result = T{};
-    auto key = ""s;
+    auto key = std::string("");
     while (begin != end)
     {
         switch (state)
@@ -232,7 +232,11 @@ TResult ParseImpl<FwIt>::parseFloat()
 template <typename FwIt>
 void ParseImpl<FwIt>::throwUnexpectedCharacter(char chr)
 {
-    throw ParseError("Unexpected character: ["s + chr + "] in json input!");
+    auto stream = std::stringstream{};
+    stream << "Unexpected character: [";
+    stream << chr;
+    stream << "] in json input!";
+    throw ParseError(stream.str());
 }
 
 template <typename FwIt>
@@ -278,4 +282,5 @@ void ParseImpl<FwIt>::assertCorrectValueEnd(char ending)
         throwUnexpectedCharacter(*begin);
     }
 }
-}
+} // namespace Mino::Json::Private
+

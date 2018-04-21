@@ -1,4 +1,7 @@
 #include "application.h"
+#include "json.h"
+#include <iostream>
+#include <string>
 
 using namespace Mino;
 
@@ -49,3 +52,15 @@ void Application::initMainCamera(IRenderSystem const& renderer, float screenHeig
     camera->getComponent<CameraComponent>()->setCamera(renderer.getMainCamera());
     mainCamera = camera;
 }
+
+Scene const& Application::loadScene(std::string const& path)
+{
+    auto file = std::ifstream(path);
+    auto result = Json::parse<Scene>(file);
+    // auto stream = std::string{};
+    // file >> stream;
+    // std::cout << stream << "\n";
+    // auto result = Json::parse<Scene>(stream.begin(), stream.end());
+    return Scene{}; // TODO
+}
+

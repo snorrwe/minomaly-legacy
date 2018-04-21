@@ -1,0 +1,5 @@
+{
+    "audioFiles": ["assets/runner/Aoa02.wav"],
+    "spriteSheetFiles": ["assets/runner/egg.png", "assets/runner/bar.png"],
+    "animationFiles": []
+}

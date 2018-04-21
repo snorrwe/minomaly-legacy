@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <streambuf>
 
 namespace Mino::Json
 {
@@ -34,7 +35,7 @@ T parse(FwIt begin, FwIt end)
 template <typename T>
 T parse(std::istream& stream)
 {
-    return parse<T>(std::istream_iterator<char>(stream), std::istream_iterator<char>());
+    return parse<T>(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
 }
 
 /**

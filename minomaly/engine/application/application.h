@@ -3,10 +3,12 @@
 #include "game_object.h"
 #include "iterable_pool.h"
 #include "render_system.h"
+#include "scene.h"
 #include "transform.h"
 #include "vector2.h"
 #include <algorithm>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace Mino
@@ -39,6 +41,9 @@ public:
     void setEngineCore(IEngineCore* e) { engine = e; }
     Transform::TransformRef getRootTransform() { return rootTransform->addChild(); }
 
+    Scene const& loadScene(std::string const&);
+    Scene* getScene() { return currentScene.get(); }
+
 protected:
     GameObject* createEmptyGameObject();
 
@@ -56,6 +61,7 @@ private:
     GameObjectContainer gameObjects;
     GameObject* mainCamera;
     IEngineCore* engine;
+    std::unique_ptr<Scene> currentScene = nullptr;
 };
 
 template <typename TComponent>

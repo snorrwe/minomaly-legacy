@@ -38,6 +38,9 @@ void Program::start()
     auto music = getEngineCore()->getAssets()->loadMusic("assets/runner/Aoa02.wav");
     assets.push_back(music);
     getEngineCore()->getAudio()->playMusic(*music);
+
+
+    loadScene("assets/runner/scene_0.json");
 }
 
 const auto barWidth = 30;

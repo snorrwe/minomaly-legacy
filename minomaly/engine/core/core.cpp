@@ -12,10 +12,10 @@ EngineCore::EngineCore(std::unique_ptr<SdlSubsystems>&& subsystems,
                        std::unique_ptr<IAssetSystem>&& assets,
                        std::shared_ptr<ILogService> const& logService,
                        std::shared_ptr<ITimeService> const& time)
-    : subsystems(std::move(subsystems))
+    : application(std::move(app))
+    , subsystems(std::move(subsystems))
     , input(std::move(input))
     , window(std::move(window))
-    , application(std::move(app))
     , renderer(std::move(renderer))
     , audioSystem(std::move(audio))
     , physicsSystem(std::move(physicsSystem))
@@ -124,3 +124,4 @@ std::shared_ptr<EngineCore> EngineCore::initCore(std::string const& name,
                                         logService,
                                         Services::get<ITimeService>());
 }
+
