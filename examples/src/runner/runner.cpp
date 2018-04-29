@@ -4,6 +4,8 @@ using namespace Mino;
 
 void Program::start()
 {
+    loadScene("assets/runner/scene_0.json");
+
     input = getEngineCore()->getInput();
     time = Services::get<ITimeService>().get();
 
@@ -38,9 +40,6 @@ void Program::start()
     auto music = getEngineCore()->getAssets()->loadMusic("assets/runner/Aoa02.wav");
     assets.push_back(music);
     getEngineCore()->getAudio()->playMusic(*music);
-
-
-    loadScene("assets/runner/scene_0.json");
 }
 
 const auto barWidth = 30;
@@ -70,3 +69,4 @@ void Program::initPlatforms()
     createPlatform({startx + 320 + 2.f * barWidth, 0.25f * barHeight}, {3.0f, 0.75f});
     createPlatform({startx + 320 + 4.f * barWidth, 0.0f}, {2.0f, 0.325f});
 }
+

@@ -1,7 +1,5 @@
 #include "application.h"
 #include "json.h"
-#include <iostream>
-#include <string>
 
 using namespace Mino;
 
@@ -24,9 +22,9 @@ GameObject* Application::createEmptyGameObject()
 
 void Application::destroyGameObject(GameObject* go)
 {
-    const auto predicate = [&](auto& g) { return g.get() == go; };
-    auto it = std::find_if(gameObjects.begin(), gameObjects.end(), predicate);
-    if (it != gameObjects.end())
+    const auto predicate = [&go](auto& g) { return g.get() == go; };
+    if (auto it = std::find_if(gameObjects.begin(), gameObjects.end(), predicate);
+        it != gameObjects.end())
     {
         gameObjects.erase(it);
     }
@@ -34,15 +32,15 @@ void Application::destroyGameObject(GameObject* go)
 
 void Application::updateGameObjects()
 {
-    for (auto& i : gameObjects)
+    for (auto& go : gameObjects)
     {
-        i->update();
+        go->update();
     }
     rootTransform->updateAsRoot();
 }
 
 template <>
-void Application::addComponents<>(GameObject& go)
+void Application::addComponents<>(GameObject&)
 {
 }
 
@@ -53,14 +51,18 @@ void Application::initMainCamera(IRenderSystem const& renderer, float screenHeig
     mainCamera = camera;
 }
 
+void Application::unloadScene()
+{
+    getEngineCore()->getAssets()->collectGarbage();
+    gameObjects.clear();
+}
+
 Scene const& Application::loadScene(std::string const& path)
 {
+    unloadScene();
     auto file = std::ifstream(path);
     auto result = Json::parse<Scene>(file);
-    // auto stream = std::string{};
-    // file >> stream;
-    // std::cout << stream << "\n";
-    // auto result = Json::parse<Scene>(stream.begin(), stream.end());
-    return Scene{}; // TODO
+    currentScene = std::make_unique<Scene>(std::move(result));
+    return *currentScene;
 }
 

@@ -1,6 +1,4 @@
 #pragma once
-#include "SDL.h"
-#include "SDL_image.h"
 #include "application.h"
 #include "asset_system.h"
 #include "audio_system.h"

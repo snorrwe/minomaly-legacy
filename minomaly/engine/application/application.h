@@ -7,6 +7,7 @@
 #include "transform.h"
 #include "vector2.h"
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -41,7 +42,8 @@ public:
     void setEngineCore(IEngineCore* e) { engine = e; }
     Transform::TransformRef getRootTransform() { return rootTransform->addChild(); }
 
-    Scene const& loadScene(std::string const&);
+    virtual void unloadScene();
+    virtual Scene const& loadScene(std::string const&);
     Scene* getScene() { return currentScene.get(); }
 
 protected:
